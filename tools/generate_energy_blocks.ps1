@@ -130,16 +130,38 @@ function Write-CableBlock([string]$Id) {
     Write-BlockLoot $Id
 }
 
-# Cable geometry copied from the IC2 glass fibre cable shapes; only the texture is ours.
+# Cable geometry: core + long arms that reach six pixels into the neighbouring block, so the
+# connection is visible even when the neighbour (IC2 cable) does not draw its own arm.
 $cableModelDir = Join-Path $blockModelDir "cable"
 New-Item -ItemType Directory -Path $cableModelDir -Force | Out-Null
+$uv = @(0, 0, 16, 16)
+$faces = @{
+    down = @{ texture = "#texture"; uv = $uv }
+    up = @{ texture = "#texture"; uv = $uv }
+    north = @{ texture = "#texture"; uv = $uv }
+    south = @{ texture = "#texture"; uv = $uv }
+    east = @{ texture = "#texture"; uv = $uv }
+    west = @{ texture = "#texture"; uv = $uv }
+}
 Write-JsonFile (Join-Path $cableModelDir "energy_core.json") @{
-    parent = "ic2:block/cable/shape/core_4"
-    textures = @{ texture = "ascension_ic2:block/energy_cable" }
+    parent = "minecraft:block/block"
+    textures = @{
+        particle = "ascension_ic2:block/energy_cable"
+        texture = "ascension_ic2:block/energy_cable"
+    }
+    elements = @(
+        @{ from = @(5, 5, 5); to = @(11, 11, 11); faces = $faces }
+    )
 }
 Write-JsonFile (Join-Path $cableModelDir "energy_side.json") @{
-    parent = "ic2:block/cable/shape/side_4"
-    textures = @{ texture = "ascension_ic2:block/energy_cable" }
+    parent = "minecraft:block/block"
+    textures = @{
+        particle = "ascension_ic2:block/energy_cable"
+        texture = "ascension_ic2:block/energy_cable"
+    }
+    elements = @(
+        @{ from = @(6, 6, -6); to = @(10, 10, 5); faces = $faces }
+    )
 }
 
 $allIds = @(
