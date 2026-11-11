@@ -1,5 +1,6 @@
 package com.ascension_ic2.energy;
 
+import ic2.api.block.IAddonServerTickable;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyEmitter;
@@ -16,7 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * Solar panel for one energy tier. Generates a full tier packet per tick while it can see the sky
  * during the day. All tiers share a single texture.
  */
-public class SolarPanelBlockEntity extends BlockEntity implements IEnergySource, ILocatable {
+public class SolarPanelBlockEntity extends BlockEntity
+        implements IEnergySource, ILocatable, IAddonServerTickable {
     private final int tier;
     private boolean registered;
     private long sourceTick = Long.MIN_VALUE;
@@ -57,6 +59,11 @@ public class SolarPanelBlockEntity extends BlockEntity implements IEnergySource,
         super.setRemoved();
     }
 
+    @Override
+    public void serverTick() {
+        registerWithEnergyNet();
+    }
+
     private void registerWithEnergyNet() {
         if (this.level != null
                 && !this.level.isClientSide
@@ -64,6 +71,8 @@ public class SolarPanelBlockEntity extends BlockEntity implements IEnergySource,
                 && !this.registered) {
             EnergyNet.instance.addBlockEntityTile(this);
             this.registered = true;
+            com.ascension_ic2.AscensionIC2.LOGGER.info(
+                    "EnergyNet solar registered: tier {} at {}", this.tier, this.worldPosition);
         }
     }
 

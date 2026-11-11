@@ -85,13 +85,18 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
         super.setRemoved();
     }
 
-    private void registerWithEnergyNet() {
+    protected void registerWithEnergyNet() {
         if (this.level != null
                 && !this.level.isClientSide
                 && EnergyNet.instance != null
                 && !this.registered) {
             EnergyNet.instance.addBlockEntityTile(this);
             this.registered = true;
+            com.ascension_ic2.AscensionIC2.LOGGER.info(
+                    "EnergyNet tile registered: {} tier {} at {}",
+                    getClass().getSimpleName(),
+                    this.tier,
+                    this.worldPosition);
         }
     }
 

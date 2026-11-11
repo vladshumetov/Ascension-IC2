@@ -1,6 +1,7 @@
 package com.ascension_ic2;
 
 import com.ascension_ic2.config.TiersConfig;
+import com.ascension_ic2.energy.EnergyCableBlock;
 import com.ascension_ic2.energy.EnergyCableBlockEntity;
 import com.ascension_ic2.energy.EnergyTiers;
 import com.ascension_ic2.energy.SolarPanelBlockEntity;
@@ -43,6 +44,8 @@ import org.jetbrains.annotations.Nullable;
 @Mod(AscensionIC2.MOD_ID)
 public final class AscensionIC2 {
     public static final String MOD_ID = "ascension_ic2";
+    public static final org.slf4j.Logger LOGGER =
+            org.slf4j.LoggerFactory.getLogger("ascension_ic2");
 
     public static final Ic2AddonContent CONTENT = Ic2AddonContent.create(MOD_ID);
 
@@ -124,7 +127,7 @@ public final class AscensionIC2 {
         DeferredBlock<Block> block =
                 CONTENT.registerBlock(
                         id,
-                        Block::new,
+                        EnergyCableBlock::new,
                         BlockBehaviour.Properties.of()
                                 .strength(0.4F)
                                 .sound(SoundType.GLASS));

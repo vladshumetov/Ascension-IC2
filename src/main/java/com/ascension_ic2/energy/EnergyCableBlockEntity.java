@@ -1,5 +1,6 @@
 package com.ascension_ic2.energy;
 
+import ic2.api.block.IAddonServerTickable;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyConductor;
@@ -16,7 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * Cable for the addon energy ladder. IC2 derives the conductor tier from the breakdown energy,
  * so each cable is registered with the voltage of its tier.
  */
-public class EnergyCableBlockEntity extends BlockEntity implements IEnergyConductor, ILocatable {
+public class EnergyCableBlockEntity extends BlockEntity
+        implements IEnergyConductor, ILocatable, IAddonServerTickable {
     private final int tier;
     private boolean registered;
 
@@ -55,6 +57,11 @@ public class EnergyCableBlockEntity extends BlockEntity implements IEnergyConduc
         super.setRemoved();
     }
 
+    @Override
+    public void serverTick() {
+        registerWithEnergyNet();
+    }
+
     private void registerWithEnergyNet() {
         if (this.level != null
                 && !this.level.isClientSide
@@ -62,6 +69,8 @@ public class EnergyCableBlockEntity extends BlockEntity implements IEnergyConduc
                 && !this.registered) {
             EnergyNet.instance.addBlockEntityTile(this);
             this.registered = true;
+            com.ascension_ic2.AscensionIC2.LOGGER.info(
+                    "EnergyNet cable registered: tier {} at {}", this.tier, this.worldPosition);
         }
     }
 

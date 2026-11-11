@@ -417,6 +417,7 @@ public class TierMachineBlockEntity extends TierEnergyBlockEntity
         if (this.level == null || this.level.isClientSide) {
             return;
         }
+        registerWithEnergyNet();
         if (!canProcess()) {
             return;
         }
