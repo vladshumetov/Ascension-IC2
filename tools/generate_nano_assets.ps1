@@ -251,11 +251,9 @@ $gui = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelF
 $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
 
-# One continuous silhouette: main body plus two side wings (x,y,x2,y2 inclusive).
+# One flat rectangle: upgrade slots sit on its side edges, no wings.
 $shapes = @(
-    @(14, 4, 225, 127),
-    @(3, 22, 28, 84),
-    @(211, 22, 236, 84)
+    @(3, 4, 236, 127)
 )
 $inside = New-Object 'bool[,]' 256, 256
 foreach ($s in $shapes) {
