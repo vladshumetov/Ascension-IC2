@@ -1,6 +1,3 @@
 {
-    "textures":  {
-                     "layer0":  "ascension_ic2:item/nano_casing"
-                 },
-    "parent":  "minecraft:item/generated"
+    "parent":  "ascension_ic2:block/nano_casing"
 }

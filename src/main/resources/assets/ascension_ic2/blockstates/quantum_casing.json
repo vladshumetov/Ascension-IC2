@@ -1,0 +1,7 @@
+{
+    "variants":  {
+                     "":  {
+                              "model":  "ascension_ic2:block/quantum_casing"
+                          }
+                 }
+}

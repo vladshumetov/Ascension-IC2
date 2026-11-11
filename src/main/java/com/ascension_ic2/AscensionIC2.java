@@ -20,6 +20,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -129,11 +130,23 @@ public final class AscensionIC2 {
                     () -> new ItemStack(MACHINES.getFirst().item().get()),
                     AscensionIC2::fillTab);
 
-    public static final DeferredItem<Item> NANO_CASING =
-            CONTENT.registerItem("nano_casing", () -> new Item(new Item.Properties()));
+    public static final DeferredBlock<Block> NANO_CASING_BLOCK =
+            CONTENT.registerBlock(
+                    "nano_casing",
+                    Block::new,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
 
-    public static final DeferredItem<Item> QUANTUM_CASING =
-            CONTENT.registerItem("quantum_casing", () -> new Item(new Item.Properties()));
+    public static final DeferredBlock<Block> QUANTUM_CASING_BLOCK =
+            CONTENT.registerBlock(
+                    "quantum_casing",
+                    Block::new,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
+
+    public static final DeferredItem<BlockItem> NANO_CASING =
+            CONTENT.registerBlockItem("nano_casing", NANO_CASING_BLOCK);
+
+    public static final DeferredItem<BlockItem> QUANTUM_CASING =
+            CONTENT.registerBlockItem("quantum_casing", QUANTUM_CASING_BLOCK);
 
     public static final DeferredItem<Item> NANO_CIRCUIT =
             CONTENT.registerItem("nano_circuit", () -> new Item(new Item.Properties()));

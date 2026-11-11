@@ -10,6 +10,8 @@
                    "ascension_ic2:nano_extractor",
                    "ascension_ic2:quantum_extractor",
                    "ascension_ic2:nano_recycler",
-                   "ascension_ic2:quantum_recycler"
+                   "ascension_ic2:quantum_recycler",
+                   "ascension_ic2:nano_casing",
+                   "ascension_ic2:quantum_casing"
                ]
 }
