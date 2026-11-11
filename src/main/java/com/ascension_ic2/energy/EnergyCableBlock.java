@@ -108,10 +108,7 @@ public class EnergyCableBlock extends Block implements EntityBlock {
         BlockState updated = state;
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.relative(direction);
-            BlockEntity neighbor = level.getBlockEntity(neighborPos);
-            boolean connect =
-                    neighbor instanceof IEnergyTile
-                            || level.getBlockState(neighborPos).getBlock() instanceof EnergyCableBlock;
+            boolean connect = isConnectable(level, neighborPos);
             BooleanProperty property = PROPERTIES.get(direction);
             if (updated.getValue(property) != connect) {
                 updated = updated.setValue(property, connect);
@@ -120,6 +117,21 @@ public class EnergyCableBlock extends Block implements EntityBlock {
         if (updated != state) {
             level.setBlock(pos, updated, Block.UPDATE_ALL);
         }
+    }
+
+    private static boolean isConnectable(Level level, BlockPos pos) {
+        BlockState neighborState = level.getBlockState(pos);
+        if (neighborState.getBlock() instanceof EnergyCableBlock) {
+            return true;
+        }
+        if (level.getBlockEntity(pos) instanceof IEnergyTile) {
+            return true;
+        }
+        // IC2 cables may not have their block entity available on the client; connect by block id.
+        net.minecraft.resources.ResourceLocation key =
+                net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(neighborState.getBlock());
+        return "ic2".equals(key.getNamespace())
+                && (key.getPath().contains("cable") || key.getPath().contains("wire"));
     }
 
     @Override

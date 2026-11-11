@@ -93,6 +93,10 @@ public class EnergyCableBlockEntity extends BlockEntity
 
     @Override
     public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction side) {
+        if (!(emitter instanceof EnergyCableBlockEntity)) {
+            com.ascension_ic2.AscensionIC2.LOGGER.info(
+                    "cable accepts energy from {} at {} side {}", emitter.getClass().getSimpleName(), this.worldPosition, side);
+        }
         return true;
     }
 
