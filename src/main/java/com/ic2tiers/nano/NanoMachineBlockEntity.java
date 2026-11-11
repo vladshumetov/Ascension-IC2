@@ -7,15 +7,20 @@ import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class NanoMachineBlockEntity extends AddonMachineBlockEntity {
+public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements MenuProvider {
     public static final int INPUT_SLOTS = 3;
-    public static final int OUTPUT_SLOTS = 6;
+    public static final int OUTPUT_SLOTS = 3;
     public static final int OUTPUT_START = INPUT_SLOTS;
     public static final int SLOT_COUNT = INPUT_SLOTS + OUTPUT_SLOTS;
 
@@ -117,12 +122,15 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity {
         }
     }
 
-    public ItemStack insertInputs(ItemStack stack) {
-        ItemStack remainder = stack;
-        for (int slot = 0; slot < INPUT_SLOTS && !remainder.isEmpty(); slot++) {
-            remainder = this.inventory.insertItem(slot, remainder, false);
-        }
-        return remainder;
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable(this.kind.translationKey());
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(
+            int containerId, Inventory playerInventory, Player player) {
+        return new NanoMachineMenu(containerId, playerInventory, this);
     }
 
     private ItemStack insertIntoOutputs(ItemStack stack) {

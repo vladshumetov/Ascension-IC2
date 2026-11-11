@@ -5,10 +5,13 @@ import com.ic2tiers.event.MachineEvents;
 import com.ic2tiers.nano.NanoMachineBlock;
 import com.ic2tiers.nano.NanoMachineBlockEntity;
 import com.ic2tiers.nano.NanoMachineKind;
+import com.ic2tiers.nano.NanoMachineMenu;
 import ic2.api.registry.AddonEnergyCapabilities;
 import ic2.api.registry.Ic2AddonContent;
 import java.util.EnumMap;
 import java.util.Map;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -21,9 +24,11 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 @Mod(IC2Tiers.MOD_ID)
 public final class IC2Tiers {
@@ -66,6 +71,12 @@ public final class IC2Tiers {
         }
     }
 
+    public static final DeferredRegister<MenuType<?>> MENUS =
+            DeferredRegister.create(Registries.MENU, MOD_ID);
+
+    public static final DeferredHolder<MenuType<?>, MenuType<NanoMachineMenu>> NANO_MENU =
+            MENUS.register("nano_machine", () -> IMenuTypeExtension.create(NanoMachineMenu::new));
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB =
             CONTENT.registerCreativeModeTab(
                     "main",
@@ -74,6 +85,7 @@ public final class IC2Tiers {
 
     public IC2Tiers(IEventBus modEventBus, ModContainer modContainer) {
         CONTENT.register(modEventBus);
+        MENUS.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, TiersConfig.SPEC);
         modEventBus.addListener(this::registerCapabilities);
         NeoForge.EVENT_BUS.register(MachineEvents.class);

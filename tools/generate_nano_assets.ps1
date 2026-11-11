@@ -81,6 +81,40 @@ function Write-JsonFile([string]$Path, $Value) {
     [System.IO.File]::WriteAllText($Path, $json, $utf8)
 }
 
+function C([string]$hex) {
+    return [System.Drawing.ColorTranslator]::FromHtml($hex)
+}
+
+function Px($bmp, [int]$x, [int]$y, [string]$hex) {
+    if ($x -ge 0 -and $y -ge 0 -and $x -lt $bmp.Width -and $y -lt $bmp.Height) {
+        $bmp.SetPixel($x, $y, (C $hex))
+    }
+}
+
+function Rect($bmp, [int]$x0, [int]$y0, [int]$x1, [int]$y1, [string]$hex) {
+    for ($y = $y0; $y -le $y1; $y++) {
+        for ($x = $x0; $x -le $x1; $x++) {
+            Px $bmp $x $y $hex
+        }
+    }
+}
+
+function Border($bmp, [int]$x0, [int]$y0, [int]$x1, [int]$y1, [string]$hex) {
+    for ($x = $x0; $x -le $x1; $x++) {
+        Px $bmp $x $y0 $hex
+        Px $bmp $x $y1 $hex
+    }
+    for ($y = $y0; $y -le $y1; $y++) {
+        Px $bmp $x0 $y $hex
+        Px $bmp $x1 $y $hex
+    }
+}
+
+function Save($bmp, [string]$path) {
+    $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
+    $bmp.Dispose()
+}
+
 function Convert-Texture($Zip, [string]$EntryName, [string]$OutPath) {
     $entry = $Zip.GetEntry($EntryName)
     if ($null -eq $entry) {
@@ -206,6 +240,77 @@ Write-JsonFile (Join-Path $tagBlockDir "needs_iron_tool.json") @{
     replace = $false
     values = $allIds
 }
+
+# ---------- GUI ----------
+$guiDir = Join-Path $assets "textures\gui"
+New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
+
+$gui = New-Object System.Drawing.Bitmap(200, 166, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+$guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
+$guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
+
+Rect $gui 0 0 175 165 '#C6C6C6'
+Border $gui 0 0 175 165 '#373737'
+Border $gui 1 1 174 164 '#FFFFFF'
+Rect $gui 7 82 168 82 '#A0A0A0'
+
+function Draw-GuiSlot($bmp, [int]$x, [int]$y) {
+    Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#8B8B8B'
+    Border $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#373737'
+    Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y - 1) '#FFFFFF'
+    Rect $bmp ($x - 1) ($y - 1) ($x - 1) ($y + 16) '#FFFFFF'
+    Rect $bmp ($x - 1) ($y + 16) ($x + 16) ($y + 16) '#555555'
+    Rect $bmp ($x + 16) ($y - 1) ($x + 16) ($y + 16) '#555555'
+}
+
+foreach ($i in 0..2) {
+    Draw-GuiSlot $gui 44 (18 + $i * 22)
+    Draw-GuiSlot $gui 98 (18 + $i * 22)
+}
+foreach ($row in 0..2) {
+    foreach ($col in 0..8) {
+        Draw-GuiSlot $gui (8 + $col * 18) (84 + $row * 18)
+    }
+}
+foreach ($col in 0..8) {
+    Draw-GuiSlot $gui (8 + $col * 18) 142
+}
+
+$arrowPen = New-Object System.Drawing.Pen((C '#373737'), 1)
+$arrowBrush = New-Object System.Drawing.SolidBrush((C '#8B8B8B'))
+$arrowPoints = @(
+    (New-Object System.Drawing.Point(70, 42)),
+    (New-Object System.Drawing.Point(84, 42)),
+    (New-Object System.Drawing.Point(84, 38)),
+    (New-Object System.Drawing.Point(93, 45)),
+    (New-Object System.Drawing.Point(84, 52)),
+    (New-Object System.Drawing.Point(84, 48)),
+    (New-Object System.Drawing.Point(70, 48))
+)
+$guiGraphics.FillPolygon($arrowBrush, $arrowPoints)
+$guiGraphics.DrawPolygon($arrowPen, $arrowPoints)
+
+$progressBrush = New-Object System.Drawing.SolidBrush((C '#55D6E8'))
+$progressPoints = @(
+    (New-Object System.Drawing.Point(176, 4)),
+    (New-Object System.Drawing.Point(190, 4)),
+    (New-Object System.Drawing.Point(190, 0)),
+    (New-Object System.Drawing.Point(199, 7)),
+    (New-Object System.Drawing.Point(190, 14)),
+    (New-Object System.Drawing.Point(190, 10)),
+    (New-Object System.Drawing.Point(176, 10))
+)
+$guiGraphics.FillPolygon($progressBrush, $progressPoints)
+$highlightPen = New-Object System.Drawing.Pen((C '#E8FCFF'), 1)
+$guiGraphics.DrawLine($highlightPen, 176, 4, 190, 4)
+$guiGraphics.DrawLine($highlightPen, 190, 4, 196, 7)
+
+$arrowPen.Dispose()
+$arrowBrush.Dispose()
+$progressBrush.Dispose()
+$highlightPen.Dispose()
+$guiGraphics.Dispose()
+Save $gui (Join-Path $guiDir "nano_machine.png")
 
 # Mod logo
 $logo = New-Object System.Drawing.Bitmap(128, 128, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
