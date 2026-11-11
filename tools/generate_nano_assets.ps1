@@ -251,27 +251,22 @@ $gui = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelF
 $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
 
-# One continuous machine body (dark navy) joined to the inventory below.
+# Main machine body: a big rectangle (x 14..225, y 4..127). Side upgrade wings protrude out of it.
 $bodyGradient = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
-    (New-Object System.Drawing.Rectangle(0, 0, $guiW, 128)),
+    (New-Object System.Drawing.Rectangle(14, 4, 212, 124)),
     (C '#1B2445'), (C '#10162E'), 90.0)
-$guiGraphics.FillRectangle($bodyGradient, 0, 0, $guiW, 128)
+$guiGraphics.FillRectangle($bodyGradient, 14, 4, 212, 124)
 $bodyGradient.Dispose()
-
-# Side walls and top wall.
-Rect $gui 0 0 2 128 '#253C5E'
-Rect $gui 237 0 239 128 '#253C5E'
-Rect $gui 0 0 239 1 '#253C5E'
-Rect $gui 2 0 2 128 '#4D7C9A'
-Rect $gui 237 0 237 128 '#4D7C9A'
-Rect $gui 0 0 0 128 '#05080C'
-Rect $gui 239 0 239 128 '#05080C'
+Border $gui 14 4 225 127 '#05080C'
+Border $gui 15 5 224 126 '#253C5E'
+Border $gui 16 6 223 125 '#4D7C9A'
+Rect $gui 17 7 222 7 '#B7E0EA'
 
 # Joint line between machine body and inventory.
-Rect $gui 0 128 239 128 '#4D7C9A'
-Rect $gui 0 129 239 129 '#B7E0EA'
+Rect $gui 14 128 225 128 '#4D7C9A'
+Rect $gui 14 129 225 129 '#B7E0EA'
 
-# Title banner.
+# Title banner on the top edge of the body.
 Rect $gui 50 2 189 14 '#1F274F'
 Border $gui 50 2 189 14 '#4D7C9A'
 Rect $gui 51 3 188 3 '#B7E0EA'
@@ -305,7 +300,7 @@ function Draw-UpgradeSlot($bmp, [int]$x, [int]$y) {
     Rect $bmp ($x - 2) ($y - 2) ($x - 2) ($y + 15) '#3F6C89'
 }
 
-# Side wings holding the upgrade slots (like the reference).
+# Side upgrade wings: they stick out beyond the body edge (x 3..28 and 211..236).
 Rect $gui 3 24 28 82 '#1F274F'
 Border $gui 3 24 28 82 '#4D7C9A'
 Rect $gui 211 24 236 82 '#1F274F'
@@ -313,7 +308,7 @@ Border $gui 211 24 236 82 '#4D7C9A'
 Rect $gui 4 25 27 25 '#B7E0EA'
 Rect $gui 212 25 235 25 '#B7E0EA'
 
-# Upgrade slots: two per side.
+# Upgrade slots: two per side, inside the wings.
 foreach ($pos in @(@(8, 28), @(8, 62), @(216, 28), @(216, 62))) {
     Draw-UpgradeSlot $gui $pos[0] $pos[1]
 }
@@ -359,7 +354,7 @@ Rect $gui 207 133 207 217 '#555555'
 
 foreach ($row in 0..2) {
     foreach ($col in 0..8) {
-        Draw-PlayerSlot $gui (40 + $col * 18) (140 + $row * 18)
+ Draw-PlayerSlot $gui (40 + $col * 18) (140 + $row * 18)
     }
 }
 foreach ($col in 0..8) {
