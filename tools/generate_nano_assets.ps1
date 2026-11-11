@@ -252,7 +252,7 @@ $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
 
 # One flat rectangle: upgrade slots sit on its side edges, no wings.
-$shapes = ,@(3, 4, 236, 127)
+$shapes = ,@(16, 4, 224, 127)
 $inside = New-Object 'bool[,]' 256, 256
 foreach ($s in $shapes) {
     for ($y = $s[1]; $y -le $s[3]; $y++) {
@@ -323,11 +323,11 @@ for ($y = 0; $y -lt 256; $y++) {
     }
 }
 # Top highlight along the body (light line just inside the rim).
-Rect $gui 20 7 219 7 '#B7E0EA'
+Rect $gui 22 7 218 7 '#B7E0EA'
 
 # Joint line between machine body and inventory.
-Rect $gui 14 128 225 128 '#4D7C9A'
-Rect $gui 14 129 225 129 '#B7E0EA'
+Rect $gui 16 128 224 128 '#4D7C9A'
+Rect $gui 16 129 224 129 '#B7E0EA'
 
 # Title banner on the top edge of the body.
 Rect $gui 50 2 189 14 '#1F274F'
