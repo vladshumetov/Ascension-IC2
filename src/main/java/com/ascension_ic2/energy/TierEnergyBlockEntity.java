@@ -62,6 +62,12 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
     }
 
     @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        registerWithEnergyNet();
+    }
+
+    @Override
     public void onLoad() {
         super.onLoad();
         registerWithEnergyNet();

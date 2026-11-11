@@ -1,6 +1,0 @@
-{
-    "textures":  {
-                     "all":  "ascension_ic2:block/energy_cable"
-                 },
-    "parent":  "minecraft:block/cube_all"
-}

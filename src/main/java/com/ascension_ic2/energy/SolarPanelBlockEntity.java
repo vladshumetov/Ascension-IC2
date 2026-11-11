@@ -34,6 +34,12 @@ public class SolarPanelBlockEntity extends BlockEntity implements IEnergySource,
     }
 
     @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        registerWithEnergyNet();
+    }
+
+    @Override
     public void onLoad() {
         super.onLoad();
         registerWithEnergyNet();

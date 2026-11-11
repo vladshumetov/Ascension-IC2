@@ -94,6 +94,10 @@ function Write-SimpleBlock([string]$Id, [string]$Texture) {
     Write-JsonFile (Join-Path $itemModelDir "$Id.json") @{
         parent = "ascension_ic2:block/$Id"
     }
+    Write-BlockLoot $Id
+}
+
+function Write-BlockLoot([string]$Id) {
     Write-JsonFile (Join-Path $lootDir "$Id.json") @{
         type = "minecraft:block"
         pools = @(
@@ -108,6 +112,42 @@ function Write-SimpleBlock([string]$Id, [string]$Texture) {
     }
 }
 
+function Write-CableBlock([string]$Id) {
+    Write-JsonFile (Join-Path $blockstateDir "$Id.json") @{
+        variants = @{ "" = @{ model = "ascension_ic2:block/energy_cable" } }
+    }
+    Write-JsonFile (Join-Path $itemModelDir "$Id.json") @{
+        parent = "ascension_ic2:block/energy_cable"
+    }
+    Write-BlockLoot $Id
+}
+
+# Shared cable model: a small core with arms on all six sides, so it reads as a wire, not a cube.
+$faceSet = @{
+    down = @{ texture = "#all" }
+    up = @{ texture = "#all" }
+    north = @{ texture = "#all" }
+    south = @{ texture = "#all" }
+    east = @{ texture = "#all" }
+    west = @{ texture = "#all" }
+}
+Write-JsonFile (Join-Path $blockModelDir "energy_cable.json") @{
+    parent = "minecraft:block/block"
+    textures = @{
+        particle = "ascension_ic2:block/energy_cable"
+        all = "ascension_ic2:block/energy_cable"
+    }
+    elements = @(
+        @{ from = @(5, 5, 5); to = @(11, 11, 11); faces = $faceSet },
+        @{ from = @(6, 6, 0); to = @(10, 10, 5); faces = $faceSet },
+        @{ from = @(6, 6, 11); to = @(10, 10, 16); faces = $faceSet },
+        @{ from = @(0, 6, 6); to = @(5, 10, 10); faces = $faceSet },
+        @{ from = @(11, 6, 6); to = @(16, 10, 10); faces = $faceSet },
+        @{ from = @(6, 0, 6); to = @(10, 5, 10); faces = $faceSet },
+        @{ from = @(6, 11, 6); to = @(10, 16, 10); faces = $faceSet }
+    )
+}
+
 $allIds = @(
     "ascension_ic2:nano_macerator", "ascension_ic2:quantum_macerator",
     "ascension_ic2:nano_electric_furnace", "ascension_ic2:quantum_electric_furnace",
@@ -119,7 +159,7 @@ $allIds = @(
 
 for ($tier = 6; $tier -le 14; $tier++) {
     $id = "energy_cable_$tier"
-    Write-SimpleBlock $id "ascension_ic2:block/energy_cable"
+    Write-CableBlock $id
     $allIds += "ascension_ic2:$id"
 }
 

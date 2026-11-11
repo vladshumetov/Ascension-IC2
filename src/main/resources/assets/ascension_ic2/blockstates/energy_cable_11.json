@@ -1,7 +1,7 @@
 {
     "variants":  {
                      "":  {
-                              "model":  "ascension_ic2:block/energy_cable_11"
+                              "model":  "ascension_ic2:block/energy_cable"
                           }
                  }
 }
