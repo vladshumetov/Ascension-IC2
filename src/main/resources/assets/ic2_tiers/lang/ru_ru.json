@@ -1,5 +1,6 @@
 {
   "itemGroup.ic2_tiers.main": "IC2: Тиры",
+  "gui.ic2_tiers.nano": "НАНО",
   "block.ic2_tiers.nano_macerator": "Нано-дробитель",
   "block.ic2_tiers.nano_electric_furnace": "Нано-электропечь",
   "block.ic2_tiers.nano_compressor": "Нано-сжиматель",

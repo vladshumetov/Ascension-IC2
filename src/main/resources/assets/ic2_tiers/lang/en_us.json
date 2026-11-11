@@ -1,5 +1,6 @@
 {
   "itemGroup.ic2_tiers.main": "IC2 Tiers",
+  "gui.ic2_tiers.nano": "NANO",
   "block.ic2_tiers.nano_macerator": "Nano Macerator",
   "block.ic2_tiers.nano_electric_furnace": "Nano Electric Furnace",
   "block.ic2_tiers.nano_compressor": "Nano Compressor",

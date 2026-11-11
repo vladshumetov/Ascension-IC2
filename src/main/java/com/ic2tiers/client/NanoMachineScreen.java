@@ -16,9 +16,9 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
     public NanoMachineScreen(
             NanoMachineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageWidth = 176;
-        this.imageHeight = 166;
-        this.inventoryLabelY = 74;
+        this.imageWidth = 188;
+        this.imageHeight = 174;
+        this.inventoryLabelY = 76;
     }
 
     @Override
@@ -32,14 +32,36 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
             if (progress > 0) {
                 guiGraphics.blit(
                         TEXTURE,
-                        this.leftPos + 61 + lane * 18,
+                        this.leftPos + 62 + lane * 24,
                         this.topPos + 37,
-                        176,
+                        192,
                         0,
                         16,
                         progress);
             }
         }
+    }
+
+    @Override
+    protected void renderLabels(
+            GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        String title = this.title.getString();
+        int titleX = (this.imageWidth - this.font.width(title)) / 2;
+        guiGraphics.drawString(this.font, title, titleX, 4, 0xFFF2D38A, true);
+        guiGraphics.drawString(
+                this.font,
+                Component.translatable("gui.ic2_tiers.nano").getString(),
+                8,
+                4,
+                0xFF64E6F2,
+                true);
+        guiGraphics.drawString(
+                this.font,
+                Component.translatable("container.inventory").getString(),
+                8,
+                this.inventoryLabelY,
+                0xFF8FA6BC,
+                false);
     }
 
     @Override

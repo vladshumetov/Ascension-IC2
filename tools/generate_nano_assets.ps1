@@ -245,68 +245,94 @@ Write-JsonFile (Join-Path $tagBlockDir "needs_iron_tool.json") @{
 $guiDir = Join-Path $assets "textures\gui"
 New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
 
+$guiW = 188
+$guiH = 174
 $gui = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
 
-Rect $gui 0 0 175 165 '#C6C6C6'
-Border $gui 0 0 175 165 '#373737'
-Border $gui 1 1 174 164 '#FFFFFF'
+$gradient = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+    (New-Object System.Drawing.Rectangle(0, 0, $guiW, $guiH)),
+    (C '#182230'), (C '#2C394A'), 90.0)
+$guiGraphics.FillRectangle($gradient, 0, 0, $guiW, $guiH)
+$gradient.Dispose()
 
-function Draw-GuiSlot($bmp, [int]$x, [int]$y) {
-    Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#8B8B8B'
-    Border $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#373737'
-    Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y - 1) '#FFFFFF'
-    Rect $bmp ($x - 1) ($y - 1) ($x - 1) ($y + 16) '#FFFFFF'
-    Rect $bmp ($x - 1) ($y + 16) ($x + 16) ($y + 16) '#555555'
-    Rect $bmp ($x + 16) ($y - 1) ($x + 16) ($y + 16) '#555555'
+Border $gui 0 0 ($guiW - 1) ($guiH - 1) '#05080C'
+Border $gui 1 1 ($guiW - 2) ($guiH - 2) '#05080C'
+Border $gui 2 2 ($guiW - 3) ($guiH - 3) '#C9A45C'
+Border $gui 3 3 ($guiW - 4) ($guiH - 4) '#334255'
+Border $gui 4 4 ($guiW - 5) ($guiH - 5) '#4A5C72'
+
+foreach ($p in @(@(5, 5), @(($guiW - 6), 5), @(5, ($guiH - 6)), @(($guiW - 6), ($guiH - 6)))) {
+    Rect $gui $p[0] $p[1] ($p[0] + 2) ($p[1] + 2) '#64E6F2'
+}
+
+# Player inventory panel
+Rect $gui 4 84 ($guiW - 5) ($guiH - 4) '#1B2532'
+Border $gui 4 84 ($guiW - 5) ($guiH - 4) '#334255'
+Border $gui 5 85 ($guiW - 6) ($guiH - 5) '#243140'
+
+# Machine panel
+Rect $gui 48 12 139 78 '#141C26'
+Border $gui 48 12 139 78 '#3A4B5F'
+Rect $gui 49 13 138 13 '#1F2B3A'
+Rect $gui 48 74 48 78 '#64E6F2'
+Rect $gui 139 74 139 78 '#64E6F2'
+
+# Title underline
+Rect $gui 8 12 179 12 '#C9A45C'
+Rect $gui 8 13 179 13 '#6E5A32'
+
+function Draw-PlayerSlot($bmp, [int]$x, [int]$y) {
+    Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#0D141C'
+    Border $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#263445'
+    Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y - 1) '#3D4E62'
+    Rect $bmp ($x - 1) ($y - 1) ($x - 1) ($y + 16) '#3D4E62'
+    Rect $bmp ($x - 1) ($y + 16) ($x + 16) ($y + 16) '#05080C'
+    Rect $bmp ($x + 16) ($y - 1) ($x + 16) ($y + 16) '#05080C'
+}
+
+function Draw-MachineSlot($bmp, [int]$x, [int]$y) {
+    Rect $bmp ($x - 3) ($y - 3) ($x + 18) ($y + 18) '#0A0F15'
+    Border $bmp ($x - 3) ($y - 3) ($x + 18) ($y + 18) '#C9A45C'
+    Rect $bmp ($x - 2) ($y - 2) ($x + 17) ($y + 17) '#0D141C'
+    Border $bmp ($x - 2) ($y - 2) ($x + 17) ($y + 17) '#263445'
+    Rect $bmp ($x - 2) ($y - 2) ($x + 15) ($y - 2) '#4A5C72'
+    Rect $bmp ($x - 2) ($y - 2) ($x - 2) ($y + 15) '#4A5C72'
+    Rect $bmp ($x - 2) ($y + 17) ($x + 17) ($y + 17) '#05080C'
+    Rect $bmp ($x + 17) ($y - 2) ($x + 17) ($y + 17) '#05080C'
+    Rect $bmp ($x - 3) ($y - 3) ($x - 1) ($y - 3) '#64E6F2'
+    Rect $bmp ($x - 3) ($y - 3) ($x - 3) ($y - 1) '#64E6F2'
 }
 
 foreach ($i in 0..2) {
-    Draw-GuiSlot $gui (61 + $i * 18) 17
-    Draw-GuiSlot $gui (61 + $i * 18) 57
+    Draw-MachineSlot $gui (62 + $i * 24) 17
+    Draw-MachineSlot $gui (62 + $i * 24) 56
 }
 foreach ($row in 0..2) {
     foreach ($col in 0..8) {
-        Draw-GuiSlot $gui (8 + $col * 18) (84 + $row * 18)
+        Draw-PlayerSlot $gui (6 + $col * 20) (86 + $row * 22)
     }
 }
 foreach ($col in 0..8) {
-    Draw-GuiSlot $gui (8 + $col * 18) 142
+    Draw-PlayerSlot $gui (6 + $col * 20) 152
 }
 
-$arrowPen = New-Object System.Drawing.Pen((C '#373737'), 1)
-$arrowBrush = New-Object System.Drawing.SolidBrush((C '#8B8B8B'))
-$progressBrush = New-Object System.Drawing.SolidBrush((C '#55D6E8'))
-$highlightPen = New-Object System.Drawing.Pen((C '#E8FCFF'), 1)
-
-foreach ($arrowX in @(61, 79, 97)) {
-    Rect $gui ($arrowX + 6) 37 ($arrowX + 9) 45 '#8B8B8B'
-    Border $gui ($arrowX + 6) 37 ($arrowX + 9) 45 '#373737'
-    $head = @(
-        (New-Object System.Drawing.Point(($arrowX + 2), 45)),
-        (New-Object System.Drawing.Point(($arrowX + 13), 45)),
-        (New-Object System.Drawing.Point(($arrowX + 8), 52))
-    )
-    $guiGraphics.FillPolygon($arrowBrush, $head)
-    $guiGraphics.DrawPolygon($arrowPen, $head)
+foreach ($x in @(62, 86, 110)) {
+    Rect $gui ($x + 4) 37 ($x + 11) 52 '#0A1018'
+    Border $gui ($x + 4) 37 ($x + 11) 52 '#263445'
+    Rect $gui ($x + 7) 39 ($x + 8) 50 '#1E4B57'
 }
 
-# Vertical progress overlay, 16x16 at (176, 0).
-Rect $gui 182 0 185 8 '#55D6E8'
-Rect $gui 182 0 182 8 '#E8FCFF'
-$progressHead = @(
-    (New-Object System.Drawing.Point(178, 8)),
-    (New-Object System.Drawing.Point(189, 8)),
-    (New-Object System.Drawing.Point(184, 15))
-)
-$guiGraphics.FillPolygon($progressBrush, $progressHead)
-$guiGraphics.DrawLine($highlightPen, 184, 8, 184, 14)
+# Vertical progress overlay: 16x16 at (192, 0).
+Rect $gui 198 0 201 10 '#4FE3F2'
+Rect $gui 198 0 199 10 '#B9F6FF'
+foreach ($y in 10..15) {
+    $half = $y - 9
+    Rect $gui (198 - $half) $y (201 + $half) $y '#4FE3F2'
+}
+Rect $gui 198 10 199 15 '#B9F6FF'
 
-$arrowPen.Dispose()
-$arrowBrush.Dispose()
-$progressBrush.Dispose()
-$highlightPen.Dispose()
 $guiGraphics.Dispose()
 Save $gui (Join-Path $guiDir "nano_machine.png")
 
