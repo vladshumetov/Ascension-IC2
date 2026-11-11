@@ -212,15 +212,14 @@ try {
         }
 
         Write-JsonFile (Join-Path $recipeDir "$id.json") @{
-            type = "minecraft:crafting_shapeless"
+            type = "minecraft:crafting_shaped"
             category = "misc"
-            ingredients = @(
-                @{ item = "ascension_ic2:nano_base" }
-                @{ item = $($machine.Base) }
-                @{ item = $($machine.Base) }
-                @{ item = "ascension_ic2:nano_circuit" }
-                @{ item = "ascension_ic2:nano_circuit" }
-            )
+            pattern = @(" M ", "XBX", " M ")
+            key = @{
+                M = @{ item = $($machine.Base) }
+                X = @{ item = "ascension_ic2:nano_circuit" }
+                B = @{ item = "ascension_ic2:nano_casing" }
+            }
             result = @{
                 id = "ascension_ic2:${id}"
                 count = 1

@@ -1,25 +1,24 @@
 {
-    "ingredients":  [
-                        {
-                            "item":  "ascension_ic2:quantum_base"
-                        },
-                        {
-                            "item":  "ascension_ic2:nano_macerator"
-                        },
-                        {
-                            "item":  "ascension_ic2:nano_macerator"
-                        },
-                        {
-                            "item":  "ascension_ic2:quantum_circuit"
-                        },
-                        {
-                            "item":  "ascension_ic2:quantum_circuit"
-                        }
-                    ],
+    "key":  {
+                "M":  {
+                          "item":  "ascension_ic2:nano_macerator"
+                      },
+                "B":  {
+                          "item":  "ascension_ic2:quantum_casing"
+                      },
+                "X":  {
+                          "item":  "ascension_ic2:quantum_circuit"
+                      }
+            },
     "category":  "misc",
+    "pattern":  [
+                    " M ",
+                    "XBX",
+                    " M "
+                ],
     "result":  {
                    "id":  "ascension_ic2:quantum_macerator",
                    "count":  1
                },
-    "type":  "minecraft:crafting_shapeless"
+    "type":  "minecraft:crafting_shaped"
 }

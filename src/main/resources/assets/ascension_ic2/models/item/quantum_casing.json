@@ -1,6 +1,6 @@
 {
     "textures":  {
-                     "layer0":  "ascension_ic2:item/nano_base"
+                     "layer0":  "ascension_ic2:item/quantum_casing"
                  },
     "parent":  "minecraft:item/generated"
 }

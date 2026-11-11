@@ -130,15 +130,14 @@ foreach ($machine in $machines) {
     }
 
     Write-JsonFile (Join-Path $recipeDir "$id.json") @{
-        type = "minecraft:crafting_shapeless"
+        type = "minecraft:crafting_shaped"
         category = "misc"
-        ingredients = @(
-            @{ item = "ascension_ic2:quantum_base" }
-            @{ item = "ascension_ic2:$nano" }
-            @{ item = "ascension_ic2:$nano" }
-            @{ item = "ascension_ic2:quantum_circuit" }
-            @{ item = "ascension_ic2:quantum_circuit" }
-        )
+        pattern = @(" M ", "XBX", " M ")
+        key = @{
+            M = @{ item = "ascension_ic2:$nano" }
+            X = @{ item = "ascension_ic2:quantum_circuit" }
+            B = @{ item = "ascension_ic2:quantum_casing" }
+        }
         result = @{
             id = "ascension_ic2:${id}"
             count = 1
