@@ -129,6 +129,12 @@ public final class AscensionIC2 {
                     () -> new ItemStack(MACHINES.getFirst().item().get()),
                     AscensionIC2::fillTab);
 
+    public static final DeferredItem<Item> NANO_BASE =
+            CONTENT.registerItem("nano_base", () -> new Item(new Item.Properties()));
+
+    public static final DeferredItem<Item> QUANTUM_BASE =
+            CONTENT.registerItem("quantum_base", () -> new Item(new Item.Properties()));
+
     public static final DeferredItem<Item> NANO_CIRCUIT =
             CONTENT.registerItem("nano_circuit", () -> new Item(new Item.Properties()));
 
@@ -148,6 +154,8 @@ public final class AscensionIC2 {
         for (MachineRegistration registration : MACHINES) {
             output.accept(registration.item().get());
         }
+        output.accept(NANO_BASE.get());
+        output.accept(QUANTUM_BASE.get());
         output.accept(NANO_CIRCUIT.get());
         output.accept(QUANTUM_CIRCUIT.get());
     }

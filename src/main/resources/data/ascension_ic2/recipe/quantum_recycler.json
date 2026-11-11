@@ -1,24 +1,25 @@
 {
-    "key":  {
-                "Q":  {
-                          "item":  "ascension_ic2:quantum_circuit"
-                      },
-                "I":  {
-                          "item":  "ic2:iridium"
-                      },
-                "N":  {
-                          "item":  "ascension_ic2:nano_recycler"
-                      }
-            },
+    "ingredients":  [
+                        {
+                            "item":  "ascension_ic2:quantum_base"
+                        },
+                        {
+                            "item":  "ascension_ic2:nano_recycler"
+                        },
+                        {
+                            "item":  "ascension_ic2:nano_recycler"
+                        },
+                        {
+                            "item":  "ascension_ic2:quantum_circuit"
+                        },
+                        {
+                            "item":  "ascension_ic2:quantum_circuit"
+                        }
+                    ],
     "category":  "misc",
-    "pattern":  [
-                    "QIQ",
-                    "INI",
-                    "QIQ"
-                ],
     "result":  {
                    "id":  "ascension_ic2:quantum_recycler",
                    "count":  1
                },
-    "type":  "minecraft:crafting_shaped"
+    "type":  "minecraft:crafting_shapeless"
 }

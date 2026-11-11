@@ -1,0 +1,37 @@
+{
+    "ingredients":  [
+                        {
+                            "item":  "ic2:advanced_machine"
+                        },
+                        {
+                            "item":  "ic2:iridium"
+                        },
+                        {
+                            "item":  "ic2:iridium"
+                        },
+                        {
+                            "item":  "ic2:iridium"
+                        },
+                        {
+                            "item":  "ic2:iridium"
+                        },
+                        {
+                            "item":  "ic2:alloy"
+                        },
+                        {
+                            "item":  "ic2:alloy"
+                        },
+                        {
+                            "item":  "ic2:alloy"
+                        },
+                        {
+                            "item":  "ic2:alloy"
+                        }
+                    ],
+    "category":  "misc",
+    "result":  {
+                   "id":  "ascension_ic2:quantum_base",
+                   "count":  1
+               },
+    "type":  "minecraft:crafting_shapeless"
+}

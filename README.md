@@ -30,14 +30,20 @@ Nano and Quantum tiers:
 The machines use the standard IC2 recipes, so they stay compatible with existing packs and
 recipe managers.
 
-## Circuits
+## Machine frames and circuits
 
-Each tier has its own circuit, crafted from the previous tier:
+Each tier has its own machine frame and its own circuit:
 
+- **Nano Machine Frame** — advanced machine casing, carbon plates and advanced alloy.
+- **Quantum Machine Frame** — advanced machine casing, iridium and advanced alloy.
 - **Nano Circuit** — carbon plates, gold and an advanced circuit.
 - **Quantum Circuit** — advanced alloy, lapotron crystals, iridium and a nano circuit.
 
-Machines require the circuit of their tier, so a quantum machine is a real endgame build.
+Machine recipes combine the frame of the tier, two machines of the previous tier and two
+circuits, for example:
+
+- Nano Macerator = Nano Machine Frame + 2 Macerators + 2 Nano Circuits.
+- Quantum Macerator = Quantum Machine Frame + 2 Nano Macerators + 2 Quantum Circuits.
 
 ## Upgrades
 

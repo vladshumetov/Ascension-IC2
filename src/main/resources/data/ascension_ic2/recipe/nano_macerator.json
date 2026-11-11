@@ -1,24 +1,25 @@
 {
-    "key":  {
-                "C":  {
-                          "item":  "ascension_ic2:nano_circuit"
-                      },
-                "M":  {
-                          "item":  "ic2:macerator"
-                      },
-                "I":  {
-                          "item":  "ic2:iridium"
-                      }
-            },
+    "ingredients":  [
+                        {
+                            "item":  "ascension_ic2:nano_base"
+                        },
+                        {
+                            "item":  "ic2:macerator"
+                        },
+                        {
+                            "item":  "ic2:macerator"
+                        },
+                        {
+                            "item":  "ascension_ic2:nano_circuit"
+                        },
+                        {
+                            "item":  "ascension_ic2:nano_circuit"
+                        }
+                    ],
     "category":  "misc",
-    "pattern":  [
-                    "ICI",
-                    "CMC",
-                    "ICI"
-                ],
     "result":  {
                    "id":  "ascension_ic2:nano_macerator",
                    "count":  1
                },
-    "type":  "minecraft:crafting_shaped"
+    "type":  "minecraft:crafting_shapeless"
 }

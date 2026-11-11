@@ -12,6 +12,8 @@
   "block.ascension_ic2.quantum_recycler": "Quantum Recycler",
   "item.ascension_ic2.nano_circuit": "Nano Circuit",
   "item.ascension_ic2.quantum_circuit": "Quantum Circuit",
+  "item.ascension_ic2.nano_base": "Nano Machine Frame",
+  "item.ascension_ic2.quantum_base": "Quantum Machine Frame",
   "gui.ascension_ic2.energy": "Energy: %s / %s EU",
   "gui.ascension_ic2.progress": "Progress: %s%%",
   "tooltip.ascension_ic2.energy_tier": "Energy tier: %s (input %s EU/t)",

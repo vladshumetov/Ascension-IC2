@@ -12,6 +12,8 @@
   "block.ascension_ic2.quantum_recycler": "Квантовый утилизатор",
   "item.ascension_ic2.nano_circuit": "Нано-схема",
   "item.ascension_ic2.quantum_circuit": "Квантовая схема",
+  "item.ascension_ic2.nano_base": "Нано-основа",
+  "item.ascension_ic2.quantum_base": "Квантовая основа",
   "gui.ascension_ic2.energy": "Энергия: %s / %s EU",
   "gui.ascension_ic2.progress": "Прогресс: %s%%",
   "tooltip.ascension_ic2.energy_tier": "Уровень энергии: %s (вход %s EU/t)",
