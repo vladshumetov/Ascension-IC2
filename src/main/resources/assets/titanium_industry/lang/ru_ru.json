@@ -1,0 +1,10 @@
+{
+  "itemGroup.titanium_industry.main": "Титановая индустрия",
+  "block.titanium_industry.titanium_refiner": "Титановый рафинадор",
+  "block.titanium_industry.bio_generator": "Биомассовый генератор",
+  "block.titanium_industry.titanium_block": "Титановый блок",
+  "item.titanium_industry.titanium_ingot": "Титановый слиток",
+  "item.titanium_industry.titanium_dust": "Титановая пыль",
+  "item.titanium_industry.titanium_plate": "Титановая пластина",
+  "item.titanium_industry.titanium_drill": "Титановый бур"
+}

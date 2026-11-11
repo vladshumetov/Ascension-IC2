@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+displayName = "Titanium Industry"
+logoFile = "logo.png"
+authors = "Titanium Industry"
+description = '''
+An add-on for IC2 Rebranded that adds titanium processing, a titanium refiner machine, a biomass generator and an electric drill.
+'''
+
+[[dependencies.titanium_industry]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.titanium_industry]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.22)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.titanium_industry]]
+modId = "ic2"
+type = "required"
+versionRange = "[1.0.3,)"
+ordering = "AFTER"
+side = "BOTH"

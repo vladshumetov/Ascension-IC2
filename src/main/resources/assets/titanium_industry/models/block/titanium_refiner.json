@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "titanium_industry:block/machine_side",
+    "down": "titanium_industry:block/machine_top",
+    "up": "titanium_industry:block/machine_top",
+    "north": "titanium_industry:block/titanium_refiner_front",
+    "south": "titanium_industry:block/machine_side",
+    "west": "titanium_industry:block/machine_side",
+    "east": "titanium_industry:block/machine_side"
+  }
+}

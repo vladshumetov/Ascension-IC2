@@ -1,0 +1,10 @@
+{
+  "itemGroup.titanium_industry.main": "Titanium Industry",
+  "block.titanium_industry.titanium_refiner": "Titanium Refiner",
+  "block.titanium_industry.bio_generator": "Biomass Generator",
+  "block.titanium_industry.titanium_block": "Block of Titanium",
+  "item.titanium_industry.titanium_ingot": "Titanium Ingot",
+  "item.titanium_industry.titanium_dust": "Titanium Dust",
+  "item.titanium_industry.titanium_plate": "Titanium Plate",
+  "item.titanium_industry.titanium_drill": "Titanium Drill"
+}

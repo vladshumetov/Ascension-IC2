@@ -1,0 +1,9 @@
+{
+  "type": "ic2:macerator",
+  "ingredient": {
+    "item": "titanium_industry:titanium_ingot"
+  },
+  "result": {
+    "item": "titanium_industry:titanium_dust"
+  }
+}

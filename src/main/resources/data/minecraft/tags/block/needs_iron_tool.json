@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "titanium_industry:titanium_refiner",
+    "titanium_industry:bio_generator",
+    "titanium_industry:titanium_block"
+  ]
+}

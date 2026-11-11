@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "titanium_industry:titanium_dust"
+  },
+  "result": {
+    "id": "titanium_industry:titanium_ingot"
+  },
+  "experience": 0.7,
+  "cookingtime": 200
+}
