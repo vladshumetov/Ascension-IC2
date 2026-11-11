@@ -2,10 +2,8 @@ package com.ascension_ic2.energy;
 
 import ic2.api.block.IAddonServerTickable;
 import ic2.api.energy.EnergyNet;
-import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergySource;
 import ic2.api.info.ILocatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +20,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
  * from {@link EnergyTiers} (1-14), which is required for tiers above the IC2 limit of 5.
  */
 public abstract class TierEnergyBlockEntity extends BlockEntity
-        implements IEnergySink, IEnergySource, ILocatable, IAddonServerTickable {
+        implements IEnergySink, ILocatable, IAddonServerTickable {
     public static final double FE_PER_EU = 2.0;
 
     private final int tier;
@@ -127,11 +125,6 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
     }
 
     @Override
-    public boolean emitsEnergyTo(IEnergyAcceptor acceptor, Direction side) {
-        return true;
-    }
-
-    @Override
     public double getDemandedEnergy() {
         return Math.min(availableInputThisTick(), Math.max(0.0, this.capacity - this.stored));
     }
@@ -179,29 +172,6 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
                 this.worldPosition.getZ() + 0.5,
                 3.0F,
                 Level.ExplosionInteraction.BLOCK);
-    }
-
-    @Override
-    public double getOfferedEnergy() {
-        return Math.min(this.stored, availableOutputThisTick());
-    }
-
-    @Override
-    public void drawEnergy(double amount) {
-        if (amount <= 0.0 || !Double.isFinite(amount)) {
-            return;
-        }
-        double drawn = Math.min(amount, Math.min(this.stored, availableOutputThisTick()));
-        if (drawn > 0.0) {
-            this.stored = Math.max(0.0, this.stored - drawn);
-            this.outputUsedThisTick += drawn;
-            setChanged();
-        }
-    }
-
-    @Override
-    public int getSourceTier() {
-        return this.tier;
     }
 
     private void beginTransferTick() {
@@ -348,7 +318,7 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
 
         @Override
         public boolean canExtract() {
-            return true;
+            return false;
         }
 
         @Override

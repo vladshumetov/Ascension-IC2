@@ -4,6 +4,7 @@ import com.ascension_ic2.config.TiersConfig;
 import com.ascension_ic2.energy.EnergyCableBlock;
 import com.ascension_ic2.energy.EnergyCableBlockEntity;
 import com.ascension_ic2.energy.EnergyTiers;
+import com.ascension_ic2.energy.SolarPanelBlock;
 import com.ascension_ic2.energy.SolarPanelBlockEntity;
 import com.ascension_ic2.event.MachineEvents;
 import com.ascension_ic2.machine.MachineTier;
@@ -127,7 +128,12 @@ public final class AscensionIC2 {
         DeferredBlock<Block> block =
                 CONTENT.registerBlock(
                         id,
-                        EnergyCableBlock::new,
+                        properties ->
+                                new EnergyCableBlock(
+                                        properties,
+                                        (pos, state) ->
+                                                new EnergyCableBlockEntity(
+                                                        tier, holder[0].get(), pos, state)),
                         BlockBehaviour.Properties.of()
                                 .strength(0.4F)
                                 .sound(SoundType.GLASS));
@@ -149,7 +155,12 @@ public final class AscensionIC2 {
         DeferredBlock<Block> block =
                 CONTENT.registerBlock(
                         id,
-                        Block::new,
+                        properties ->
+                                new SolarPanelBlock(
+                                        properties,
+                                        (pos, state) ->
+                                                new SolarPanelBlockEntity(
+                                                        tier, holder[0].get(), pos, state)),
                         BlockBehaviour.Properties.of()
                                 .strength(3.0F, 6.0F)
                                 .requiresCorrectToolForDrops()

@@ -150,11 +150,6 @@ public class TierMachineBlockEntity extends TierEnergyBlockEntity
         return super.getSinkTier() + this.extraTier;
     }
 
-    @Override
-    public int getSourceTier() {
-        return super.getSourceTier() + this.extraTier;
-    }
-
     // ---------- IC2 upgrades ----------
 
     @Override
