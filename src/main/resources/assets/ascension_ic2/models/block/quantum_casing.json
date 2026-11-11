@@ -1,6 +1,6 @@
 {
     "textures":  {
-                     "all":  "ic2:block/resource/advanced_machine"
+                     "all":  "ascension_ic2:block/quantum_casing"
                  },
     "parent":  "minecraft:block/cube_all"
 }

@@ -1,6 +1,6 @@
 {
     "textures":  {
-                     "all":  "ic2:block/resource/machine"
+                     "all":  "ascension_ic2:block/nano_casing"
                  },
     "parent":  "minecraft:block/cube_all"
 }
