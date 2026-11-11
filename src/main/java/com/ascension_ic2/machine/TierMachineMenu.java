@@ -1,4 +1,4 @@
-package com.ascension_ic2.nano;
+package com.ascension_ic2.machine;
 
 import com.ascension_ic2.AscensionIC2;
 import net.minecraft.core.BlockPos;
@@ -15,51 +15,65 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class NanoMachineMenu extends AbstractContainerMenu {
-    public static final int MACHINE_SLOTS = NanoMachineBlockEntity.SLOT_COUNT;
-    public static final int INPUT_SLOTS = NanoMachineBlockEntity.INPUT_SLOTS;
-
-    private static final int DATA_PROGRESS = 0;
-    private static final int DATA_MAX_PROGRESS = INPUT_SLOTS;
-    private static final int DATA_ENERGY = INPUT_SLOTS + 1;
-    private static final int DATA_CAPACITY = INPUT_SLOTS + 2;
-    private static final int DATA_COUNT = INPUT_SLOTS + 3;
-
+public class TierMachineMenu extends AbstractContainerMenu {
     private static final int[][] UPGRADE_POSITIONS = {{8, 28}, {8, 62}, {216, 28}, {216, 62}};
 
-    private final @Nullable NanoMachineBlockEntity machine;
+    private final MachineTier tier;
+    private final int inputSlots;
+    private final int slotCount;
+    private final int upgradeStart;
+    private final @Nullable TierMachineBlockEntity machine;
     private final Container container;
     private final ContainerData data;
 
-    public NanoMachineMenu(
-            int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        this(containerId, playerInventory, getBlockEntity(playerInventory, buf.readBlockPos()));
+    private final int dataEnergy;
+    private final int dataCapacity;
+
+    public TierMachineMenu(
+            MachineTier tier,
+            int containerId,
+            Inventory playerInventory,
+            RegistryFriendlyByteBuf buf) {
+        this(tier, containerId, playerInventory, getBlockEntity(playerInventory, buf.readBlockPos()));
     }
 
-    public NanoMachineMenu(
-            int containerId, Inventory playerInventory, @Nullable NanoMachineBlockEntity machine) {
-        super(AscensionIC2.NANO_MENU.get(), containerId);
+    public TierMachineMenu(
+            MachineTier tier,
+            int containerId,
+            Inventory playerInventory,
+            @Nullable TierMachineBlockEntity machine) {
+        super(AscensionIC2.menuFor(tier).get(), containerId);
+        if (machine != null) {
+            tier = machine.getTier();
+        }
+        this.tier = tier;
+        this.inputSlots = tier.lanes();
+        this.slotCount = this.inputSlots * 2 + TierMachineBlockEntity.UPGRADE_SLOTS;
+        this.upgradeStart = this.inputSlots * 2;
         this.machine = machine;
         this.container =
-                machine != null ? new MachineContainer(machine) : new SimpleContainer(MACHINE_SLOTS);
+                machine != null ? new MachineContainer(machine) : new SimpleContainer(this.slotCount);
 
+        int dataCount = this.inputSlots + 3;
+        this.dataEnergy = this.inputSlots + 1;
+        this.dataCapacity = this.inputSlots + 2;
         this.data = new ContainerData() {
-            private final int[] values = new int[DATA_COUNT];
+            private final int[] values = new int[dataCount];
 
             @Override
             public int get(int index) {
-                NanoMachineBlockEntity be = NanoMachineMenu.this.machine;
+                TierMachineBlockEntity be = TierMachineMenu.this.machine;
                 if (be != null && be.getLevel() != null && !be.getLevel().isClientSide) {
-                    if (index >= 0 && index < INPUT_SLOTS) {
+                    if (index >= 0 && index < TierMachineMenu.this.inputSlots) {
                         return be.getLaneProgress(index);
                     }
-                    if (index == DATA_MAX_PROGRESS) {
+                    if (index == TierMachineMenu.this.inputSlots) {
                         return be.getLaneProcessingTime();
                     }
-                    if (index == DATA_ENERGY) {
+                    if (index == TierMachineMenu.this.dataEnergy) {
                         return (int) be.getStoredEu();
                     }
-                    if (index == DATA_CAPACITY) {
+                    if (index == TierMachineMenu.this.dataCapacity) {
                         return (int) be.getCapacityEu();
                     }
                     return 0;
@@ -81,28 +95,28 @@ public class NanoMachineMenu extends AbstractContainerMenu {
         };
         this.addDataSlots(this.data);
 
-        for (int i = 0; i < INPUT_SLOTS; i++) {
-            this.addSlot(new Slot(this.container, i, 86 + i * 26, 28));
+        for (int i = 0; i < this.inputSlots; i++) {
+            this.addSlot(new Slot(this.container, i, tier.slotX(i), MachineTier.INPUT_Y));
         }
-        for (int i = 0; i < NanoMachineBlockEntity.OUTPUT_SLOTS; i++) {
+        for (int i = 0; i < this.inputSlots; i++) {
             this.addSlot(
-                    new Slot(this.container, NanoMachineBlockEntity.OUTPUT_START + i, 86 + i * 26, 76) {
+                    new Slot(this.container, this.inputSlots + i, tier.slotX(i), MachineTier.OUTPUT_Y) {
                         @Override
                         public boolean mayPlace(ItemStack stack) {
                             return false;
                         }
                     });
         }
-        for (int i = 0; i < NanoMachineBlockEntity.UPGRADE_SLOTS; i++) {
+        for (int i = 0; i < TierMachineBlockEntity.UPGRADE_SLOTS; i++) {
             this.addSlot(
                     new Slot(
                             this.container,
-                            NanoMachineBlockEntity.UPGRADE_START + i,
+                            this.upgradeStart + i,
                             UPGRADE_POSITIONS[i][0],
                             UPGRADE_POSITIONS[i][1]) {
                         @Override
                         public boolean mayPlace(ItemStack stack) {
-                            return NanoMachineBlockEntity.isUpgrade(stack);
+                            return TierMachineBlockEntity.isUpgrade(stack);
                         }
                     });
         }
@@ -118,40 +132,48 @@ public class NanoMachineMenu extends AbstractContainerMenu {
         }
     }
 
+    public MachineTier getTier() {
+        return this.tier;
+    }
+
+    public int getInputSlots() {
+        return this.inputSlots;
+    }
+
     /** Machine type of the open GUI, or {@code null} if the block entity is unavailable. */
-    public @Nullable NanoMachineKind getKind() {
- return this.machine != null ? this.machine.getKind() : null;
+    public @Nullable TierMachineKind getKind() {
+        return this.machine != null ? this.machine.getKind() : null;
     }
 
     public int getProgressScaled(int lane, int pixels) {
-        if (lane < 0 || lane >= INPUT_SLOTS) {
+        if (lane < 0 || lane >= this.inputSlots) {
             return 0;
         }
-        int progress = this.data.get(DATA_PROGRESS + lane);
-        int max = Math.max(1, this.data.get(DATA_MAX_PROGRESS));
+        int progress = this.data.get(lane);
+        int max = Math.max(1, this.data.get(this.inputSlots));
         return progress * pixels / max;
     }
 
     public int getProgressPercent(int lane) {
-        if (lane < 0 || lane >= INPUT_SLOTS) {
-     return 0;
+        if (lane < 0 || lane >= this.inputSlots) {
+            return 0;
         }
-        int progress = this.data.get(DATA_PROGRESS + lane);
- int max = Math.max(1, this.data.get(DATA_MAX_PROGRESS));
+        int progress = this.data.get(lane);
+        int max = Math.max(1, this.data.get(this.inputSlots));
         return progress * 100 / max;
     }
 
     public int getEnergy() {
-        return this.data.get(DATA_ENERGY);
+        return this.data.get(this.dataEnergy);
     }
 
     public int getCapacity() {
-        return this.data.get(DATA_CAPACITY);
+        return this.data.get(this.dataCapacity);
     }
 
     public int getEnergyScaled(int pixels) {
-        long energy = this.data.get(DATA_ENERGY);
-        long capacity = Math.max(1, this.data.get(DATA_CAPACITY));
+        long energy = this.data.get(this.dataEnergy);
+        long capacity = Math.max(1, this.data.get(this.dataCapacity));
         return (int) Math.min(pixels, energy * pixels / capacity);
     }
 
@@ -164,19 +186,19 @@ public class NanoMachineMenu extends AbstractContainerMenu {
             ItemStack stack = slot.getItem();
             result = stack.copy();
 
-            if (index < MACHINE_SLOTS) {
-                if (!this.moveItemStackTo(stack, MACHINE_SLOTS, this.slots.size(), true)) {
+            if (index < this.slotCount) {
+                if (!this.moveItemStackTo(stack, this.slotCount, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (NanoMachineBlockEntity.isUpgrade(stack)) {
+            } else if (TierMachineBlockEntity.isUpgrade(stack)) {
                 if (!this.moveItemStackTo(
                         stack,
-                        NanoMachineBlockEntity.UPGRADE_START,
-                        NanoMachineBlockEntity.UPGRADE_START + NanoMachineBlockEntity.UPGRADE_SLOTS,
+                        this.upgradeStart,
+                        this.upgradeStart + TierMachineBlockEntity.UPGRADE_SLOTS,
                         false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(stack, 0, INPUT_SLOTS, false)) {
+            } else if (!this.moveItemStackTo(stack, 0, this.inputSlots, false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -203,21 +225,21 @@ public class NanoMachineMenu extends AbstractContainerMenu {
                 && player.distanceToSqr(Vec3.atCenterOf(this.machine.getBlockPos())) <= 64.0;
     }
 
-    private static NanoMachineBlockEntity getBlockEntity(Inventory playerInventory, BlockPos pos) {
+    private static TierMachineBlockEntity getBlockEntity(Inventory playerInventory, BlockPos pos) {
         BlockEntity blockEntity = playerInventory.player.level().getBlockEntity(pos);
-        return blockEntity instanceof NanoMachineBlockEntity nano ? nano : null;
+        return blockEntity instanceof TierMachineBlockEntity machine ? machine : null;
     }
 
     private static final class MachineContainer implements Container {
-        private final NanoMachineBlockEntity machine;
+        private final TierMachineBlockEntity machine;
 
-        private MachineContainer(NanoMachineBlockEntity machine) {
+        private MachineContainer(TierMachineBlockEntity machine) {
             this.machine = machine;
         }
 
         @Override
         public int getContainerSize() {
-            return NanoMachineBlockEntity.SLOT_COUNT;
+            return this.machine.getSlotCount();
         }
 
         @Override

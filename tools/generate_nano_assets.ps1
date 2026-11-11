@@ -231,7 +231,12 @@ finally {
     $zip.Dispose()
 }
 
-$allIds = $machines | ForEach-Object { "ascension_ic2:$($_.Id)" }
+$allIds = @()
+foreach ($m in $machines) {
+    $base = $m.Id -replace '^nano_', ''
+    $allIds += "ascension_ic2:$($m.Id)"
+    $allIds += "ascension_ic2:quantum_$base"
+}
 Write-JsonFile (Join-Path $tagMineableDir "pickaxe.json") @{
     replace = $false
     values = $allIds
@@ -453,8 +458,10 @@ foreach ($src in $progressSources) {
   $sprite.SetPixel($canvasW + $offX + $i, $j, $c)
      }
         }
-        Save $sprite (Join-Path $progressDir "$($src.Id).png")
-        Write-Output "progress $($src.Id): arrow ${w}x${h} at $minx,$miny in $($src.File)"
+        # Arrow shapes are shared by both tiers, so the sprite is named after the machine type.
+        $spriteName = $src.Id -replace '^nano_', ''
+        Save $sprite (Join-Path $progressDir "$spriteName.png")
+        Write-Output "progress ${spriteName}: arrow ${w}x${h} at $minx,$miny in $($src.File)"
     }
     finally {
         $ex.Dispose()

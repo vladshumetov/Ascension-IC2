@@ -1,20 +1,19 @@
-package com.ascension_ic2.nano;
+package com.ascension_ic2.machine;
 
-import com.ascension_ic2.config.TiersConfig;
 import ic2.api.block.AddonMachineBlockEntity;
 import ic2.core.block.machine.tileentity.TileEntityRecycler;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -22,37 +21,69 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements MenuProvider {
-    public static final int INPUT_SLOTS = 3;
-    public static final int OUTPUT_SLOTS = 3;
-    public static final int OUTPUT_START = INPUT_SLOTS;
-    public static final int UPGRADE_START = INPUT_SLOTS + OUTPUT_SLOTS;
+public class TierMachineBlockEntity extends AddonMachineBlockEntity implements MenuProvider {
     public static final int UPGRADE_SLOTS = 4;
-    public static final int SLOT_COUNT = UPGRADE_START + UPGRADE_SLOTS;
 
     private static final TagKey<Item> UPGRADE_TAG =
-     TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("ascension_ic2", "upgrades"));
+            TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("ascension_ic2", "upgrades"));
 
     public static boolean isUpgrade(ItemStack stack) {
         return stack.is(UPGRADE_TAG);
     }
 
-    private final NanoMachineKind kind;
-    private final NanoInventory inventory = new NanoInventory();
-    private final int[] laneProgress = new int[INPUT_SLOTS];
-    private final ItemStack[] laneInput = new ItemStack[INPUT_SLOTS];
+    private final MachineTier tier;
+    private final TierMachineKind kind;
+    private final int inputSlots;
+    private final int outputStart;
+    private final int upgradeStart;
+    private final int slotCount;
+    private final TierInventory inventory;
+    private final int[] laneProgress;
+    private final ItemStack[] laneInput;
 
-    public NanoMachineBlockEntity(
-            NanoMachineKind kind, BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state, 5, 1_000_000.0, 8192.0, 0.0);
+    public TierMachineBlockEntity(
+            MachineTier tier,
+            TierMachineKind kind,
+            BlockEntityType<?> type,
+            BlockPos pos,
+            BlockState state) {
+        super(type, pos, state, tier.energyTier(), tier.capacity(), tier.maxTransfer(), 0.0);
+        this.tier = tier;
         this.kind = kind;
-        for (int lane = 0; lane < INPUT_SLOTS; lane++) {
+        this.inputSlots = tier.lanes();
+        this.outputStart = this.inputSlots;
+        this.upgradeStart = this.inputSlots * 2;
+        this.slotCount = this.upgradeStart + UPGRADE_SLOTS;
+        this.inventory = new TierInventory(this.slotCount);
+        this.laneProgress = new int[this.inputSlots];
+        this.laneInput = new ItemStack[this.inputSlots];
+        for (int lane = 0; lane < this.inputSlots; lane++) {
             this.laneInput[lane] = ItemStack.EMPTY;
         }
     }
 
-    public NanoMachineKind getKind() {
+    public MachineTier getTier() {
+        return this.tier;
+    }
+
+    public TierMachineKind getKind() {
         return this.kind;
+    }
+
+    public int getInputSlots() {
+        return this.inputSlots;
+    }
+
+    public int getOutputStart() {
+        return this.outputStart;
+    }
+
+    public int getUpgradeStart() {
+        return this.upgradeStart;
+    }
+
+    public int getSlotCount() {
+        return this.slotCount;
     }
 
     @Override
@@ -65,7 +96,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
     }
 
     public int getLaneProgress(int lane) {
-        if (lane < 0 || lane >= INPUT_SLOTS) {
+        if (lane < 0 || lane >= this.inputSlots) {
             return 0;
         }
         return Math.min(this.laneProgress[lane], getLaneProcessingTime());
@@ -82,7 +113,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
             return false;
         }
 
-        for (int lane = 0; lane < INPUT_SLOTS; lane++) {
+        for (int lane = 0; lane < this.inputSlots; lane++) {
             if (canProcessLane(lane)) {
                 return true;
             }
@@ -104,7 +135,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
         }
         this.laneInput[lane] = input.copyWithCount(1);
 
-        NanoMachineKind.RecipePlan plan = this.kind.getRecipe(this.level, input);
+        MachineRecipePlan plan = this.kind.getRecipe(this.level, input);
         if (plan.isEmpty() || input.getCount() < plan.inputAmount()) {
             this.laneProgress[lane] = 0;
             return false;
@@ -122,7 +153,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
         int time = getLaneProcessingTime();
         boolean changed = false;
 
-        for (int lane = 0; lane < INPUT_SLOTS; lane++) {
+        for (int lane = 0; lane < this.inputSlots; lane++) {
             if (!canProcessLane(lane)) {
                 continue;
             }
@@ -144,8 +175,8 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
     }
 
     private void processLane(int lane) {
-        int remaining = TiersConfig.NANO_ITEMS_PER_OPERATION.get();
-        int outputSlot = OUTPUT_START + lane;
+        int remaining = this.tier.itemsPerOperation();
+        int outputSlot = this.outputStart + lane;
         boolean changed = false;
 
         while (remaining > 0) {
@@ -154,7 +185,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
                 break;
             }
 
-            NanoMachineKind.RecipePlan plan = this.kind.getRecipe(this.level, input);
+            MachineRecipePlan plan = this.kind.getRecipe(this.level, input);
             if (plan.isEmpty() || input.getCount() < plan.inputAmount()) {
                 break;
             }
@@ -163,7 +194,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
             }
 
             this.inventory.extractInput(lane, plan.inputAmount(), false);
-            if (this.kind != NanoMachineKind.RECYCLER || rollRecyclerChance()) {
+            if (!this.kind.isRecycler() || rollRecyclerChance()) {
                 for (ItemStack output : plan.outputs()) {
                     ItemStack remainder = this.inventory.insertOutput(outputSlot, output.copy(), false);
                     if (!remainder.isEmpty()) {
@@ -186,7 +217,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
 
     private boolean canFitLaneOutput(int lane, List<ItemStack> outputs) {
         ItemStack[] simulated = new ItemStack[] {
-            this.inventory.getStackInSlot(OUTPUT_START + lane).copy()
+            this.inventory.getStackInSlot(this.outputStart + lane).copy()
         };
 
         for (ItemStack output : outputs) {
@@ -249,7 +280,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
     @Override
     public AbstractContainerMenu createMenu(
             int containerId, Inventory playerInventory, Player player) {
-        return new NanoMachineMenu(containerId, playerInventory, this);
+        return new TierMachineMenu(this.tier, containerId, playerInventory, this);
     }
 
     @Override
@@ -267,7 +298,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
         }
 
         int[] saved = tag.getIntArray("LaneProgress");
-        for (int lane = 0; lane < INPUT_SLOTS && lane < saved.length; lane++) {
+        for (int lane = 0; lane < this.inputSlots && lane < saved.length; lane++) {
             this.laneProgress[lane] = Math.max(0, saved[lane]);
         }
     }
@@ -277,7 +308,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
     }
 
     public void collectDrops(List<ItemStack> drops) {
-        for (int slot = 0; slot < SLOT_COUNT; slot++) {
+        for (int slot = 0; slot < this.slotCount; slot++) {
             ItemStack stack = this.inventory.getStackInSlot(slot);
             if (!stack.isEmpty()) {
                 drops.add(stack.copy());
@@ -285,24 +316,30 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
         }
     }
 
-    private final class NanoInventory extends ItemStackHandler {
-        private NanoInventory() {
-            super(SLOT_COUNT);
+    private final class TierInventory extends ItemStackHandler {
+        private TierInventory(int size) {
+            super(size);
         }
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return slot < INPUT_SLOTS || (slot >= UPGRADE_START && isUpgrade(stack));
+            return slot < TierMachineBlockEntity.this.inputSlots
+                    || (slot >= TierMachineBlockEntity.this.upgradeStart && isUpgrade(stack));
         }
 
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            return (slot < OUTPUT_START || slot >= UPGRADE_START) ? super.insertItem(slot, stack, simulate) : stack;
+            return (slot < TierMachineBlockEntity.this.outputStart
+                            || slot >= TierMachineBlockEntity.this.upgradeStart)
+                    ? super.insertItem(slot, stack, simulate)
+                    : stack;
         }
 
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return slot >= OUTPUT_START ? super.extractItem(slot, amount, simulate) : ItemStack.EMPTY;
+            return slot >= TierMachineBlockEntity.this.outputStart
+                    ? super.extractItem(slot, amount, simulate)
+                    : ItemStack.EMPTY;
         }
 
         private ItemStack insertOutput(int slot, ItemStack stack, boolean simulate) {
@@ -342,7 +379,7 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
 
         @Override
         protected void onContentsChanged(int slot) {
-            NanoMachineBlockEntity.this.setChanged();
+            TierMachineBlockEntity.this.setChanged();
         }
     }
 }

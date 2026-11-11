@@ -5,6 +5,11 @@
   "block.ascension_ic2.nano_compressor": "Нано-сжиматель",
   "block.ascension_ic2.nano_extractor": "Нано-экстрактор",
   "block.ascension_ic2.nano_recycler": "Нано-утилизатор",
+  "block.ascension_ic2.quantum_macerator": "Квантовый дробитель",
+  "block.ascension_ic2.quantum_electric_furnace": "Квантовая электропечь",
+  "block.ascension_ic2.quantum_compressor": "Квантовый сжиматель",
+  "block.ascension_ic2.quantum_extractor": "Квантовый экстрактор",
+  "block.ascension_ic2.quantum_recycler": "Квантовый утилизатор",
   "gui.ascension_ic2.energy": "Энергия: %s / %s EU",
   "gui.ascension_ic2.progress": "Прогресс: %s%%"
 }

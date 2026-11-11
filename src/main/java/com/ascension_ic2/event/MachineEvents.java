@@ -1,6 +1,6 @@
 package com.ascension_ic2.event;
 
-import com.ascension_ic2.nano.NanoMachineBlockEntity;
+import com.ascension_ic2.machine.TierMachineBlockEntity;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +23,7 @@ public final class MachineEvents {
         }
 
         BlockEntity blockEntity = level.getBlockEntity(event.getPos());
-        if (!(blockEntity instanceof NanoMachineBlockEntity machine)) {
+        if (!(blockEntity instanceof TierMachineBlockEntity machine)) {
             return;
         }
 

@@ -1,4 +1,4 @@
-package com.ascension_ic2.nano;
+package com.ascension_ic2.machine;
 
 import ic2.api.recipe.IBasicMachineRecipeManager;
 import ic2.api.recipe.IRecipeInput;
@@ -10,135 +10,99 @@ import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public enum NanoMachineKind {
-    MACERATOR(
-            "macerator",
-            "Nano Macerator",
-            "ic2:macerator",
-            300,
-            2048,
-            (level, input) -> basic(Recipes.macerator, level, input)),
+public enum NanoMachineKind implements TierMachineKind {
+    MACERATOR("macerator", "ic2:macerator", 300, 2048, (level, input) -> basic(Recipes.macerator, level, input)),
     ELECTRIC_FURNACE(
             "electric_furnace",
-            "Nano Electric Furnace",
             "ic2:electric_furnace",
             100,
             3072,
             (level, input) -> furnace(input)),
-    COMPRESSOR(
-            "compressor",
-            "Nano Compressor",
-            "ic2:compressor",
-            300,
-            2048,
-            (level, input) -> basic(Recipes.compressor, level, input)),
-    EXTRACTOR(
-            "extractor",
-            "Nano Extractor",
-            "ic2:extractor",
-            300,
-            2048,
-            (level, input) -> basic(Recipes.extractor, level, input)),
-    RECYCLER(
-            "recycler",
-            "Nano Recycler",
-            "ic2:recycler",
-            45,
-            1024,
-            (level, input) -> basic(Recipes.recycler, input));
+    COMPRESSOR("compressor", "ic2:compressor", 300, 2048, (level, input) -> basic(Recipes.compressor, level, input)),
+    EXTRACTOR("extractor", "ic2:extractor", 300, 2048, (level, input) -> basic(Recipes.extractor, level, input)),
+    RECYCLER("recycler", "ic2:recycler", 45, 1024, (level, input) -> basic(Recipes.recycler, input));
 
-    public record RecipePlan(int inputAmount, List<ItemStack> outputs) {
-        public static final RecipePlan EMPTY = new RecipePlan(0, List.of());
-
-        public boolean isEmpty() {
-            return this.inputAmount <= 0 || this.outputs.isEmpty();
-        }
-    }
-
-    @FunctionalInterface
-    public interface RecipeLookup {
-        RecipePlan getRecipe(Level level, ItemStack input);
-    }
-
+    private final String baseId;
     private final String id;
-    private final String displayName;
     private final String baseMachineId;
     private final int processingTicks;
     private final int energyPerTick;
     private final RecipeLookup recipeLookup;
 
     NanoMachineKind(
-            String id,
-            String displayName,
+            String baseId,
             String baseMachineId,
             int processingTicks,
             int energyPerTick,
             RecipeLookup recipeLookup) {
-        this.id = "nano_" + id;
-        this.displayName = displayName;
+        this.baseId = baseId;
+        this.id = "nano_" + baseId;
         this.baseMachineId = baseMachineId;
         this.processingTicks = processingTicks;
         this.energyPerTick = energyPerTick;
         this.recipeLookup = recipeLookup;
     }
 
+    @Override
     public String id() {
         return this.id;
-    }
-
-    public String displayName() {
-        return this.displayName;
     }
 
     public String baseMachineId() {
         return this.baseMachineId;
     }
 
+    @Override
     public int processingTicks() {
         return this.processingTicks;
     }
 
+    @Override
     public int energyPerTick() {
         return this.energyPerTick;
     }
 
-    /**
-     * Height in pixels of this machine's progress arrow sprite
-     * (textures/gui/progress/{@link #id()}.png). Taken from the matching examples/nano reference.
-     */
+    @Override
     public int progressHeight() {
         return switch (this) {
-     case MACERATOR -> 21;
-     case ELECTRIC_FURNACE, COMPRESSOR, EXTRACTOR -> 23;
-     case RECYCLER -> 17;
+            case MACERATOR -> 21;
+            case ELECTRIC_FURNACE, COMPRESSOR, EXTRACTOR -> 23;
+            case RECYCLER -> 17;
         };
     }
 
-    public RecipePlan getRecipe(Level level, ItemStack input) {
+    @Override
+    public String progressSprite() {
+        return this.baseId;
+    }
+
+    @Override
+    public MachineRecipePlan getRecipe(Level level, ItemStack input) {
         return this.recipeLookup.getRecipe(level, input);
     }
 
+    @Override
     public String translationKey() {
         return "block.ascension_ic2." + this.id;
     }
 
-    private static RecipePlan basic(
+    static MachineRecipePlan basic(
             Recipes.IGetter<IBasicMachineRecipeManager> getter, Level level, ItemStack input) {
         if (getter == null) {
-            return RecipePlan.EMPTY;
+            return MachineRecipePlan.EMPTY;
         }
         return basic(getter.get(level), input);
     }
 
-    private static RecipePlan basic(IBasicMachineRecipeManager manager, ItemStack input) {
+    static MachineRecipePlan basic(IBasicMachineRecipeManager manager, ItemStack input) {
         if (manager == null || input.isEmpty()) {
-            return RecipePlan.EMPTY;
+            return MachineRecipePlan.EMPTY;
         }
 
         MachineRecipeResult<IRecipeInput, Collection<ItemStack>, ItemStack> result =
                 manager.apply(input.copy(), true);
         if (result == null || result.getOutput() == null) {
-            return RecipePlan.EMPTY;
+            return MachineRecipePlan.EMPTY;
         }
 
         List<ItemStack> outputs = new ArrayList<>();
@@ -148,26 +112,31 @@ public enum NanoMachineKind {
             }
         }
         if (outputs.isEmpty()) {
-            return RecipePlan.EMPTY;
+            return MachineRecipePlan.EMPTY;
         }
 
         int inputAmount = 1;
         if (result.recipe() != null && result.recipe().getInput() != null) {
             inputAmount = Math.max(1, result.recipe().getInput().getAmount());
         }
-        return new RecipePlan(inputAmount, outputs);
+        return new MachineRecipePlan(inputAmount, outputs);
     }
 
-    private static RecipePlan furnace(ItemStack input) {
+    static MachineRecipePlan furnace(ItemStack input) {
         if (Recipes.furnace == null || input.isEmpty()) {
-            return RecipePlan.EMPTY;
+            return MachineRecipePlan.EMPTY;
         }
 
         MachineRecipeResult<ItemStack, ItemStack, ItemStack> result =
                 Recipes.furnace.apply(input.copy(), true);
         if (result == null || result.getOutput().isEmpty()) {
-            return RecipePlan.EMPTY;
+            return MachineRecipePlan.EMPTY;
         }
-        return new RecipePlan(1, List.of(result.getOutput().copy()));
+        return new MachineRecipePlan(1, List.of(result.getOutput().copy()));
+    }
+
+    @FunctionalInterface
+    public interface RecipeLookup {
+        MachineRecipePlan getRecipe(Level level, ItemStack input);
     }
 }

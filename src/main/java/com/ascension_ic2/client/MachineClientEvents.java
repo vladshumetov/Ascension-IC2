@@ -7,11 +7,12 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 @EventBusSubscriber(modid = AscensionIC2.MOD_ID, value = Dist.CLIENT)
-public final class NanoClientEvents {
-    private NanoClientEvents() {}
+public final class MachineClientEvents {
+    private MachineClientEvents() {}
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(AscensionIC2.NANO_MENU.get(), NanoMachineScreen::new);
+        event.register(AscensionIC2.NANO_MENU.get(), TierMachineScreen::new);
+        event.register(AscensionIC2.QUANTUM_MENU.get(), TierMachineScreen::new);
     }
 }

@@ -1,4 +1,4 @@
-package com.ascension_ic2.nano;
+package com.ascension_ic2.machine;
 
 import com.mojang.serialization.MapCodec;
 import ic2.api.block.AddonEnergyBlock;
@@ -23,28 +23,28 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class NanoMachineBlock extends AddonWrenchableBlock {
+public class TierMachineBlock extends AddonWrenchableBlock {
     private static final TagKey<Item> IC2_WRENCHES =
             TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("ic2", "wrenches"));
 
-    private final NanoMachineKind kind;
+    private final TierMachineKind kind;
 
-    public NanoMachineBlock(
+    public TierMachineBlock(
             BlockBehaviour.Properties properties,
-            NanoMachineKind kind,
+            TierMachineKind kind,
             BiFunction<BlockPos, BlockState, ? extends BlockEntity> factory) {
         super(properties, factory);
         this.kind = kind;
     }
 
-    public NanoMachineKind getKind() {
+    public TierMachineKind getKind() {
         return this.kind;
     }
 
     @Override
     protected MapCodec<? extends AddonEnergyBlock> codec() {
         return simpleCodec(
-                properties -> new NanoMachineBlock(properties, this.kind, this.factory));
+                properties -> new TierMachineBlock(properties, this.kind, this.factory));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class NanoMachineBlock extends AddonWrenchableBlock {
     }
 
     private static InteractionResult openMenu(Level level, BlockPos pos, Player player) {
-        if (!(level.getBlockEntity(pos) instanceof NanoMachineBlockEntity machine)) {
+        if (!(level.getBlockEntity(pos) instanceof TierMachineBlockEntity machine)) {
             return InteractionResult.PASS;
         }
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
@@ -84,7 +84,7 @@ public class NanoMachineBlock extends AddonWrenchableBlock {
     }
 
     private static ItemInteractionResult openMenuItem(Level level, BlockPos pos, Player player) {
-        if (!(level.getBlockEntity(pos) instanceof NanoMachineBlockEntity machine)) {
+        if (!(level.getBlockEntity(pos) instanceof TierMachineBlockEntity machine)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
@@ -103,8 +103,8 @@ public class NanoMachineBlock extends AddonWrenchableBlock {
             int fortune) {
         List<ItemStack> drops =
                 new ArrayList<>(super.getWrenchDrops(world, pos, state, blockEntity, player, fortune));
-        if (blockEntity instanceof NanoMachineBlockEntity nano) {
-            nano.collectDrops(drops);
+        if (blockEntity instanceof TierMachineBlockEntity machine) {
+            machine.collectDrops(drops);
         }
         return drops;
     }

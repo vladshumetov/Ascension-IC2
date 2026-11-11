@@ -5,6 +5,11 @@
   "block.ascension_ic2.nano_compressor": "Nano Compressor",
   "block.ascension_ic2.nano_extractor": "Nano Extractor",
   "block.ascension_ic2.nano_recycler": "Nano Recycler",
+  "block.ascension_ic2.quantum_macerator": "Quantum Macerator",
+  "block.ascension_ic2.quantum_electric_furnace": "Quantum Electric Furnace",
+  "block.ascension_ic2.quantum_compressor": "Quantum Compressor",
+  "block.ascension_ic2.quantum_extractor": "Quantum Extractor",
+  "block.ascension_ic2.quantum_recycler": "Quantum Recycler",
   "gui.ascension_ic2.energy": "Energy: %s / %s EU",
   "gui.ascension_ic2.progress": "Progress: %s%%"
 }

@@ -2,9 +2,14 @@
     "replace":  false,
     "values":  [
                    "ascension_ic2:nano_macerator",
+                   "ascension_ic2:quantum_macerator",
                    "ascension_ic2:nano_electric_furnace",
+                   "ascension_ic2:quantum_electric_furnace",
                    "ascension_ic2:nano_compressor",
+                   "ascension_ic2:quantum_compressor",
                    "ascension_ic2:nano_extractor",
-                   "ascension_ic2:nano_recycler"
+                   "ascension_ic2:quantum_extractor",
+                   "ascension_ic2:nano_recycler",
+                   "ascension_ic2:quantum_recycler"
                ]
 }
