@@ -17,8 +17,8 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
             NanoMachineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 176;
-        this.imageHeight = 160;
-        this.inventoryLabelY = 72;
+        this.imageHeight = 166;
+        this.inventoryLabelY = 74;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
                 guiGraphics.blit(
                         TEXTURE,
                         this.leftPos + 61 + lane * 18,
-                        this.topPos + 35,
+                        this.topPos + 37,
                         176,
                         0,
                         16,

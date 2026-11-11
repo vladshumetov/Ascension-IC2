@@ -1,4 +1,4 @@
-﻿param(
+param(
     [string]$Ic2Jar = "",
     [string]$ProjectRoot = ""
 )
@@ -245,13 +245,13 @@ Write-JsonFile (Join-Path $tagBlockDir "needs_iron_tool.json") @{
 $guiDir = Join-Path $assets "textures\gui"
 New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
 
-$gui = New-Object System.Drawing.Bitmap(192, 160, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+$gui = New-Object System.Drawing.Bitmap(192, 166, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
 
-Rect $gui 0 0 175 159 '#C6C6C6'
-Border $gui 0 0 175 159 '#373737'
-Border $gui 1 1 174 158 '#FFFFFF'
+Rect $gui 0 0 175 165 '#C6C6C6'
+Border $gui 0 0 175 165 '#373737'
+Border $gui 1 1 174 164 '#FFFFFF'
 
 function Draw-GuiSlot($bmp, [int]$x, [int]$y) {
     Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#8B8B8B'
@@ -263,16 +263,16 @@ function Draw-GuiSlot($bmp, [int]$x, [int]$y) {
 }
 
 foreach ($i in 0..2) {
-    Draw-GuiSlot $gui (61 + $i * 18) 16
-    Draw-GuiSlot $gui (61 + $i * 18) 54
+    Draw-GuiSlot $gui (61 + $i * 18) 17
+    Draw-GuiSlot $gui (61 + $i * 18) 57
 }
 foreach ($row in 0..2) {
     foreach ($col in 0..8) {
-        Draw-GuiSlot $gui (8 + $col * 18) (82 + $row * 18)
+        Draw-GuiSlot $gui (8 + $col * 18) (84 + $row * 18)
     }
 }
 foreach ($col in 0..8) {
-    Draw-GuiSlot $gui (8 + $col * 18) 140
+    Draw-GuiSlot $gui (8 + $col * 18) 142
 }
 
 $arrowPen = New-Object System.Drawing.Pen((C '#373737'), 1)
@@ -281,12 +281,12 @@ $progressBrush = New-Object System.Drawing.SolidBrush((C '#55D6E8'))
 $highlightPen = New-Object System.Drawing.Pen((C '#E8FCFF'), 1)
 
 foreach ($arrowX in @(61, 79, 97)) {
-    Rect $gui ($arrowX + 6) 35 ($arrowX + 9) 43 '#8B8B8B'
-    Border $gui ($arrowX + 6) 35 ($arrowX + 9) 43 '#373737'
+    Rect $gui ($arrowX + 6) 37 ($arrowX + 9) 45 '#8B8B8B'
+    Border $gui ($arrowX + 6) 37 ($arrowX + 9) 45 '#373737'
     $head = @(
-        (New-Object System.Drawing.Point(($arrowX + 2), 43)),
-        (New-Object System.Drawing.Point(($arrowX + 13), 43)),
-        (New-Object System.Drawing.Point(($arrowX + 8), 50))
+        (New-Object System.Drawing.Point(($arrowX + 2), 45)),
+        (New-Object System.Drawing.Point(($arrowX + 13), 45)),
+        (New-Object System.Drawing.Point(($arrowX + 8), 52))
     )
     $guiGraphics.FillPolygon($arrowBrush, $head)
     $guiGraphics.DrawPolygon($arrowPen, $head)
