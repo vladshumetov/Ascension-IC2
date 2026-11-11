@@ -4,5 +4,7 @@
   "block.ic2_tiers.nano_electric_furnace": "Nano Electric Furnace",
   "block.ic2_tiers.nano_compressor": "Nano Compressor",
   "block.ic2_tiers.nano_extractor": "Nano Extractor",
-  "block.ic2_tiers.nano_recycler": "Nano Recycler"
+  "block.ic2_tiers.nano_recycler": "Nano Recycler",
+  "gui.ic2_tiers.energy": "Energy: %s / %s EU",
+  "gui.ic2_tiers.progress": "Progress: %s%%"
 }

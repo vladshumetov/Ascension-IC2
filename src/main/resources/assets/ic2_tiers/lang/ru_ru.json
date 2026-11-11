@@ -4,5 +4,7 @@
   "block.ic2_tiers.nano_electric_furnace": "Нано-электропечь",
   "block.ic2_tiers.nano_compressor": "Нано-сжиматель",
   "block.ic2_tiers.nano_extractor": "Нано-экстрактор",
-  "block.ic2_tiers.nano_recycler": "Нано-утилизатор"
+  "block.ic2_tiers.nano_recycler": "Нано-утилизатор",
+  "gui.ic2_tiers.energy": "Энергия: %s / %s EU",
+  "gui.ic2_tiers.progress": "Прогресс: %s%%"
 }

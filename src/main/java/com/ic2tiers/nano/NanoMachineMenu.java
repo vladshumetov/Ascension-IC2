@@ -25,7 +25,7 @@ public class NanoMachineMenu extends AbstractContainerMenu {
     private static final int DATA_CAPACITY = INPUT_SLOTS + 2;
     private static final int DATA_COUNT = INPUT_SLOTS + 3;
 
-    private static final int[][] UPGRADE_POSITIONS = {{6, 28}, {6, 62}, {218, 28}, {218, 62}};
+    private static final int[][] UPGRADE_POSITIONS = {{8, 28}, {8, 62}, {216, 28}, {216, 62}};
 
     private final @Nullable NanoMachineBlockEntity machine;
     private final Container container;
@@ -125,6 +125,23 @@ public class NanoMachineMenu extends AbstractContainerMenu {
         int progress = this.data.get(DATA_PROGRESS + lane);
         int max = Math.max(1, this.data.get(DATA_MAX_PROGRESS));
         return progress * pixels / max;
+    }
+
+    public int getProgressPercent(int lane) {
+        if (lane < 0 || lane >= INPUT_SLOTS) {
+     return 0;
+        }
+        int progress = this.data.get(DATA_PROGRESS + lane);
+ int max = Math.max(1, this.data.get(DATA_MAX_PROGRESS));
+        return progress * 100 / max;
+    }
+
+    public int getEnergy() {
+        return this.data.get(DATA_ENERGY);
+    }
+
+    public int getCapacity() {
+        return this.data.get(DATA_CAPACITY);
     }
 
     public int getEnergyScaled(int pixels) {

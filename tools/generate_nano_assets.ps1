@@ -305,8 +305,16 @@ function Draw-UpgradeSlot($bmp, [int]$x, [int]$y) {
     Rect $bmp ($x - 2) ($y - 2) ($x - 2) ($y + 15) '#3F6C89'
 }
 
-# Upgrade slots on both sides.
-foreach ($pos in @(@(6, 28), @(6, 62), @(218, 28), @(218, 62))) {
+# Side wings holding the upgrade slots (like the reference).
+Rect $gui 3 24 28 82 '#1F274F'
+Border $gui 3 24 28 82 '#4D7C9A'
+Rect $gui 211 24 236 82 '#1F274F'
+Border $gui 211 24 236 82 '#4D7C9A'
+Rect $gui 4 25 27 25 '#B7E0EA'
+Rect $gui 212 25 235 25 '#B7E0EA'
+
+# Upgrade slots: two per side.
+foreach ($pos in @(@(8, 28), @(8, 62), @(216, 28), @(216, 62))) {
     Draw-UpgradeSlot $gui $pos[0] $pos[1]
 }
 
@@ -329,14 +337,13 @@ foreach ($x in @(86, 112, 138)) {
     Draw-ArrowShape $gui $x 51 $null '#253C5E'
 }
 
-# Horizontal energy bar under the output slots, spanning the body between the upgrade columns.
-# Outer frame x 24..215, y 100..111; inner well x 25..214, y 101..110.
-Rect $gui 24 100 215 111 '#0F1325'
-Border $gui 24 100 215 111 '#4D7C9A'
-Rect $gui 25 101 214 110 '#3D001C'
+# Horizontal energy bar under the output slots (frame 24..215 x 100..106, well 25..214 x 101..105).
+Rect $gui 24 100 215 106 '#0F1325'
+Border $gui 24 100 215 106 '#4D7C9A'
+Rect $gui 25 101 214 105 '#3D001C'
 foreach ($k in 1..9) {
     $tx = 25 + [int](190 * $k / 10)
-    Rect $gui $tx 101 $tx 110 '#63121A'
+    Rect $gui $tx 101 $tx 105 '#63121A'
 }
 
 # Vertical progress overlay (texture 240,0): bright arrow drawn with height = progress.
@@ -352,7 +359,7 @@ Rect $gui 207 133 207 217 '#555555'
 
 foreach ($row in 0..2) {
     foreach ($col in 0..8) {
- Draw-PlayerSlot $gui (40 + $col * 18) (140 + $row * 18)
+        Draw-PlayerSlot $gui (40 + $col * 18) (140 + $row * 18)
     }
 }
 foreach ($col in 0..8) {
