@@ -3,7 +3,7 @@ param(
     [string]$Ic2Jar = ""
 )
 
-# Generates the high-tier energy blocks: cables for tiers 6..14 and solar panels for tiers 1..14.
+# Generates the high-tier energy blocks: cables for tiers 6, 8, 10, 13 and solar panels for tiers 1..13.
 # No recipes on purpose. Cables use one recoloured glass fibre texture; all solar panels share
 # the IC2 solar generator top texture.
 
@@ -151,13 +151,13 @@ $allIds = @(
     "ascension_ic2:nano_casing", "ascension_ic2:quantum_casing"
 )
 
-for ($tier = 6; $tier -le 14; $tier++) {
+foreach ($tier in @(6, 8, 10, 13)) {
     $id = "energy_cable_$tier"
     Write-CableBlock $id
     $allIds += "ascension_ic2:$id"
 }
 
-for ($tier = 1; $tier -le 14; $tier++) {
+for ($tier = 1; $tier -le 13; $tier++) {
     $id = "solar_panel_$tier"
     Write-SimpleBlock $id "ic2:block/generator/electric/solar_generator_top"
     $allIds += "ascension_ic2:$id"
@@ -166,4 +166,4 @@ for ($tier = 1; $tier -le 14; $tier++) {
 Write-JsonFile (Join-Path $tagMineableDir "pickaxe.json") @{ replace = $false; values = $allIds }
 Write-JsonFile (Join-Path $tagBlockDir "needs_iron_tool.json") @{ replace = $false; values = $allIds }
 
-Write-Output "Generated 9 cables and 14 solar panels."
+Write-Output "Generated energy blocks for the kept tiers."

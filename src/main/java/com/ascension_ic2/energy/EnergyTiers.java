@@ -1,14 +1,14 @@
 package com.ascension_ic2.energy;
 
 /**
- * The addon energy ladder: 14 levels based on the IC2 scale, where every level is four times the
- * previous one. Tiers 1-5 match IC2 exactly (32, 128, 512, 2048, 8192 EU/t); tiers 6-14 extend the
+ * The addon energy ladder: 13 levels based on the IC2 scale, where every level is four times the
+ * previous one. Tiers 1-5 match IC2 exactly (32, 128, 512, 2048, 8192 EU/t); tiers 6-13 extend the
  * same rule beyond the IC2 API limit. Machines at tiers 6+ need the addon's own energy block and
  * transport, because IC2 cables and addon energy blocks stop at tier 5.
  */
 public final class EnergyTiers {
     public static final int MIN_TIER = 1;
-    public static final int MAX_TIER = 14;
+    public static final int MAX_TIER = 13;
 
     private static final long BASE_EU_PER_TICK = 32L;
     /** Buffers are sized for this many ticks of full input. */

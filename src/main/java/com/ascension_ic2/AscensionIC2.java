@@ -74,7 +74,7 @@ public final class AscensionIC2 {
                 MACHINES.add(registerMachine(tier, kind));
             }
         }
-        for (int tier = 6; tier <= EnergyTiers.MAX_TIER; tier++) {
+        for (int tier : new int[] {6, 8, 10, 13}) {
             CABLES.add(registerCable(tier));
         }
         for (int tier = EnergyTiers.MIN_TIER; tier <= EnergyTiers.MAX_TIER; tier++) {

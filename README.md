@@ -19,7 +19,7 @@ of items processed per operation is configurable in `config/ascension_ic2-common
 
 ## Energy tiers
 
-EU/t follows the IC2 rule `32 * 4^(tier - 1)`. The addon defines 14 levels:
+EU/t follows the IC2 rule `32 * 4^(tier - 1)`. The addon defines 13 levels:
 
 | Tier | EU/t | Tier | EU/t |
 |------|------|------|------|
@@ -29,16 +29,15 @@ EU/t follows the IC2 rule `32 * 4^(tier - 1)`. The addon defines 14 levels:
 | 4 (EV) | 2 048 | 11 | 33 554 432 |
 | 5 (IV) | 8 192 | 12 | 134 217 728 |
 | 6 | 32 768 | 13 | 536 870 912 |
-| 7 | 131 072 | 14 | 2 147 483 648 |
 
-Tiers 1–5 match IC2. Tiers 6–14 are the addon ladder; the addon machines use their own energy
-block, which accepts all 14 tiers. IC2 cables and the standard addon energy block stop at 8192 EU/t,
+Tiers 1–5 match IC2. Tiers 6-13 are the addon ladder; the addon machines use their own energy
+block, which accepts all 13 tiers. IC2 cables and the standard addon energy block stop at 8192 EU/t,
 so transport above tier 5 needs the addon cables.
 
 The addon currently ships these energy blocks (creative only, recipes are not set up yet):
 
-- **Energy Cable (Tier 6–14)** — one cyan glass-fibre cable per tier, conducts that tier's voltage.
-- **Solar Panel (Tier 1–14)** — generates a full tier packet per tick in daylight with sky access;
+- **Energy Cable (Tiers 6, 8, 10, 13)** — one cyan glass-fibre cable for each of these tiers, conducts that tier's voltage.
+- **Solar Panel (Tier 1-13)** — generates a full tier packet per tick in daylight with sky access;
   all panels share one texture.
 
 Feeding a machine with a voltage above its energy tier destroys it.
