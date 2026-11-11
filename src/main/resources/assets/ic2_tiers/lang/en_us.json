@@ -1,0 +1,8 @@
+{
+  "itemGroup.ic2_tiers.main": "IC2 Tiers",
+  "block.ic2_tiers.nano_macerator": "Nano Macerator",
+  "block.ic2_tiers.nano_electric_furnace": "Nano Electric Furnace",
+  "block.ic2_tiers.nano_compressor": "Nano Compressor",
+  "block.ic2_tiers.nano_extractor": "Nano Extractor",
+  "block.ic2_tiers.nano_recycler": "Nano Recycler"
+}

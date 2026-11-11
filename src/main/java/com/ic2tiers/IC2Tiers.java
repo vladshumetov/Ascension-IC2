@@ -1,0 +1,101 @@
+package com.ic2tiers;
+
+import com.ic2tiers.config.TiersConfig;
+import com.ic2tiers.event.MachineEvents;
+import com.ic2tiers.nano.NanoMachineBlock;
+import com.ic2tiers.nano.NanoMachineBlockEntity;
+import com.ic2tiers.nano.NanoMachineKind;
+import ic2.api.registry.AddonEnergyCapabilities;
+import ic2.api.registry.Ic2AddonContent;
+import java.util.EnumMap;
+import java.util.Map;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
+
+@Mod(IC2Tiers.MOD_ID)
+public final class IC2Tiers {
+    public static final String MOD_ID = "ic2_tiers";
+
+    public static final Ic2AddonContent CONTENT = Ic2AddonContent.create(MOD_ID);
+
+    public static final Map<NanoMachineKind, DeferredBlock<NanoMachineBlock>> NANO_BLOCKS =
+            new EnumMap<>(NanoMachineKind.class);
+    public static final Map<NanoMachineKind, DeferredItem<net.minecraft.world.item.BlockItem>>
+            NANO_ITEMS = new EnumMap<>(NanoMachineKind.class);
+    public static final Map<
+                    NanoMachineKind,
+                    DeferredHolder<BlockEntityType<?>, BlockEntityType<NanoMachineBlockEntity>>>
+            NANO_BES = new EnumMap<>(NanoMachineKind.class);
+
+    static {
+        for (NanoMachineKind kind : NanoMachineKind.values()) {
+            DeferredBlock<NanoMachineBlock> block =
+                    CONTENT.registerBlock(
+                            kind.id(),
+                            properties ->
+                                    new NanoMachineBlock(
+                                            properties,
+                                            kind,
+                                            (pos, state) ->
+                                                    new NanoMachineBlockEntity(
+                                                            kind, NANO_BES.get(kind).get(), pos, state)),
+                            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
+            NANO_BLOCKS.put(kind, block);
+            NANO_ITEMS.put(kind, CONTENT.registerBlockItem(kind.id(), block));
+            NANO_BES.put(
+                    kind,
+                    CONTENT.registerBlockEntityType(
+                            kind.id(),
+                            (pos, state) ->
+                                    new NanoMachineBlockEntity(
+                                            kind, NANO_BES.get(kind).get(), pos, state),
+                            block));
+        }
+    }
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB =
+            CONTENT.registerCreativeModeTab(
+                    "main",
+                    () -> new ItemStack(NANO_ITEMS.get(NanoMachineKind.MACERATOR).get()),
+                    IC2Tiers::fillTab);
+
+    public IC2Tiers(IEventBus modEventBus, ModContainer modContainer) {
+        CONTENT.register(modEventBus);
+        modContainer.registerConfig(ModConfig.Type.COMMON, TiersConfig.SPEC);
+        modEventBus.addListener(this::registerCapabilities);
+        NeoForge.EVENT_BUS.register(MachineEvents.class);
+    }
+
+    private static void fillTab(
+            CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        for (DeferredItem<net.minecraft.world.item.BlockItem> item : NANO_ITEMS.values()) {
+            output.accept(item.get());
+        }
+    }
+
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        for (DeferredHolder<BlockEntityType<?>, BlockEntityType<NanoMachineBlockEntity>> holder :
+                NANO_BES.values()) {
+            AddonEnergyCapabilities.registerEnergyStorage(event, holder.get());
+            event.registerBlockEntity(
+                    Capabilities.ItemHandler.BLOCK,
+                    holder.get(),
+                    (blockEntity, side) -> blockEntity.getInventory());
+        }
+    }
+
+}
+

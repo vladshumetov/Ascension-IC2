@@ -1,0 +1,19 @@
+{
+    "variants":  {
+                     "facing=north":  {
+                                          "model":  "ic2_tiers:block/nano_extractor"
+                                      },
+                     "facing=south":  {
+                                          "model":  "ic2_tiers:block/nano_extractor",
+                                          "y":  180
+                                      },
+                     "facing=east":  {
+                                         "model":  "ic2_tiers:block/nano_extractor",
+                                         "y":  90
+                                     },
+                     "facing=west":  {
+                                         "model":  "ic2_tiers:block/nano_extractor",
+                                         "y":  270
+                                     }
+                 }
+}

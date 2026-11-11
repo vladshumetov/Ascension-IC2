@@ -1,8 +1,10 @@
 {
-  "replace": false,
-  "values": [
-    "titanium_industry:titanium_refiner",
-    "titanium_industry:bio_generator",
-    "titanium_industry:titanium_block"
-  ]
+    "replace":  false,
+    "values":  [
+                   "ic2_tiers:nano_macerator",
+                   "ic2_tiers:nano_electric_furnace",
+                   "ic2_tiers:nano_compressor",
+                   "ic2_tiers:nano_extractor",
+                   "ic2_tiers:nano_recycler"
+               ]
 }

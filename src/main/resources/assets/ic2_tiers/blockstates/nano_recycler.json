@@ -1,0 +1,19 @@
+{
+    "variants":  {
+                     "facing=north":  {
+                                          "model":  "ic2_tiers:block/nano_recycler"
+                                      },
+                     "facing=south":  {
+                                          "model":  "ic2_tiers:block/nano_recycler",
+                                          "y":  180
+                                      },
+                     "facing=east":  {
+                                         "model":  "ic2_tiers:block/nano_recycler",
+                                         "y":  90
+                                     },
+                     "facing=west":  {
+                                         "model":  "ic2_tiers:block/nano_recycler",
+                                         "y":  270
+                                     }
+                 }
+}
