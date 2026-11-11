@@ -1,0 +1,24 @@
+{
+    "key":  {
+                "E":  {
+                          "item":  "ic2:advanced_circuit"
+                      },
+                "M":  {
+                          "item":  "ic2:recycler"
+                      },
+                "I":  {
+                          "item":  "ic2:iridium"
+                      }
+            },
+    "category":  "misc",
+    "pattern":  [
+                    "IEI",
+                    "EME",
+                    "IEI"
+                ],
+    "result":  {
+                   "id":  "ascension_ic2:nano_recycler",
+                   "count":  1
+               },
+    "type":  "minecraft:crafting_shaped"
+}

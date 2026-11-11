@@ -1,0 +1,10 @@
+{
+  "itemGroup.ascension_ic2.main": "Ascension IC2",
+  "block.ascension_ic2.nano_macerator": "Nano Macerator",
+  "block.ascension_ic2.nano_electric_furnace": "Nano Electric Furnace",
+  "block.ascension_ic2.nano_compressor": "Nano Compressor",
+  "block.ascension_ic2.nano_extractor": "Nano Extractor",
+  "block.ascension_ic2.nano_recycler": "Nano Recycler",
+  "gui.ascension_ic2.energy": "Energy: %s / %s EU",
+  "gui.ascension_ic2.progress": "Progress: %s%%"
+}

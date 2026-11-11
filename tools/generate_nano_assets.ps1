@@ -14,8 +14,8 @@ if ([string]::IsNullOrWhiteSpace($Ic2Jar)) {
     $Ic2Jar = Join-Path $ProjectRoot "libs\ic2r-neoforge-1.2.11.jar"
 }
 
-$assets = Join-Path $ProjectRoot "src\main\resources\assets\ic2_tiers"
-$data = Join-Path $ProjectRoot "src\main\resources\data\ic2_tiers"
+$assets = Join-Path $ProjectRoot "src\main\resources\assets\ascension_ic2"
+$data = Join-Path $ProjectRoot "src\main\resources\data\ascension_ic2"
 $textureDir = Join-Path $assets "textures\block\nano"
 $blockstateDir = Join-Path $assets "blockstates"
 $blockModelDir = Join-Path $assets "models\block"
@@ -170,28 +170,28 @@ try {
 
         Write-JsonFile (Join-Path $blockstateDir "$id.json") @{
             variants = @{
-                "facing=north" = @{ model = "ic2_tiers:block/$id" }
-                "facing=east" = @{ model = "ic2_tiers:block/$id"; y = 90 }
-                "facing=south" = @{ model = "ic2_tiers:block/$id"; y = 180 }
-                "facing=west" = @{ model = "ic2_tiers:block/$id"; y = 270 }
+                "facing=north" = @{ model = "ascension_ic2:block/$id" }
+                "facing=east" = @{ model = "ascension_ic2:block/$id"; y = 90 }
+                "facing=south" = @{ model = "ascension_ic2:block/$id"; y = 180 }
+                "facing=west" = @{ model = "ascension_ic2:block/$id"; y = 270 }
             }
         }
 
         Write-JsonFile (Join-Path $blockModelDir "$id.json") @{
             parent = "minecraft:block/cube"
             textures = @{
-                particle = "ic2_tiers:block/nano/${id}_side"
-                down = "ic2_tiers:block/nano/${id}_bottom"
-                up = "ic2_tiers:block/nano/${id}_top"
-                north = "ic2_tiers:block/nano/${id}_front"
-                south = "ic2_tiers:block/nano/${id}_side"
-                west = "ic2_tiers:block/nano/${id}_side"
-                east = "ic2_tiers:block/nano/${id}_side"
+                particle = "ascension_ic2:block/nano/${id}_side"
+                down = "ascension_ic2:block/nano/${id}_bottom"
+                up = "ascension_ic2:block/nano/${id}_top"
+                north = "ascension_ic2:block/nano/${id}_front"
+                south = "ascension_ic2:block/nano/${id}_side"
+                west = "ascension_ic2:block/nano/${id}_side"
+                east = "ascension_ic2:block/nano/${id}_side"
             }
         }
 
         Write-JsonFile (Join-Path $itemModelDir "$id.json") @{
-            parent = "ic2_tiers:block/$id"
+            parent = "ascension_ic2:block/$id"
         }
 
         Write-JsonFile (Join-Path $lootDir "$id.json") @{
@@ -201,14 +201,14 @@ try {
                     rolls = 1
                     bonus_rolls = 0
                     entries = @(
-                        @{ type = "minecraft:item"; name = "ic2_tiers:${id}" }
+                        @{ type = "minecraft:item"; name = "ascension_ic2:${id}" }
                     )
                     conditions = @(
                         @{ condition = "minecraft:survives_explosion" }
                     )
                 }
             )
-            random_sequence = "ic2_tiers:blocks/$id"
+            random_sequence = "ascension_ic2:blocks/$id"
         }
 
         Write-JsonFile (Join-Path $recipeDir "$id.json") @{
@@ -221,7 +221,7 @@ try {
                 M = @{ item = $($machine.Base) }
             }
             result = @{
-                id = "ic2_tiers:${id}"
+                id = "ascension_ic2:${id}"
                 count = 1
             }
         }
@@ -231,7 +231,7 @@ finally {
     $zip.Dispose()
 }
 
-$allIds = $machines | ForEach-Object { "ic2_tiers:$($_.Id)" }
+$allIds = $machines | ForEach-Object { "ascension_ic2:$($_.Id)" }
 Write-JsonFile (Join-Path $tagMineableDir "pickaxe.json") @{
     replace = $false
     values = $allIds
@@ -371,18 +371,7 @@ foreach ($i in 0..2) {
     Draw-MachineSlot $gui (86 + $i * 26) 76
 }
 
-# Arrow tracks under each input lane (same shape as the progress overlay).
-function Draw-ArrowShape($bmp, [int]$x, [int]$y, [string]$stemHi, [string]$fill) {
-    Rect $bmp ($x + 6) $y ($x + 9) ($y + 8) $fill
-    if ($stemHi) { Rect $bmp ($x + 6) $y ($x + 6) ($y + 8) $stemHi }
-    $heads = @(@(3, 12), @(4, 11), @(5, 10), @(6, 9), @(7, 8))
-    for ($r = 0; $r -lt $heads.Count; $r++) {
-        Rect $bmp ($x + $heads[$r][0]) ($y + 9 + $r) ($x + $heads[$r][1]) ($y + 9 + $r) $fill
-    }
-}
-foreach ($x in @(86, 112, 138)) {
-    Draw-ArrowShape $gui $x 51 $null '#253C5E'
-}
+
 
 # Horizontal energy bar under the output slots (frame 24..215 x 100..106, well 25..214 x 101..105).
 Rect $gui 24 100 215 106 '#0F1325'
@@ -393,8 +382,7 @@ foreach ($k in 1..9) {
     Rect $gui $tx 101 $tx 105 '#63121A'
 }
 
-# Vertical progress overlay (texture 240,0): bright arrow drawn with height = progress.
-Draw-ArrowShape $gui 240 0 '#B7E0EA' '#55D6E8'
+
 
 # Vanilla player inventory panel, joined under the body.
 Rect $gui 32 132 207 217 '#C6C6C6'
@@ -416,7 +404,65 @@ foreach ($col in 0..8) {
 $guiGraphics.Dispose()
 Save $gui (Join-Path $guiDir "nano_machine.png")
 
+# ---------- Per-machine progress arrows (taken from examples/nano) ----------
+# Each machine keeps the arrow of its own reference example. Sprite layout: 32 x H,
+#   left  16 px (u 0..15)  = unlit track: arrow silhouette in dark #253C5E;
+#   right 16 px (u 16..31) = lit arrow in the example's own colours.
+# The arrow is cropped from lane 0 of the example (window x 80..104, y 46..80) and centred
+# on a 16 px slot canvas, so it lines up with the machine input slot at x = 86 + lane * 26.
+$progressDir = Join-Path $guiDir "progress"
+New-Item -ItemType Directory -Path $progressDir -Force | Out-Null
+$exampleDir = Join-Path $ProjectRoot "examples\nano"
+$progressSources = @(
+    @{ Id = "nano_macerator"; File = "nano_macerator.png" },
+    @{ Id = "nano_electric_furnace"; File = "nano_furnace.png" },
+    @{ Id = "nano_compressor"; File = "nano_compressor.png" },
+    @{ Id = "nano_extractor"; File = "nano_extractor.png" },
+    @{ Id = "nano_recycler"; File = "nano_recycler.png" }
+)
+$arrowBg = (C '#171D39').ToArgb()
+$canvasW = 16
+foreach ($src in $progressSources) {
+    $ex = [System.Drawing.Bitmap]::FromFile((Join-Path $exampleDir $src.File))
+    try {
+        $minx = 9999; $miny = 9999; $maxx = -1; $maxy = -1
+        for ($y = 46; $y -le 80; $y++) {
+     for ($x = 80; $x -le 104; $x++) {
+  $c = $ex.GetPixel($x, $y)
+         if ($c.A -gt 0 -and $c.ToArgb() -ne $arrowBg) {
+      if ($x -lt $minx) { $minx = $x }
+      if ($x -gt $maxx) { $maxx = $x }
+      if ($y -lt $miny) { $miny = $y }
+      if ($y -gt $maxy) { $maxy = $y }
+         }
+     }
+        }
+        if ($maxx -lt 0) { throw "No progress arrow found in $($src.File)" }
+        $w = $maxx - $minx + 1
+        $h = $maxy - $miny + 1
+        if ($w -gt $canvasW) { throw "Progress arrow in $($src.File) is wider than $canvasW px ($w)" }
+        $offX = [int][Math]::Floor(($canvasW - $w) / 2)
+
+ $sprite = New-Object System.Drawing.Bitmap(($canvasW * 2), $h, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+ $trackColor = [System.Drawing.Color]::FromArgb(255, 0x25, 0x3C, 0x5E)
+        for ($j = 0; $j -lt $h; $j++) {
+            for ($i = 0; $i -lt $w; $i++) {
+         $c = $ex.GetPixel($minx + $i, $miny + $j)
+  if ($c.A -eq 0 -or $c.ToArgb() -eq $arrowBg) { continue }
+  $sprite.SetPixel($offX + $i, $j, $trackColor)
+  $sprite.SetPixel($canvasW + $offX + $i, $j, $c)
+     }
+        }
+        Save $sprite (Join-Path $progressDir "$($src.Id).png")
+        Write-Output "progress $($src.Id): arrow ${w}x${h} at $minx,$miny in $($src.File)"
+    }
+    finally {
+        $ex.Dispose()
+    }
+}
+
 # Mod logo
+
 $logo = New-Object System.Drawing.Bitmap(128, 128, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $graphics = [System.Drawing.Graphics]::FromImage($logo)
 $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias

@@ -1,0 +1,12 @@
+{
+    "textures":  {
+                     "north":  "ascension_ic2:block/nano/nano_electric_furnace_front",
+                     "south":  "ascension_ic2:block/nano/nano_electric_furnace_side",
+                     "up":  "ascension_ic2:block/nano/nano_electric_furnace_top",
+                     "west":  "ascension_ic2:block/nano/nano_electric_furnace_side",
+                     "particle":  "ascension_ic2:block/nano/nano_electric_furnace_side",
+                     "east":  "ascension_ic2:block/nano/nano_electric_furnace_side",
+                     "down":  "ascension_ic2:block/nano/nano_electric_furnace_bottom"
+                 },
+    "parent":  "minecraft:block/cube"
+}

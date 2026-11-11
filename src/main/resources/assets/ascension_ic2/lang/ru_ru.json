@@ -1,0 +1,10 @@
+{
+  "itemGroup.ascension_ic2.main": "IC2: Тиры",
+  "block.ascension_ic2.nano_macerator": "Нано-дробитель",
+  "block.ascension_ic2.nano_electric_furnace": "Нано-электропечь",
+  "block.ascension_ic2.nano_compressor": "Нано-сжиматель",
+  "block.ascension_ic2.nano_extractor": "Нано-экстрактор",
+  "block.ascension_ic2.nano_recycler": "Нано-утилизатор",
+  "gui.ascension_ic2.energy": "Энергия: %s / %s EU",
+  "gui.ascension_ic2.progress": "Прогресс: %s%%"
+}

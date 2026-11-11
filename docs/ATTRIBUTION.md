@@ -3,7 +3,7 @@
 ## IC2 Rebranded textures
 
 The nano tier block textures in
-`src/main/resources/assets/ic2_tiers/textures/block/nano/` are grayscale/metallic
+`src/main/resources/assets/ascension_ic2/textures/block/nano/` are grayscale/metallic
 derivatives of textures from **IndustrialCraft 2: Refactored** by the IC2 Dev Team,
 HalfCooler and Lerche:
 

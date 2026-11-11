@@ -1,10 +1,10 @@
 {
     "replace":  false,
     "values":  [
-                   "ic2_tiers:nano_macerator",
-                   "ic2_tiers:nano_electric_furnace",
-                   "ic2_tiers:nano_compressor",
-                   "ic2_tiers:nano_extractor",
-                   "ic2_tiers:nano_recycler"
+                   "ascension_ic2:nano_macerator",
+                   "ascension_ic2:nano_electric_furnace",
+                   "ascension_ic2:nano_compressor",
+                   "ascension_ic2:nano_extractor",
+                   "ascension_ic2:nano_recycler"
                ]
 }
