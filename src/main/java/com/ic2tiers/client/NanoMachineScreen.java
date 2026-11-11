@@ -14,7 +14,7 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
      ResourceLocation.fromNamespaceAndPath(IC2Tiers.MOD_ID, "textures/gui/nano_machine.png");
 
     private static final int ARROW_HEIGHT = 14;
-    private static final int ENERGY_HEIGHT = 35;
+    private static final int ENERGY_WIDTH = 190;
 
     public NanoMachineScreen(
      NanoMachineMenu menu, Inventory playerInventory, Component title) {
@@ -29,42 +29,41 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
         guiGraphics.blit(
          TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
-        // Energy bar: fills from the bottom of the inner well (x 7..14, y 88..122).
-        int energy = this.menu.getEnergyScaled(ENERGY_HEIGHT);
+        // Horizontal energy bar under the output slots: inner well x 25..214, y 101..110.
+        int energy = this.menu.getEnergyScaled(ENERGY_WIDTH);
         if (energy > 0) {
-     int x1 = this.leftPos + 7;
-     int x2 = this.leftPos + 15;
-            int y2 = this.topPos + 123;
-     int y1 = y2 - energy;
-     guiGraphics.fill(x1, y1, x2, y2, 0xFF55D6E8);
-     guiGraphics.fill(x1, y1, x2, y1 + 1, 0xFFB7E0EA);
-        }
+     int x1 = this.leftPos + 25;
+            int y1 = this.topPos + 101;
+     int y2 = this.topPos + 111;
+     guiGraphics.fill(x1, y1, x1 + energy, y2, 0xFFEB352E);
+     guiGraphics.fill(x1, y1, x1 + energy, y1 + 2, 0xFFFF8D4F);
+ }
 
         // Progress arrows under each input lane.
-        for (int lane = 0; lane < NanoMachineBlockEntity.INPUT_SLOTS; lane++) {
-            int progress = this.menu.getProgressScaled(lane, ARROW_HEIGHT);
-            if (progress > 0) {
-  guiGraphics.blit(
-   TEXTURE,
-   this.leftPos + 86 + lane * 26,
-   this.topPos + 51,
-   240,
-          0,
-          16,
-          progress);
+ for (int lane = 0; lane < NanoMachineBlockEntity.INPUT_SLOTS; lane++) {
+     int progress = this.menu.getProgressScaled(lane, ARROW_HEIGHT);
+     if (progress > 0) {
+         guiGraphics.blit(
+          TEXTURE,
+          this.leftPos + 86 + lane * 26,
+          this.topPos + 51,
+          240,
+   0,
+   16,
+   progress);
      }
-        }
+ }
     }
 
     @Override
     public void renderBackground(
      GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
+ this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
     }
 
     @Override
     protected void renderLabels(
-            GuiGraphics guiGraphics, int mouseX, int mouseY) {
+     GuiGraphics guiGraphics, int mouseX, int mouseY) {
         String title = this.title.getString();
         int titleX = (this.imageWidth - this.font.width(title)) / 2;
         guiGraphics.drawString(this.font, title, titleX, 4, 0xFFB7E0EA, false);
@@ -72,8 +71,8 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
 
     @Override
     public void render(
-     GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
- this.renderTooltip(guiGraphics, mouseX, mouseY);
+            GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+ super.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 }

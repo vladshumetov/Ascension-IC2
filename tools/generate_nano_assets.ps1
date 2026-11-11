@@ -310,14 +310,6 @@ foreach ($pos in @(@(6, 28), @(6, 62), @(218, 28), @(218, 62))) {
     Draw-UpgradeSlot $gui $pos[0] $pos[1]
 }
 
-# Energy bar on the left wall, below the upper upgrade slot.
-Rect $gui 5 86 16 124 '#0F1325'
-Border $gui 5 86 16 124 '#4D7C9A'
-Rect $gui 6 87 15 123 '#09203F'
-foreach ($y in @(95, 104, 113)) {
-    Rect $gui 7 $y 14 $y '#253C5E'
-}
-
 # Machine inputs (top) and outputs (bottom).
 foreach ($i in 0..2) {
     Draw-MachineSlot $gui (86 + $i * 26) 28
@@ -330,11 +322,21 @@ function Draw-ArrowShape($bmp, [int]$x, [int]$y, [string]$stemHi, [string]$fill)
     if ($stemHi) { Rect $bmp ($x + 6) $y ($x + 6) ($y + 8) $stemHi }
     $heads = @(@(3, 12), @(4, 11), @(5, 10), @(6, 9), @(7, 8))
     for ($r = 0; $r -lt $heads.Count; $r++) {
- Rect $bmp ($x + $heads[$r][0]) ($y + 9 + $r) ($x + $heads[$r][1]) ($y + 9 + $r) $fill
+        Rect $bmp ($x + $heads[$r][0]) ($y + 9 + $r) ($x + $heads[$r][1]) ($y + 9 + $r) $fill
     }
 }
 foreach ($x in @(86, 112, 138)) {
     Draw-ArrowShape $gui $x 51 $null '#253C5E'
+}
+
+# Horizontal energy bar under the output slots, spanning the body between the upgrade columns.
+# Outer frame x 24..215, y 100..111; inner well x 25..214, y 101..110.
+Rect $gui 24 100 215 111 '#0F1325'
+Border $gui 24 100 215 111 '#4D7C9A'
+Rect $gui 25 101 214 110 '#3D001C'
+foreach ($k in 1..9) {
+    $tx = 25 + [int](190 * $k / 10)
+    Rect $gui $tx 101 $tx 110 '#63121A'
 }
 
 # Vertical progress overlay (texture 240,0): bright arrow drawn with height = progress.
@@ -356,14 +358,6 @@ foreach ($row in 0..2) {
 foreach ($col in 0..8) {
     Draw-PlayerSlot $gui (40 + $col * 18) 198
 }
-
-# Decorative red/orange bar along the bottom (as in the reference).
-Rect $gui 0 221 127 221 '#8CBCD0'
-Rect $gui 0 222 127 226 '#EB352E'
-foreach ($x in 0..31) {
-    Px $gui ($x * 4) 224 '#FF8D4F'
-}
-Rect $gui 0 227 127 227 '#8CBCD0'
 
 $guiGraphics.Dispose()
 Save $gui (Join-Path $guiDir "nano_machine.png")
