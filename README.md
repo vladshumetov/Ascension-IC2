@@ -17,6 +17,23 @@ Every input lane works independently and has its own progress arrow and output s
 of items processed per operation is configurable in `config/ascension_ic2-common.toml`
 (`nano.itemsPerOperation`, `quantum.itemsPerOperation`).
 
+## Energy tiers
+
+EU/t follows the IC2 rule `32 * 4^(tier - 1)`. The addon defines 14 levels:
+
+| Tier | EU/t | Tier | EU/t |
+|------|------|------|------|
+| 1 (LV) | 32 | 8 | 524 288 |
+| 2 (MV) | 128 | 9 | 2 097 152 |
+| 3 (HV) | 512 | 10 | 8 388 608 |
+| 4 (EV) | 2 048 | 11 | 33 554 432 |
+| 5 (IV) | 8 192 | 12 | 134 217 728 |
+| 6 | 32 768 | 13 | 536 870 912 |
+| 7 | 131 072 | 14 | 2 147 483 648 |
+
+Tiers 1–5 match IC2. Tiers 6–14 are the addon ladder and need high-tier addon energy transport:
+IC2 cables and the standard addon energy block stop at tier 5.
+
 ## Machines
 
 Nano and Quantum tiers:

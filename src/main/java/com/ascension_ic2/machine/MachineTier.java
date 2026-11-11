@@ -2,6 +2,7 @@ package com.ascension_ic2.machine;
 
 import com.ascension_ic2.AscensionIC2;
 import com.ascension_ic2.config.TiersConfig;
+import com.ascension_ic2.energy.EnergyTiers;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -9,8 +10,8 @@ import net.minecraft.resources.ResourceLocation;
  * driven by these values so the nano and quantum tiers use the same code.
  */
 public enum MachineTier {
-    NANO("nano", 3, 86, 4, 1_000_000.0, 2048.0),
-    QUANTUM("quantum", 5, 60, 5, 4_000_000.0, 8192.0);
+    NANO("nano", 3, 86, 4),
+    QUANTUM("quantum", 5, 60, 5);
 
     public static final int INPUT_Y = 28;
     public static final int OUTPUT_Y = 76;
@@ -20,22 +21,13 @@ public enum MachineTier {
     private final int lanes;
     private final int firstSlotX;
     private final int energyTier;
-    private final double capacity;
-    private final double maxTransfer;
 
-    MachineTier(
-            String id,
-            int lanes,
-            int firstSlotX,
-            int energyTier,
-            double capacity,
-            double maxTransfer) {
+    MachineTier(String id, int lanes, int firstSlotX, int energyTier) {
+        EnergyTiers.checkTier(energyTier);
         this.id = id;
         this.lanes = lanes;
         this.firstSlotX = firstSlotX;
         this.energyTier = energyTier;
-        this.capacity = capacity;
-        this.maxTransfer = maxTransfer;
     }
 
     public String id() {
@@ -59,11 +51,11 @@ public enum MachineTier {
     }
 
     public double capacity() {
-        return this.capacity;
+        return EnergyTiers.defaultCapacity(this.energyTier);
     }
 
     public double maxTransfer() {
-        return this.maxTransfer;
+        return EnergyTiers.euPerTick(this.energyTier);
     }
 
     public int itemsPerOperation() {
