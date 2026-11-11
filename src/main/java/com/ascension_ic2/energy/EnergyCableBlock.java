@@ -108,10 +108,21 @@ public class EnergyCableBlock extends Block implements EntityBlock {
         BlockState updated = state;
         for (Direction direction : Direction.values()) {
             BlockPos neighborPos = pos.relative(direction);
+            BlockState neighborState = level.getBlockState(neighborPos);
             boolean connect = isConnectable(level, neighborPos);
             BooleanProperty property = PROPERTIES.get(direction);
             if (updated.getValue(property) != connect) {
                 updated = updated.setValue(property, connect);
+            }
+            if (connect && isIc2Cable(neighborState)) {
+                // IC2 cables do not draw an arm towards a non-IC2 conductor, so enable it here.
+                BooleanProperty opposite = PROPERTIES.get(direction.getOpposite());
+                if (neighborState.hasProperty(opposite) && !neighborState.getValue(opposite)) {
+                    level.setBlock(
+                            neighborPos,
+                            neighborState.setValue(opposite, true),
+                            Block.UPDATE_ALL);
+                }
             }
         }
         if (updated != state) {
@@ -127,9 +138,12 @@ public class EnergyCableBlock extends Block implements EntityBlock {
         if (level.getBlockEntity(pos) instanceof IEnergyTile) {
             return true;
         }
-        // IC2 cables may not have their block entity available on the client; connect by block id.
+        return isIc2Cable(neighborState);
+    }
+
+    private static boolean isIc2Cable(BlockState state) {
         net.minecraft.resources.ResourceLocation key =
-                net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(neighborState.getBlock());
+                net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock());
         return "ic2".equals(key.getNamespace())
                 && (key.getPath().contains("cable") || key.getPath().contains("wire"));
     }
