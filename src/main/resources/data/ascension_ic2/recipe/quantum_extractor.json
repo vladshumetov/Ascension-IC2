@@ -1,5 +1,8 @@
 {
     "key":  {
+                "Y":  {
+                          "item":  "ascension_ic2:quantum_circuit"
+                      },
                 "M":  {
                           "item":  "ascension_ic2:nano_extractor"
                       },
@@ -7,14 +10,14 @@
                           "item":  "ascension_ic2:quantum_casing"
                       },
                 "X":  {
-                          "item":  "ascension_ic2:quantum_circuit"
+                          "item":  "ic2:iridium"
                       }
             },
     "category":  "misc",
     "pattern":  [
-                    " M ",
-                    "XBX",
-                    " M "
+                    "XMX",
+                    "YBY",
+                    "XMX"
                 ],
     "result":  {
                    "id":  "ascension_ic2:quantum_extractor",

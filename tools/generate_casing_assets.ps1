@@ -127,7 +127,7 @@ foreach ($id in @("nano_casing", "quantum_casing")) {
 Write-JsonFile (Join-Path $recipeDir "nano_casing.json") @{
     type = "minecraft:crafting_shaped"
     category = "misc"
-    pattern = @(" A ", "CMC", " A ")
+    pattern = @("ACA", "CMC", "ACA")
     key = @{
         A = @{ item = "ic2:advanced_machine" }
         C = @{ item = "ic2:carbon_plate" }
@@ -139,7 +139,7 @@ Write-JsonFile (Join-Path $recipeDir "nano_casing.json") @{
 Write-JsonFile (Join-Path $recipeDir "quantum_casing.json") @{
     type = "minecraft:crafting_shaped"
     category = "misc"
-    pattern = @(" N ", "ICI", " N ")
+    pattern = @("NIN", "ICI", "NIN")
     key = @{
         N = @{ item = "ascension_ic2:nano_casing" }
         I = @{ item = "ic2:iridium" }

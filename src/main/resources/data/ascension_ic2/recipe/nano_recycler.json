@@ -1,5 +1,8 @@
 {
     "key":  {
+                "Y":  {
+                          "item":  "ascension_ic2:nano_circuit"
+                      },
                 "M":  {
                           "item":  "ic2:recycler"
                       },
@@ -7,14 +10,14 @@
                           "item":  "ascension_ic2:nano_casing"
                       },
                 "X":  {
-                          "item":  "ascension_ic2:nano_circuit"
+                          "item":  "ic2:alloy"
                       }
             },
     "category":  "misc",
     "pattern":  [
-                    " M ",
-                    "XBX",
-                    " M "
+                    "XMX",
+                    "YBY",
+                    "XMX"
                 ],
     "result":  {
                    "id":  "ascension_ic2:nano_recycler",

@@ -214,10 +214,11 @@ try {
         Write-JsonFile (Join-Path $recipeDir "$id.json") @{
             type = "minecraft:crafting_shaped"
             category = "misc"
-            pattern = @(" M ", "XBX", " M ")
+            pattern = @("XMX", "YBY", "XMX")
             key = @{
+                X = @{ item = "ic2:alloy" }
                 M = @{ item = $($machine.Base) }
-                X = @{ item = "ascension_ic2:nano_circuit" }
+                Y = @{ item = "ascension_ic2:nano_circuit" }
                 B = @{ item = "ascension_ic2:nano_casing" }
             }
             result = @{

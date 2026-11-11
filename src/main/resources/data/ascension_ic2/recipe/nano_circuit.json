@@ -4,17 +4,17 @@
                           "item":  "ic2:carbon_plate"
                       },
                 "G":  {
-                          "item":  "minecraft:gold_ingot"
+                          "item":  "ic2:advanced_circuit"
                       },
                 "A":  {
-                          "item":  "ic2:advanced_circuit"
+                          "item":  "ic2:alloy"
                       }
             },
     "category":  "misc",
     "pattern":  [
-                    "CGC",
-                    "GAG",
-                    "CGC"
+                    "CAC",
+                    "AGA",
+                    "CAC"
                 ],
     "result":  {
                    "id":  "ascension_ic2:nano_circuit",

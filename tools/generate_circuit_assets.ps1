@@ -89,11 +89,11 @@ foreach ($id in @("nano_circuit", "quantum_circuit")) {
 Write-JsonFile (Join-Path $recipeDir "nano_circuit.json") @{
     type = "minecraft:crafting_shaped"
     category = "misc"
-    pattern = @("CGC", "GAG", "CGC")
+    pattern = @("CAC", "AGA", "CAC")
     key = @{
         C = @{ item = "ic2:carbon_plate" }
-        G = @{ item = "minecraft:gold_ingot" }
-        A = @{ item = "ic2:advanced_circuit" }
+        A = @{ item = "ic2:alloy" }
+        G = @{ item = "ic2:advanced_circuit" }
     }
     result = @{ id = "ascension_ic2:nano_circuit"; count = 1 }
 }
@@ -101,9 +101,8 @@ Write-JsonFile (Join-Path $recipeDir "nano_circuit.json") @{
 Write-JsonFile (Join-Path $recipeDir "quantum_circuit.json") @{
     type = "minecraft:crafting_shaped"
     category = "misc"
-    pattern = @("ALA", "ICI", "ALA")
+    pattern = @("LIL", "ICI", "LIL")
     key = @{
-        A = @{ item = "ic2:alloy" }
         L = @{ item = "ic2:lapotron_crystal" }
         I = @{ item = "ic2:iridium" }
         C = @{ item = "ascension_ic2:nano_circuit" }

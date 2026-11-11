@@ -12,9 +12,9 @@
             },
     "category":  "misc",
     "pattern":  [
-                    " A ",
+                    "ACA",
                     "CMC",
-                    " A "
+                    "ACA"
                 ],
     "result":  {
                    "id":  "ascension_ic2:nano_casing",

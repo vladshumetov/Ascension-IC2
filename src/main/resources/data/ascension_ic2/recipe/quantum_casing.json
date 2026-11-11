@@ -12,9 +12,9 @@
             },
     "category":  "misc",
     "pattern":  [
-                    " N ",
+                    "NIN",
                     "ICI",
-                    " N "
+                    "NIN"
                 ],
     "result":  {
                    "id":  "ascension_ic2:quantum_casing",

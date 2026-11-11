@@ -34,13 +34,14 @@ recipe managers.
 
 Each tier has its own casing and its own circuit:
 
-- **Nano Casing** — two advanced machine casings, carbon plates and advanced alloy.
-- **Quantum Casing** — two nano casings, iridium and a quantum circuit.
-- **Nano Circuit** — carbon plates, gold and an advanced circuit.
-- **Quantum Circuit** — advanced alloy, lapotron crystals, iridium and a nano circuit.
+- **Nano Casing** — four advanced machine casings, carbon plates and advanced alloy.
+- **Quantum Casing** — four nano casings, iridium and a quantum circuit.
+- **Nano Circuit** — carbon plates, advanced alloy and an advanced circuit.
+- **Quantum Circuit** — four lapotron crystals, iridium and a nano circuit.
 
 Machine recipes mirror the tier progression: the casing sits in the centre, two machines of the
-previous tier above and below it, and two circuits on the sides.
+previous tier above and below it, two circuits on the sides, and the four corners are filled with
+the tier material (advanced alloy for nano, iridium for quantum).
 
 - Nano Macerator = Nano Casing + 2 Macerators + 2 Nano Circuits.
 - Quantum Macerator = Quantum Casing + 2 Nano Macerators + 2 Quantum Circuits.

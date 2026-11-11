@@ -8,16 +8,13 @@
                       },
                 "I":  {
                           "item":  "ic2:iridium"
-                      },
-                "A":  {
-                          "item":  "ic2:alloy"
                       }
             },
     "category":  "misc",
     "pattern":  [
-                    "ALA",
+                    "LIL",
                     "ICI",
-                    "ALA"
+                    "LIL"
                 ],
     "result":  {
                    "id":  "ascension_ic2:quantum_circuit",
