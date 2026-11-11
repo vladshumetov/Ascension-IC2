@@ -251,16 +251,85 @@ $gui = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelF
 $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
 
-# Main machine body: a big rectangle (x 14..225, y 4..127). Side upgrade wings protrude out of it.
-$bodyGradient = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
-    (New-Object System.Drawing.Rectangle(14, 4, 212, 124)),
-    (C '#1B2445'), (C '#10162E'), 90.0)
-$guiGraphics.FillRectangle($bodyGradient, 14, 4, 212, 124)
-$bodyGradient.Dispose()
-Border $gui 14 4 225 127 '#05080C'
-Border $gui 15 5 224 126 '#253C5E'
-Border $gui 16 6 223 125 '#4D7C9A'
-Rect $gui 17 7 222 7 '#B7E0EA'
+# One continuous silhouette: main body plus two side wings (x,y,x2,y2 inclusive).
+$shapes = @(
+    @(14, 4, 225, 127),
+    @(3, 22, 28, 84),
+    @(211, 22, 236, 84)
+)
+$inside = New-Object 'bool[,]' 256, 256
+foreach ($s in $shapes) {
+    for ($y = $s[1]; $y -le $s[3]; $y++) {
+        for ($x = $s[0]; $x -le $s[2]; $x++) {
+     $inside[$x, $y] = $true
+        }
+    }
+}
+
+# Distance from the outside edge of the silhouette (0 = outline pixel).
+$dist = New-Object 'int[,]' 256, 256
+$queue = New-Object 'System.Collections.Generic.Queue[int]'
+$dirs = @(@(1, 0), @(-1, 0), @(0, 1), @(0, -1))
+for ($y = 0; $y -lt 256; $y++) {
+    for ($x = 0; $x -lt 256; $x++) {
+        $dist[$x, $y] = -1
+    }
+}
+for ($y = 0; $y -lt 256; $y++) {
+    for ($x = 0; $x -lt 256; $x++) {
+        if ($inside[$x, $y]) {
+     $edge = $false
+     foreach ($d in $dirs) {
+  $nx = $x + $d[0]; $ny = $y + $d[1]
+         if ($nx -lt 0 -or $ny -lt 0 -or $nx -ge 256 -or $ny -ge 256 -or -not $inside[$nx, $ny]) {
+      $edge = $true
+  }
+     }
+     if ($edge) {
+         $dist[$x, $y] = 0
+         $queue.Enqueue($y * 256 + $x)
+     }
+        }
+    }
+}
+while ($queue.Count -gt 0) {
+    $idx = $queue.Dequeue()
+    $x = $idx % 256
+    $y = [int][math]::Floor($idx / 256)
+    foreach ($d in $dirs) {
+        $nx = $x + $d[0]; $ny = $y + $d[1]
+ if ($nx -ge 0 -and $ny -ge 0 -and $nx -lt 256 -and $ny -lt 256 -and $inside[$nx, $ny] -and $dist[$nx, $ny] -eq -1) {
+     $dist[$nx, $ny] = $dist[$x, $y] + 1
+     $queue.Enqueue($ny * 256 + $nx)
+        }
+    }
+}
+
+# Paint: dark outline, cyan rim, dark-blue inner rim, then the navy gradient fill.
+$top = C '#1B2445'
+$bottom = C '#10162E'
+for ($y = 0; $y -lt 256; $y++) {
+    for ($x = 0; $x -lt 256; $x++) {
+ if (-not $inside[$x, $y]) { continue }
+ $d = $dist[$x, $y]
+ if ($d -eq 0) {
+     $gui.SetPixel($x, $y, (C '#05080C'))
+        } elseif ($d -eq 1) {
+     $gui.SetPixel($x, $y, (C '#4D7C9A'))
+        } elseif ($d -eq 2) {
+     $gui.SetPixel($x, $y, (C '#253C5E'))
+        } else {
+     $t = [Math]::Min(1.0, [Math]::Max(0.0, ($y - 4) / 124.0))
+     $r = [int]($top.R + ($bottom.R - $top.R) * $t)
+     $g = [int]($top.G + ($bottom.G - $top.G) * $t)
+     $b = [int]($top.B + ($bottom.B - $top.B) * $t)
+            $gui.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, $r, $g, $b))
+        }
+    }
+}
+
+# Top highlight along the body (light line just inside the rim).
+Rect $gui 20 7 219 7 '#B7E0EA'
 
 # Joint line between machine body and inventory.
 Rect $gui 14 128 225 128 '#4D7C9A'
@@ -291,24 +360,13 @@ function Draw-MachineSlot($bmp, [int]$x, [int]$y) {
     Rect $bmp ($x + 17) ($y - 2) ($x + 17) ($y + 17) '#041833'
 }
 
+# Upgrade socket: only the slot itself, no grouping rectangle around it.
 function Draw-UpgradeSlot($bmp, [int]$x, [int]$y) {
-    Rect $bmp ($x - 3) ($y - 3) ($x + 18) ($y + 18) '#1E2751'
-    Border $bmp ($x - 3) ($y - 3) ($x + 18) ($y + 18) '#4D7C9A'
     Rect $bmp ($x - 2) ($y - 2) ($x + 17) ($y + 17) '#09203F'
-    Border $bmp ($x - 2) ($y - 2) ($x + 17) ($y + 17) '#253C5E'
-    Rect $bmp ($x - 2) ($y - 2) ($x + 15) ($y - 2) '#3F6C89'
-    Rect $bmp ($x - 2) ($y - 2) ($x - 2) ($y + 15) '#3F6C89'
+    Border $bmp ($x - 2) ($y - 2) ($x + 17) ($y + 17) '#4D7C9A'
 }
 
-# Side upgrade wings: they stick out beyond the body edge (x 3..28 and 211..236).
-Rect $gui 3 24 28 82 '#1F274F'
-Border $gui 3 24 28 82 '#4D7C9A'
-Rect $gui 211 24 236 82 '#1F274F'
-Border $gui 211 24 236 82 '#4D7C9A'
-Rect $gui 4 25 27 25 '#B7E0EA'
-Rect $gui 212 25 235 25 '#B7E0EA'
-
-# Upgrade slots: two per side, inside the wings.
+# Upgrade slots: two per side, sitting directly in the protruding wings.
 foreach ($pos in @(@(8, 28), @(8, 62), @(216, 28), @(216, 62))) {
     Draw-UpgradeSlot $gui $pos[0] $pos[1]
 }
@@ -354,7 +412,7 @@ Rect $gui 207 133 207 217 '#555555'
 
 foreach ($row in 0..2) {
     foreach ($col in 0..8) {
- Draw-PlayerSlot $gui (40 + $col * 18) (140 + $row * 18)
+        Draw-PlayerSlot $gui (40 + $col * 18) (140 + $row * 18)
     }
 }
 foreach ($col in 0..8) {
