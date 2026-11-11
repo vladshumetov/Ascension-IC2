@@ -26,11 +26,16 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
 
     private final NanoMachineKind kind;
     private final NanoInventory inventory = new NanoInventory();
+    private final int[] laneProgress = new int[INPUT_SLOTS];
+    private final ItemStack[] laneInput = new ItemStack[INPUT_SLOTS];
 
     public NanoMachineBlockEntity(
             NanoMachineKind kind, BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state, 5, 1_000_000.0, 8192.0, 0.0);
         this.kind = kind;
+        for (int lane = 0; lane < INPUT_SLOTS; lane++) {
+            this.laneInput[lane] = ItemStack.EMPTY;
+        }
     }
 
     public NanoMachineKind getKind() {
@@ -39,7 +44,18 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
 
     @Override
     public int getProcessingTime() {
+        return 1;
+    }
+
+    public int getLaneProcessingTime() {
         return this.kind.processingTicks();
+    }
+
+    public int getLaneProgress(int lane) {
+        if (lane < 0 || lane >= INPUT_SLOTS) {
+            return 0;
+        }
+        return Math.min(this.laneProgress[lane], getLaneProcessingTime());
     }
 
     @Override
@@ -53,20 +69,35 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
             return false;
         }
 
-        for (int slot = 0; slot < INPUT_SLOTS; slot++) {
-            ItemStack input = this.inventory.getStackInSlot(slot);
-            if (input.isEmpty()) {
-                continue;
-            }
-
-            NanoMachineKind.RecipePlan plan = this.kind.getRecipe(this.level, input);
-            if (!plan.isEmpty()
-                    && input.getCount() >= plan.inputAmount()
-                    && canFitOutputs(plan.outputs())) {
+        for (int lane = 0; lane < INPUT_SLOTS; lane++) {
+            if (canProcessLane(lane)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private boolean canProcessLane(int lane) {
+        ItemStack input = this.inventory.getStackInSlot(lane);
+        if (input.isEmpty()) {
+            this.laneProgress[lane] = 0;
+            this.laneInput[lane] = ItemStack.EMPTY;
+            return false;
+        }
+
+        if (!this.laneInput[lane].isEmpty()
+                && !ItemStack.isSameItemSameComponents(this.laneInput[lane], input)) {
+            this.laneProgress[lane] = 0;
+        }
+        this.laneInput[lane] = input.copyWithCount(1);
+
+        NanoMachineKind.RecipePlan plan = this.kind.getRecipe(this.level, input);
+        if (plan.isEmpty() || input.getCount() < plan.inputAmount()) {
+            this.laneProgress[lane] = 0;
+            return false;
+        }
+
+        return canFitLaneOutput(lane, plan.outputs());
     }
 
     @Override
@@ -75,45 +106,22 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
             return;
         }
 
-        int remaining = TiersConfig.NANO_ITEMS_PER_OPERATION.get();
+        int time = getLaneProcessingTime();
         boolean changed = false;
 
-        while (remaining > 0) {
-            boolean processedInPass = false;
-
-            for (int slot = 0; slot < INPUT_SLOTS && remaining > 0; slot++) {
-                ItemStack input = this.inventory.getStackInSlot(slot);
-                if (input.isEmpty()) {
-                    continue;
-                }
-
-                NanoMachineKind.RecipePlan plan = this.kind.getRecipe(this.level, input);
-                if (plan.isEmpty()
-                        || input.getCount() < plan.inputAmount()
-                        || !canFitOutputs(plan.outputs())) {
-                    continue;
-                }
-
-                this.inventory.extractItem(slot, plan.inputAmount(), false);
-                if (this.kind != NanoMachineKind.RECYCLER || rollRecyclerChance()) {
-                    for (ItemStack output : plan.outputs()) {
-                        ItemStack remainder = insertIntoOutputs(output.copy());
-                        if (!remainder.isEmpty()) {
-                            Block.popResource(this.level, this.worldPosition, remainder);
-                        }
-                    }
-                }
-
-                remaining -= plan.inputAmount();
-                if (remaining < 0) {
-                    remaining = 0;
-                }
-                processedInPass = true;
-                changed = true;
+        for (int lane = 0; lane < INPUT_SLOTS; lane++) {
+            if (!canProcessLane(lane)) {
+                continue;
             }
 
-            if (!processedInPass) {
-                break;
+            if (this.laneProgress[lane] < time) {
+                this.laneProgress[lane]++;
+            }
+
+            if (this.laneProgress[lane] >= time) {
+                this.laneProgress[lane] = 0;
+                processLane(lane);
+                changed = true;
             }
         }
 
@@ -122,30 +130,51 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
         }
     }
 
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable(this.kind.translationKey());
-    }
+    private void processLane(int lane) {
+        int remaining = TiersConfig.NANO_ITEMS_PER_OPERATION.get();
+        int outputSlot = OUTPUT_START + lane;
+        boolean changed = false;
 
-    @Override
-    public AbstractContainerMenu createMenu(
-            int containerId, Inventory playerInventory, Player player) {
-        return new NanoMachineMenu(containerId, playerInventory, this);
-    }
+        while (remaining > 0) {
+            ItemStack input = this.inventory.getStackInSlot(lane);
+            if (input.isEmpty()) {
+                break;
+            }
 
-    private ItemStack insertIntoOutputs(ItemStack stack) {
-        ItemStack remainder = stack;
-        for (int slot = OUTPUT_START; slot < SLOT_COUNT && !remainder.isEmpty(); slot++) {
-            remainder = this.inventory.insertOutput(slot, remainder, false);
+            NanoMachineKind.RecipePlan plan = this.kind.getRecipe(this.level, input);
+            if (plan.isEmpty() || input.getCount() < plan.inputAmount()) {
+                break;
+            }
+            if (!canFitLaneOutput(lane, plan.outputs())) {
+                break;
+            }
+
+            this.inventory.extractInput(lane, plan.inputAmount(), false);
+            if (this.kind != NanoMachineKind.RECYCLER || rollRecyclerChance()) {
+                for (ItemStack output : plan.outputs()) {
+                    ItemStack remainder = this.inventory.insertOutput(outputSlot, output.copy(), false);
+                    if (!remainder.isEmpty()) {
+                        Block.popResource(this.level, this.worldPosition, remainder);
+                    }
+                }
+            }
+
+            remaining -= plan.inputAmount();
+            if (remaining < 0) {
+                remaining = 0;
+            }
+            changed = true;
         }
-        return remainder;
+
+        if (changed) {
+            setChanged();
+        }
     }
 
-    private boolean canFitOutputs(List<ItemStack> outputs) {
-        ItemStack[] simulated = new ItemStack[OUTPUT_SLOTS];
-        for (int slot = 0; slot < OUTPUT_SLOTS; slot++) {
-            simulated[slot] = this.inventory.getStackInSlot(OUTPUT_START + slot).copy();
-        }
+    private boolean canFitLaneOutput(int lane, List<ItemStack> outputs) {
+        ItemStack[] simulated = new ItemStack[] {
+            this.inventory.getStackInSlot(OUTPUT_START + lane).copy()
+        };
 
         for (ItemStack output : outputs) {
             if (!insertSimulated(simulated, output.copy())) {
@@ -200,9 +229,21 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
     }
 
     @Override
+    public Component getDisplayName() {
+        return Component.translatable(this.kind.translationKey());
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(
+            int containerId, Inventory playerInventory, Player player) {
+        return new NanoMachineMenu(containerId, playerInventory, this);
+    }
+
+    @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("Inventory", this.inventory.serializeNBT(registries));
+        tag.putIntArray("LaneProgress", this.laneProgress);
     }
 
     @Override
@@ -210,6 +251,11 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
         super.loadAdditional(tag, registries);
         if (tag.contains("Inventory")) {
             this.inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+        }
+
+        int[] saved = tag.getIntArray("LaneProgress");
+        for (int lane = 0; lane < INPUT_SLOTS && lane < saved.length; lane++) {
+            this.laneProgress[lane] = Math.max(0, saved[lane]);
         }
     }
 
@@ -247,7 +293,38 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
         }
 
         private ItemStack insertOutput(int slot, ItemStack stack, boolean simulate) {
-            return super.insertItem(slot, stack, simulate);
+            if (stack.isEmpty()) {
+                return ItemStack.EMPTY;
+            }
+
+            ItemStack existing = getStackInSlot(slot);
+            int limit = Math.min(getSlotLimit(slot), stack.getMaxStackSize());
+            if (!existing.isEmpty()) {
+                if (!ItemStack.isSameItemSameComponents(existing, stack)) {
+                    return stack;
+                }
+                limit -= existing.getCount();
+            }
+            if (limit <= 0) {
+                return stack;
+            }
+
+            int moved = Math.min(limit, stack.getCount());
+            if (!simulate) {
+                ItemStack result =
+                        existing.isEmpty()
+                                ? stack.copyWithCount(moved)
+                                : existing.copyWithCount(existing.getCount() + moved);
+                setStackInSlot(slot, result);
+            }
+
+            ItemStack remainder = stack.copy();
+            remainder.shrink(moved);
+            return remainder;
+        }
+
+        private ItemStack extractInput(int slot, int amount, boolean simulate) {
+            return super.extractItem(slot, amount, simulate);
         }
 
         @Override

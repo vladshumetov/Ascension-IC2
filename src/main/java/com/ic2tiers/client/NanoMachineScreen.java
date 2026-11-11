@@ -1,6 +1,7 @@
 package com.ic2tiers.client;
 
 import com.ic2tiers.IC2Tiers;
+import com.ic2tiers.nano.NanoMachineBlockEntity;
 import com.ic2tiers.nano.NanoMachineMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -15,6 +16,9 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
     public NanoMachineScreen(
             NanoMachineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+        this.imageWidth = 176;
+        this.imageHeight = 160;
+        this.inventoryLabelY = 72;
     }
 
     @Override
@@ -23,10 +27,18 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
         guiGraphics.blit(
                 TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
-        int progress = this.menu.getProgressScaled(24);
-        if (progress > 0) {
-            guiGraphics.blit(
-                    TEXTURE, this.leftPos + 70, this.topPos + 38, 176, 0, progress, 16);
+        for (int lane = 0; lane < NanoMachineBlockEntity.INPUT_SLOTS; lane++) {
+            int progress = this.menu.getProgressScaled(lane, 16);
+            if (progress > 0) {
+                guiGraphics.blit(
+                        TEXTURE,
+                        this.leftPos + 61 + lane * 18,
+                        this.topPos + 35,
+                        176,
+                        0,
+                        16,
+                        progress);
+            }
         }
     }
 

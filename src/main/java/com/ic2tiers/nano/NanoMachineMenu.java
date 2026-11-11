@@ -18,6 +18,8 @@ import org.jetbrains.annotations.Nullable;
 public class NanoMachineMenu extends AbstractContainerMenu {
     public static final int MACHINE_SLOTS = NanoMachineBlockEntity.SLOT_COUNT;
     public static final int INPUT_SLOTS = NanoMachineBlockEntity.INPUT_SLOTS;
+    private static final int DATA_PROGRESS = 0;
+    private static final int DATA_MAX_PROGRESS = INPUT_SLOTS;
 
     private final @Nullable NanoMachineBlockEntity machine;
     private final Container container;
@@ -39,18 +41,20 @@ public class NanoMachineMenu extends AbstractContainerMenu {
 
         this.data =
                 new ContainerData() {
-                    private final int[] values = new int[2];
+                    private final int[] values = new int[INPUT_SLOTS + 1];
 
                     @Override
                     public int get(int index) {
                         if (NanoMachineMenu.this.machine != null
                                 && NanoMachineMenu.this.machine.getLevel() != null
                                 && !NanoMachineMenu.this.machine.getLevel().isClientSide) {
-                            return switch (index) {
-                                case 0 -> NanoMachineMenu.this.machine.getAddonProgress();
-                                case 1 -> NanoMachineMenu.this.machine.getProcessingTime();
-                                default -> 0;
-                            };
+                            if (index >= 0 && index < INPUT_SLOTS) {
+                                return NanoMachineMenu.this.machine.getLaneProgress(index);
+                            }
+                            if (index == DATA_MAX_PROGRESS) {
+                                return NanoMachineMenu.this.machine.getLaneProcessingTime();
+                            }
+                            return 0;
                         }
                         return index >= 0 && index < this.values.length ? this.values[index] : 0;
                     }
@@ -70,11 +74,11 @@ public class NanoMachineMenu extends AbstractContainerMenu {
         this.addDataSlots(this.data);
 
         for (int i = 0; i < INPUT_SLOTS; i++) {
-            this.addSlot(new Slot(this.container, i, 44, 18 + i * 22));
+            this.addSlot(new Slot(this.container, i, 61 + i * 18, 16));
         }
         for (int i = 0; i < NanoMachineBlockEntity.OUTPUT_SLOTS; i++) {
             this.addSlot(
-                    new Slot(this.container, NanoMachineBlockEntity.OUTPUT_START + i, 98, 18 + i * 22) {
+                    new Slot(this.container, NanoMachineBlockEntity.OUTPUT_START + i, 61 + i * 18, 54) {
                         @Override
                         public boolean mayPlace(ItemStack stack) {
                             return false;
@@ -85,21 +89,20 @@ public class NanoMachineMenu extends AbstractContainerMenu {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
                 this.addSlot(
-                        new Slot(
-                                playerInventory,
-                                col + row * 9 + 9,
-                                8 + col * 18,
-                                84 + row * 18));
+                        new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 82 + row * 18));
             }
         }
         for (int col = 0; col < 9; col++) {
-            this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
+            this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 140));
         }
     }
 
-    public int getProgressScaled(int pixels) {
-        int progress = this.data.get(0);
-        int max = Math.max(1, this.data.get(1));
+    public int getProgressScaled(int lane, int pixels) {
+        if (lane < 0 || lane >= INPUT_SLOTS) {
+            return 0;
+        }
+        int progress = this.data.get(DATA_PROGRESS + lane);
+        int max = Math.max(1, this.data.get(DATA_MAX_PROGRESS));
         return progress * pixels / max;
     }
 
