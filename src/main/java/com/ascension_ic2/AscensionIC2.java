@@ -21,7 +21,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
@@ -124,6 +124,14 @@ public final class AscensionIC2 {
         };
     }
 
+    /** Same block properties as the IC2 machine casings: metal, pickaxe, blast resistance 10. */
+    private static BlockBehaviour.Properties casingProperties(float hardness) {
+        return BlockBehaviour.Properties.of()
+                .strength(hardness, 10.0F)
+                .requiresCorrectToolForDrops()
+                .sound(SoundType.METAL);
+    }
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB =
             CONTENT.registerCreativeModeTab(
                     "main",
@@ -132,15 +140,11 @@ public final class AscensionIC2 {
 
     public static final DeferredBlock<Block> NANO_CASING_BLOCK =
             CONTENT.registerBlock(
-                    "nano_casing",
-                    Block::new,
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
+                    "nano_casing", Block::new, casingProperties(5.0F));
 
     public static final DeferredBlock<Block> QUANTUM_CASING_BLOCK =
             CONTENT.registerBlock(
-                    "quantum_casing",
-                    Block::new,
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
+                    "quantum_casing", Block::new, casingProperties(8.0F));
 
     public static final DeferredItem<BlockItem> NANO_CASING =
             CONTENT.registerBlockItem("nano_casing", NANO_CASING_BLOCK);
