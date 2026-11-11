@@ -48,6 +48,13 @@ public class TierMachineBlock extends AddonWrenchableBlock {
     }
 
     @Override
+    protected boolean triggerEvent(
+            BlockState state, Level level, BlockPos pos, int id, int param) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        return blockEntity != null && blockEntity.triggerEvent(id, param);
+    }
+
+    @Override
     protected InteractionResult useWithoutItem(
             BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (player.isShiftKeyDown() || player.getOffhandItem().is(IC2_WRENCHES)) {

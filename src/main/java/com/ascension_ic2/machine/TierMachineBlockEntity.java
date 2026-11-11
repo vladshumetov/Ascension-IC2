@@ -1,6 +1,7 @@
 package com.ascension_ic2.machine;
 
 import ic2.api.block.AddonMachineBlockEntity;
+import com.ascension_ic2.client.MachineSoundHandler;
 import ic2.api.upgrade.IEnergyStorageUpgrade;
 import ic2.api.upgrade.IProcessingUpgrade;
 import ic2.api.upgrade.ITransformerUpgrade;
@@ -63,8 +64,11 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
     private final ItemStack[] laneInput;
 
     // Working state used for sounds and particles.
+    private static final int SOUND_EVENT_ID = 1;
     private boolean working;
     private int effectCooldown;
+    private long lastEffectTick = Long.MIN_VALUE;
+    private int idleTicks;
 
     // Upgrade rates, recalculated whenever the upgrade slots change (same maths as IC2 InvSlotUpgrade).
     private int extraProcessTime;
@@ -269,10 +273,6 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
         return "electric_furnace".equals(this.kind.progressSprite());
     }
 
-    private String operateSound() {
-        return "machine." + this.kind.progressSprite() + ".operate";
-    }
-
     private void playIc2Sound(String path, float volume, float pitch) {
         if (this.level == null) {
             return;
@@ -291,44 +291,108 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
             return;
         }
 
-        if (workingNow != this.working) {
-            this.working = workingNow;
-            this.effectCooldown = 20;
-            if (workingNow) {
-                playIc2Sound(isFurnace() ? "machine.furnace.electric.start" : operateSound(), 0.6F, 1.0F);
-            } else if (isFurnace()) {
-                playIc2Sound("machine.furnace.electric.stop", 0.6F, 1.0F);
+        // canProcess may be queried more than once per tick; effects run once per game tick.
+        long now = this.level.getGameTime();
+        if (now == this.lastEffectTick) {
+            return;
+        }
+        this.lastEffectTick = now;
+
+        if (workingNow) {
+            this.idleTicks = 0;
+        } else {
+            this.idleTicks++;
+        }
+        // Keep the sound running through short gaps (full output, one empty lane) to avoid
+        // restarting the loop and stacking several copies of it.
+        boolean effective = workingNow || (this.working && this.idleTicks < 10);
+
+        if (effective != this.working) {
+            this.working = effective;
+            this.effectCooldown = 40;
+            this.level.blockEvent(
+                    this.worldPosition,
+                    getBlockState().getBlock(),
+                    SOUND_EVENT_ID,
+                    effective ? 1 : 0);
+            if (effective && isFurnace()) {
+                playIc2Sound("machine.furnace.electric.start", 0.5F, 1.0F);
+            } else if (!effective && isFurnace()) {
+                playIc2Sound("machine.furnace.electric.stop", 0.5F, 1.0F);
             }
         }
 
-        if (!workingNow) {
+        if (!effective) {
             return;
         }
         if (--this.effectCooldown > 0) {
             return;
         }
-        this.effectCooldown = 20;
-
-        playIc2Sound(
-                isFurnace() ? "machine.furnace.electric.loop" : operateSound(), 0.45F, 1.0F);
+        this.effectCooldown = 40;
         spawnWorkingParticles();
+    }
+
+    /** Sound loop for this machine; the client starts and stops it via a block event. */
+    public String workingSoundPath() {
+        return isFurnace()
+                ? "machine.furnace.electric.loop"
+                : "machine." + this.kind.progressSprite() + ".operate";
+    }
+
+    @Override
+    public boolean triggerEvent(int id, int type) {
+        if (id == SOUND_EVENT_ID) {
+            if (this.level != null && this.level.isClientSide) {
+                if (type == 1) {
+                    MachineSoundHandler.start(this, workingSoundPath());
+                } else {
+                    MachineSoundHandler.stop(this);
+                }
+            }
+            return true;
+        }
+        return super.triggerEvent(id, type);
+    }
+
+    @Override
+    public void setRemoved() {
+        if (this.level != null && this.level.isClientSide) {
+            MachineSoundHandler.stop(this);
+        }
+        this.working = false;
+        super.setRemoved();
     }
 
     private void spawnWorkingParticles() {
         if (!(this.level instanceof ServerLevel server)) {
             return;
         }
+
         double x = this.worldPosition.getX() + 0.5;
         double y = this.worldPosition.getY();
         double z = this.worldPosition.getZ() + 0.5;
+        net.minecraft.core.Direction facing = net.minecraft.core.Direction.NORTH;
+        BlockState state = getBlockState();
+        if (state.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)) {
+            facing = state.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING);
+        }
+        double fx = x + facing.getStepX() * 0.52;
+        double fz = z + facing.getStepZ() * 0.52;
+
         if (isFurnace()) {
             server.sendParticles(
-                    ParticleTypes.SMOKE, x, y + 1.05, z, 2, 0.25, 0.05, 0.25, 0.01);
-            server.sendParticles(
-                    ParticleTypes.FLAME, x, y + 0.85, z, 1, 0.2, 0.0, 0.2, 0.0);
+                    ParticleTypes.SMOKE, fx, y + 0.95, fz, 1, 0.05, 0.02, 0.05, 0.0);
+            if (this.level.random.nextInt(3) == 0) {
+                server.sendParticles(
+                        ParticleTypes.SMALL_FLAME, fx, y + 0.55, fz, 1, 0.03, 0.0, 0.03, 0.0);
+            }
         } else {
             server.sendParticles(
-                    ParticleTypes.ELECTRIC_SPARK, x, y + 0.9, z, 3, 0.3, 0.15, 0.3, 0.02);
+                    ParticleTypes.SMOKE, x, y + 0.95, z, 1, 0.08, 0.02, 0.08, 0.0);
+            if (this.level.random.nextInt(2) == 0) {
+                server.sendParticles(
+                        ParticleTypes.ELECTRIC_SPARK, fx, y + 0.55, fz, 1, 0.04, 0.04, 0.04, 0.01);
+            }
         }
     }
 
