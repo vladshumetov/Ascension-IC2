@@ -11,16 +11,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public enum NanoMachineKind implements TierMachineKind {
-    MACERATOR("macerator", "ic2:macerator", 300, 2048, (level, input) -> basic(Recipes.macerator, level, input)),
+    MACERATOR("macerator", "ic2:macerator", 300, 512, (level, input) -> basic(Recipes.macerator, level, input)),
     ELECTRIC_FURNACE(
             "electric_furnace",
             "ic2:electric_furnace",
             100,
-            3072,
+            1024,
             (level, input) -> furnace(input)),
-    COMPRESSOR("compressor", "ic2:compressor", 300, 2048, (level, input) -> basic(Recipes.compressor, level, input)),
-    EXTRACTOR("extractor", "ic2:extractor", 300, 2048, (level, input) -> basic(Recipes.extractor, level, input)),
-    RECYCLER("recycler", "ic2:recycler", 45, 1024, (level, input) -> basic(Recipes.recycler, input));
+    COMPRESSOR("compressor", "ic2:compressor", 300, 512, (level, input) -> basic(Recipes.compressor, level, input)),
+    EXTRACTOR("extractor", "ic2:extractor", 300, 512, (level, input) -> basic(Recipes.extractor, level, input)),
+    RECYCLER("recycler", "ic2:recycler", 45, 256, (level, input) -> basic(Recipes.recycler, input));
 
     private final String baseId;
     private final String id;

@@ -9,7 +9,7 @@ classic IC2 machines.
 
 | Tier | Inputs | Outputs | Items per operation | Energy tier |
 |------|--------|---------|---------------------|-------------|
-| Nano | 3 | 3 | 4 | 5 |
+| Nano | 3 | 3 | 4 | 4 |
 | Quantum | 5 | 5 | 12 | 5 |
 | Singular | 7 | 7 | planned | planned |
 
