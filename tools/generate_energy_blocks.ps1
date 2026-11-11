@@ -114,38 +114,32 @@ function Write-BlockLoot([string]$Id) {
 
 function Write-CableBlock([string]$Id) {
     Write-JsonFile (Join-Path $blockstateDir "$Id.json") @{
-        variants = @{ "" = @{ model = "ascension_ic2:block/energy_cable" } }
+        multipart = @(
+            @{ apply = @{ model = "ascension_ic2:block/cable/energy_core" } },
+            @{ when = @{ north = "true" }; apply = @{ model = "ascension_ic2:block/cable/energy_side"; uvlock = $true } },
+            @{ when = @{ east = "true" }; apply = @{ model = "ascension_ic2:block/cable/energy_side"; uvlock = $true; y = 90 } },
+            @{ when = @{ south = "true" }; apply = @{ model = "ascension_ic2:block/cable/energy_side"; uvlock = $true; y = 180 } },
+            @{ when = @{ west = "true" }; apply = @{ model = "ascension_ic2:block/cable/energy_side"; uvlock = $true; y = 270 } },
+            @{ when = @{ up = "true" }; apply = @{ model = "ascension_ic2:block/cable/energy_side"; uvlock = $true; x = -90 } },
+            @{ when = @{ down = "true" }; apply = @{ model = "ascension_ic2:block/cable/energy_side"; uvlock = $true; x = 90 } }
+        )
     }
     Write-JsonFile (Join-Path $itemModelDir "$Id.json") @{
-        parent = "ascension_ic2:block/energy_cable"
+        parent = "ascension_ic2:block/cable/energy_core"
     }
     Write-BlockLoot $Id
 }
 
-# Shared cable model: a small core with arms on all six sides, so it reads as a wire, not a cube.
-$faceSet = @{
-    down = @{ texture = "#all" }
-    up = @{ texture = "#all" }
-    north = @{ texture = "#all" }
-    south = @{ texture = "#all" }
-    east = @{ texture = "#all" }
-    west = @{ texture = "#all" }
+# Cable geometry copied from the IC2 glass fibre cable shapes; only the texture is ours.
+$cableModelDir = Join-Path $blockModelDir "cable"
+New-Item -ItemType Directory -Path $cableModelDir -Force | Out-Null
+Write-JsonFile (Join-Path $cableModelDir "energy_core.json") @{
+    parent = "ic2:block/cable/shape/core_4"
+    textures = @{ texture = "ascension_ic2:block/energy_cable" }
 }
-Write-JsonFile (Join-Path $blockModelDir "energy_cable.json") @{
-    parent = "minecraft:block/block"
-    textures = @{
-        particle = "ascension_ic2:block/energy_cable"
-        all = "ascension_ic2:block/energy_cable"
-    }
-    elements = @(
-        @{ from = @(5, 5, 5); to = @(11, 11, 11); faces = $faceSet },
-        @{ from = @(6, 6, 0); to = @(10, 10, 5); faces = $faceSet },
-        @{ from = @(6, 6, 11); to = @(10, 10, 16); faces = $faceSet },
-        @{ from = @(0, 6, 6); to = @(5, 10, 10); faces = $faceSet },
-        @{ from = @(11, 6, 6); to = @(16, 10, 10); faces = $faceSet },
-        @{ from = @(6, 0, 6); to = @(10, 5, 10); faces = $faceSet },
-        @{ from = @(6, 11, 6); to = @(10, 16, 10); faces = $faceSet }
-    )
+Write-JsonFile (Join-Path $cableModelDir "energy_side.json") @{
+    parent = "ic2:block/cable/shape/side_4"
+    textures = @{ texture = "ascension_ic2:block/energy_cable" }
 }
 
 $allIds = @(

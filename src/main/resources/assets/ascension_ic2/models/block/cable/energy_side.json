@@ -1,0 +1,6 @@
+{
+    "textures":  {
+                     "texture":  "ascension_ic2:block/energy_cable"
+                 },
+    "parent":  "ic2:block/cable/shape/side_4"
+}
