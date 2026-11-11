@@ -252,9 +252,7 @@ $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
 
 # One flat rectangle: upgrade slots sit on its side edges, no wings.
-$shapes = @(
-    @(3, 4, 236, 127)
-)
+$shapes = ,@(3, 4, 236, 127)
 $inside = New-Object 'bool[,]' 256, 256
 foreach ($s in $shapes) {
     for ($y = $s[1]; $y -le $s[3]; $y++) {
@@ -303,29 +301,27 @@ while ($queue.Count -gt 0) {
     }
 }
 
-# Paint: dark outline, cyan rim, dark-blue inner rim, then the navy gradient fill.
-$top = C '#1B2445'
-$bottom = C '#10162E'
+# Paint the body: dark outline on the silhouette edge, cyan rim, inner dark-blue rim, navy gradient fill.
 for ($y = 0; $y -lt 256; $y++) {
     for ($x = 0; $x -lt 256; $x++) {
- if (-not $inside[$x, $y]) { continue }
- $d = $dist[$x, $y]
- if ($d -eq 0) {
-     $gui.SetPixel($x, $y, (C '#05080C'))
-        } elseif ($d -eq 1) {
-     $gui.SetPixel($x, $y, (C '#4D7C9A'))
-        } elseif ($d -eq 2) {
-     $gui.SetPixel($x, $y, (C '#253C5E'))
-        } else {
-     $t = [Math]::Min(1.0, [Math]::Max(0.0, ($y - 4) / 124.0))
-     $r = [int]($top.R + ($bottom.R - $top.R) * $t)
-     $g = [int]($top.G + ($bottom.G - $top.G) * $t)
-     $b = [int]($top.B + ($bottom.B - $top.B) * $t)
-            $gui.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, $r, $g, $b))
+        if (-not $inside[$x, $y]) { continue }
+        $edge = $false
+ foreach ($dd in $dirs) {
+     $nx = $x + $dd[0]
+     $ny = $y + $dd[1]
+     if ($nx -lt 0 -or $ny -lt 0 -or $nx -ge 256 -or $ny -ge 256 -or -not $inside[$nx, $ny]) { $edge = $true }
         }
+        if ($edge) {
+     $gui.SetPixel($x, $y, (C '#05080C'))
+     continue
+        }
+        $t2 = [Math]::Min(1.0, [Math]::Max(0.0, ($y - 4) / 124.0))
+ $r = [int](27 + (16 - 27) * $t2)
+ $g = [int](36 + (22 - 36) * $t2)
+ $b = [int](69 + (46 - 69) * $t2)
+ $gui.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255, $r, $g, $b))
     }
 }
-
 # Top highlight along the body (light line just inside the rim).
 Rect $gui 20 7 219 7 '#B7E0EA'
 
