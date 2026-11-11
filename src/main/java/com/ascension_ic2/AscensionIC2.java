@@ -158,6 +158,12 @@ public final class AscensionIC2 {
     public static final DeferredItem<Item> QUANTUM_CIRCUIT =
             CONTENT.registerItem("quantum_circuit", () -> new Item(new Item.Properties()));
 
+    public static final DeferredItem<Item> QUANTUM_CRYSTAL =
+            CONTENT.registerItem("quantum_crystal", () -> new Item(new Item.Properties()));
+
+    public static final DeferredItem<Item> SINGULAR_CRYSTAL =
+            CONTENT.registerItem("singular_crystal", () -> new Item(new Item.Properties()));
+
     public AscensionIC2(IEventBus modEventBus, ModContainer modContainer) {
         CONTENT.register(modEventBus);
         MENUS.register(modEventBus);
@@ -175,6 +181,8 @@ public final class AscensionIC2 {
         output.accept(QUANTUM_CASING.get());
         output.accept(NANO_CIRCUIT.get());
         output.accept(QUANTUM_CIRCUIT.get());
+        output.accept(QUANTUM_CRYSTAL.get());
+        output.accept(SINGULAR_CRYSTAL.get());
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {

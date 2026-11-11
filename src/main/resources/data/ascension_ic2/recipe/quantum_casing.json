@@ -1,7 +1,7 @@
 {
     "key":  {
-                "C":  {
-                          "item":  "ascension_ic2:quantum_circuit"
+                "X":  {
+                          "item":  "ascension_ic2:quantum_crystal"
                       },
                 "I":  {
                           "item":  "ic2:iridium"
@@ -13,7 +13,7 @@
     "category":  "misc",
     "pattern":  [
                     "NIN",
-                    "ICI",
+                    "IXI",
                     "NIN"
                 ],
     "result":  {

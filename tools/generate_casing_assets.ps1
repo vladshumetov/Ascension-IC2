@@ -139,11 +139,11 @@ Write-JsonFile (Join-Path $recipeDir "nano_casing.json") @{
 Write-JsonFile (Join-Path $recipeDir "quantum_casing.json") @{
     type = "minecraft:crafting_shaped"
     category = "misc"
-    pattern = @("NIN", "ICI", "NIN")
+    pattern = @("NIN", "IXI", "NIN")
     key = @{
         N = @{ item = "ascension_ic2:nano_casing" }
         I = @{ item = "ic2:iridium" }
-        C = @{ item = "ascension_ic2:quantum_circuit" }
+        X = @{ item = "ascension_ic2:quantum_crystal" }
     }
     result = @{ id = "ascension_ic2:quantum_casing"; count = 1 }
 }
