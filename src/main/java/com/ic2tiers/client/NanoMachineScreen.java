@@ -13,12 +13,14 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
     private static final ResourceLocation TEXTURE =
      ResourceLocation.fromNamespaceAndPath(IC2Tiers.MOD_ID, "textures/gui/nano_machine.png");
 
+    private static final int ARROW_HEIGHT = 14;
+    private static final int ENERGY_HEIGHT = 35;
+
     public NanoMachineScreen(
-            NanoMachineMenu menu, Inventory playerInventory, Component title) {
+     NanoMachineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 240;
- this.imageHeight = 230;
-        this.inventoryLabelY = 123;
+        this.imageHeight = 230;
     }
 
     @Override
@@ -27,9 +29,21 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
         guiGraphics.blit(
          TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
+        // Energy bar: fills from the bottom of the inner well (x 7..14, y 88..122).
+        int energy = this.menu.getEnergyScaled(ENERGY_HEIGHT);
+        if (energy > 0) {
+     int x1 = this.leftPos + 7;
+     int x2 = this.leftPos + 15;
+            int y2 = this.topPos + 123;
+     int y1 = y2 - energy;
+     guiGraphics.fill(x1, y1, x2, y2, 0xFF55D6E8);
+     guiGraphics.fill(x1, y1, x2, y1 + 1, 0xFFB7E0EA);
+        }
+
+        // Progress arrows under each input lane.
         for (int lane = 0; lane < NanoMachineBlockEntity.INPUT_SLOTS; lane++) {
-     int progress = this.menu.getProgressScaled(lane, 16);
-     if (progress > 0) {
+            int progress = this.menu.getProgressScaled(lane, ARROW_HEIGHT);
+            if (progress > 0) {
   guiGraphics.blit(
    TEXTURE,
    this.leftPos + 86 + lane * 26,
@@ -50,23 +64,16 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
 
     @Override
     protected void renderLabels(
-     GuiGraphics guiGraphics, int mouseX, int mouseY) {
+            GuiGraphics guiGraphics, int mouseX, int mouseY) {
         String title = this.title.getString();
         int titleX = (this.imageWidth - this.font.width(title)) / 2;
         guiGraphics.drawString(this.font, title, titleX, 4, 0xFFB7E0EA, false);
- guiGraphics.drawString(
-         this.font,
-         Component.translatable("container.inventory").getString(),
-  40,
-  this.inventoryLabelY,
-         0xFFB7E0EA,
-         false);
     }
 
     @Override
     public void render(
      GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
- super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+ this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 }

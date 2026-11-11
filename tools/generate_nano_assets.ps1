@@ -251,25 +251,30 @@ $gui = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelF
 $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
 
-# Machine body: dark navy panel with blue/cyan trim.
+# One continuous machine body (dark navy) joined to the inventory below.
 $bodyGradient = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
-    (New-Object System.Drawing.Rectangle(16, 8, 208, 111)),
+    (New-Object System.Drawing.Rectangle(0, 0, $guiW, 128)),
     (C '#1B2445'), (C '#10162E'), 90.0)
-$guiGraphics.FillRectangle($bodyGradient, 16, 8, 208, 111)
+$guiGraphics.FillRectangle($bodyGradient, 0, 0, $guiW, 128)
 $bodyGradient.Dispose()
-Border $gui 16 8 223 118 '#05080C'
-Border $gui 17 9 222 117 '#253C5E'
-Border $gui 18 10 221 116 '#4D7C9A'
-Rect $gui 19 11 220 11 '#B7E0EA'
+
+# Side walls and top wall.
+Rect $gui 0 0 2 128 '#253C5E'
+Rect $gui 237 0 239 128 '#253C5E'
+Rect $gui 0 0 239 1 '#253C5E'
+Rect $gui 2 0 2 128 '#4D7C9A'
+Rect $gui 237 0 237 128 '#4D7C9A'
+Rect $gui 0 0 0 128 '#05080C'
+Rect $gui 239 0 239 128 '#05080C'
+
+# Joint line between machine body and inventory.
+Rect $gui 0 128 239 128 '#4D7C9A'
+Rect $gui 0 129 239 129 '#B7E0EA'
 
 # Title banner.
 Rect $gui 50 2 189 14 '#1F274F'
 Border $gui 50 2 189 14 '#4D7C9A'
 Rect $gui 51 3 188 3 '#B7E0EA'
-
-# Red/orange energy accent under the banner.
-Rect $gui 60 16 179 16 '#EB352E'
-Rect $gui 60 17 179 17 '#FF8D4F'
 
 function Draw-PlayerSlot($bmp, [int]$x, [int]$y) {
     Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#8B8B8B'
@@ -289,8 +294,6 @@ function Draw-MachineSlot($bmp, [int]$x, [int]$y) {
     Rect $bmp ($x - 2) ($y - 2) ($x - 2) ($y + 15) '#3F6C89'
     Rect $bmp ($x - 2) ($y + 17) ($x + 17) ($y + 17) '#041833'
     Rect $bmp ($x + 17) ($y - 2) ($x + 17) ($y + 17) '#041833'
-    Rect $bmp ($x - 3) ($y - 3) ($x - 1) ($y - 3) '#B7E0EA'
-    Rect $bmp ($x - 3) ($y - 3) ($x - 3) ($y - 1) '#B7E0EA'
 }
 
 function Draw-UpgradeSlot($bmp, [int]$x, [int]$y) {
@@ -307,25 +310,37 @@ foreach ($pos in @(@(6, 28), @(6, 62), @(218, 28), @(218, 62))) {
     Draw-UpgradeSlot $gui $pos[0] $pos[1]
 }
 
+# Energy bar on the left wall, below the upper upgrade slot.
+Rect $gui 5 86 16 124 '#0F1325'
+Border $gui 5 86 16 124 '#4D7C9A'
+Rect $gui 6 87 15 123 '#09203F'
+foreach ($y in @(95, 104, 113)) {
+    Rect $gui 7 $y 14 $y '#253C5E'
+}
+
 # Machine inputs (top) and outputs (bottom).
 foreach ($i in 0..2) {
     Draw-MachineSlot $gui (86 + $i * 26) 28
     Draw-MachineSlot $gui (86 + $i * 26) 76
 }
 
-# Progress tracks under each input lane.
+# Arrow tracks under each input lane (same shape as the progress overlay).
+function Draw-ArrowShape($bmp, [int]$x, [int]$y, [string]$stemHi, [string]$fill) {
+    Rect $bmp ($x + 6) $y ($x + 9) ($y + 8) $fill
+    if ($stemHi) { Rect $bmp ($x + 6) $y ($x + 6) ($y + 8) $stemHi }
+    $heads = @(@(3, 12), @(4, 11), @(5, 10), @(6, 9), @(7, 8))
+    for ($r = 0; $r -lt $heads.Count; $r++) {
+ Rect $bmp ($x + $heads[$r][0]) ($y + 9 + $r) ($x + $heads[$r][1]) ($y + 9 + $r) $fill
+    }
+}
 foreach ($x in @(86, 112, 138)) {
-    Rect $gui ($x + 4) 51 ($x + 11) 66 '#0F1325'
-    Border $gui ($x + 4) 51 ($x + 11) 66 '#4D7C9A'
-    Rect $gui ($x + 7) 53 ($x + 8) 64 '#63121A'
+    Draw-ArrowShape $gui $x 51 $null '#253C5E'
 }
 
-# Label bar above the player inventory.
-Rect $gui 32 122 207 129 '#171D39'
-Border $gui 32 122 207 129 '#253C5E'
-Rect $gui 33 123 206 123 '#4D7C9A'
+# Vertical progress overlay (texture 240,0): bright arrow drawn with height = progress.
+Draw-ArrowShape $gui 240 0 '#B7E0EA' '#55D6E8'
 
-# Vanilla player inventory panel.
+# Vanilla player inventory panel, joined under the body.
 Rect $gui 32 132 207 217 '#C6C6C6'
 Border $gui 32 132 207 217 '#373737'
 Rect $gui 33 133 206 133 '#FFFFFF'
@@ -335,21 +350,20 @@ Rect $gui 207 133 207 217 '#555555'
 
 foreach ($row in 0..2) {
     foreach ($col in 0..8) {
-        Draw-PlayerSlot $gui (40 + $col * 18) (140 + $row * 18)
+ Draw-PlayerSlot $gui (40 + $col * 18) (140 + $row * 18)
     }
 }
 foreach ($col in 0..8) {
     Draw-PlayerSlot $gui (40 + $col * 18) 198
 }
 
-# Vertical progress overlay: 16x16 at (240, 0).
-Rect $gui 246 0 249 10 '#EB352E'
-Rect $gui 246 0 247 10 '#FF8D4F'
-foreach ($y in 10..15) {
-    $half = $y - 9
-    Rect $gui (246 - $half) $y (249 + $half) $y '#EB352E'
+# Decorative red/orange bar along the bottom (as in the reference).
+Rect $gui 0 221 127 221 '#8CBCD0'
+Rect $gui 0 222 127 226 '#EB352E'
+foreach ($x in 0..31) {
+    Px $gui ($x * 4) 224 '#FF8D4F'
 }
-Rect $gui 246 10 247 15 '#FF8D4F'
+Rect $gui 0 227 127 227 '#8CBCD0'
 
 $guiGraphics.Dispose()
 Save $gui (Join-Path $guiDir "nano_machine.png")
