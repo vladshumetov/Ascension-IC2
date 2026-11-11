@@ -251,40 +251,25 @@ $gui = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelF
 $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
 
-# Machine panel: dark navy/blue like the reference textures.
-$machineGradient = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
-    (New-Object System.Drawing.Rectangle(20, 8, 200, 112)),
+# Machine body: dark navy panel with blue/cyan trim.
+$bodyGradient = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+    (New-Object System.Drawing.Rectangle(16, 8, 208, 111)),
     (C '#1B2445'), (C '#10162E'), 90.0)
-$guiGraphics.FillRectangle($machineGradient, 20, 8, 200, 112)
-$machineGradient.Dispose()
+$guiGraphics.FillRectangle($bodyGradient, 16, 8, 208, 111)
+$bodyGradient.Dispose()
+Border $gui 16 8 223 118 '#05080C'
+Border $gui 17 9 222 117 '#253C5E'
+Border $gui 18 10 221 116 '#4D7C9A'
+Rect $gui 19 11 220 11 '#B7E0EA'
 
-Border $gui 20 8 219 119 '#05080C'
-Border $gui 21 9 218 118 '#253C5E'
-Border $gui 22 10 217 117 '#4D7C9A'
-Rect $gui 23 11 216 11 '#B7E0EA'
+# Title banner.
+Rect $gui 50 2 189 14 '#1F274F'
+Border $gui 50 2 189 14 '#4D7C9A'
+Rect $gui 51 3 188 3 '#B7E0EA'
 
-# Side accent bars.
-Rect $gui 6 30 19 98 '#1F274F'
-Border $gui 6 30 19 98 '#253C5E'
-Rect $gui 220 30 233 98 '#1F274F'
-Border $gui 220 30 233 98 '#253C5E'
-
-# Red/orange title accent.
-Rect $gui 24 22 215 22 '#EB352E'
-Rect $gui 24 23 215 23 '#FF8D4F'
-
-# Label bar above the standard player inventory.
-Rect $gui 32 124 207 131 '#171D39'
-Border $gui 32 124 207 131 '#253C5E'
-Rect $gui 33 125 206 125 '#4D7C9A'
-
-# Vanilla player inventory panel.
-Rect $gui 32 132 207 217 '#C6C6C6'
-Border $gui 32 132 207 217 '#373737'
-Rect $gui 33 133 206 133 '#FFFFFF'
-Rect $gui 33 133 33 216 '#FFFFFF'
-Rect $gui 33 217 207 217 '#555555'
-Rect $gui 207 133 207 217 '#555555'
+# Red/orange energy accent under the banner.
+Rect $gui 60 16 179 16 '#EB352E'
+Rect $gui 60 17 179 17 '#FF8D4F'
 
 function Draw-PlayerSlot($bmp, [int]$x, [int]$y) {
     Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#8B8B8B'
@@ -308,10 +293,45 @@ function Draw-MachineSlot($bmp, [int]$x, [int]$y) {
     Rect $bmp ($x - 3) ($y - 3) ($x - 3) ($y - 1) '#B7E0EA'
 }
 
-foreach ($i in 0..2) {
-    Draw-MachineSlot $gui (56 + $i * 56) 28
-    Draw-MachineSlot $gui (56 + $i * 56) 82
+function Draw-UpgradeSlot($bmp, [int]$x, [int]$y) {
+    Rect $bmp ($x - 3) ($y - 3) ($x + 18) ($y + 18) '#1E2751'
+    Border $bmp ($x - 3) ($y - 3) ($x + 18) ($y + 18) '#4D7C9A'
+    Rect $bmp ($x - 2) ($y - 2) ($x + 17) ($y + 17) '#09203F'
+    Border $bmp ($x - 2) ($y - 2) ($x + 17) ($y + 17) '#253C5E'
+    Rect $bmp ($x - 2) ($y - 2) ($x + 15) ($y - 2) '#3F6C89'
+    Rect $bmp ($x - 2) ($y - 2) ($x - 2) ($y + 15) '#3F6C89'
 }
+
+# Upgrade slots on both sides.
+foreach ($pos in @(@(6, 28), @(6, 62), @(218, 28), @(218, 62))) {
+    Draw-UpgradeSlot $gui $pos[0] $pos[1]
+}
+
+# Machine inputs (top) and outputs (bottom).
+foreach ($i in 0..2) {
+    Draw-MachineSlot $gui (86 + $i * 26) 28
+    Draw-MachineSlot $gui (86 + $i * 26) 76
+}
+
+# Progress tracks under each input lane.
+foreach ($x in @(86, 112, 138)) {
+    Rect $gui ($x + 4) 51 ($x + 11) 66 '#0F1325'
+    Border $gui ($x + 4) 51 ($x + 11) 66 '#4D7C9A'
+    Rect $gui ($x + 7) 53 ($x + 8) 64 '#63121A'
+}
+
+# Label bar above the player inventory.
+Rect $gui 32 122 207 129 '#171D39'
+Border $gui 32 122 207 129 '#253C5E'
+Rect $gui 33 123 206 123 '#4D7C9A'
+
+# Vanilla player inventory panel.
+Rect $gui 32 132 207 217 '#C6C6C6'
+Border $gui 32 132 207 217 '#373737'
+Rect $gui 33 133 206 133 '#FFFFFF'
+Rect $gui 33 133 33 216 '#FFFFFF'
+Rect $gui 33 217 207 217 '#555555'
+Rect $gui 207 133 207 217 '#555555'
 
 foreach ($row in 0..2) {
     foreach ($col in 0..8) {
@@ -320,12 +340,6 @@ foreach ($row in 0..2) {
 }
 foreach ($col in 0..8) {
     Draw-PlayerSlot $gui (40 + $col * 18) 198
-}
-
-foreach ($x in @(56, 112, 168)) {
-    Rect $gui ($x + 4) 54 ($x + 11) 69 '#0F1325'
-    Border $gui ($x + 4) 54 ($x + 11) 69 '#4D7C9A'
-    Rect $gui ($x + 7) 56 ($x + 8) 67 '#63121A'
 }
 
 # Vertical progress overlay: 16x16 at (240, 0).

@@ -12,6 +12,10 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,7 +26,16 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
     public static final int INPUT_SLOTS = 3;
     public static final int OUTPUT_SLOTS = 3;
     public static final int OUTPUT_START = INPUT_SLOTS;
-    public static final int SLOT_COUNT = INPUT_SLOTS + OUTPUT_SLOTS;
+    public static final int UPGRADE_START = INPUT_SLOTS + OUTPUT_SLOTS;
+    public static final int UPGRADE_SLOTS = 4;
+    public static final int SLOT_COUNT = UPGRADE_START + UPGRADE_SLOTS;
+
+    private static final TagKey<Item> UPGRADE_TAG =
+     TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("ic2_tiers", "upgrades"));
+
+    public static boolean isUpgrade(ItemStack stack) {
+        return stack.is(UPGRADE_TAG);
+    }
 
     private final NanoMachineKind kind;
     private final NanoInventory inventory = new NanoInventory();
@@ -279,12 +292,12 @@ public class NanoMachineBlockEntity extends AddonMachineBlockEntity implements M
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            return slot < INPUT_SLOTS;
+            return slot < INPUT_SLOTS || (slot >= UPGRADE_START && isUpgrade(stack));
         }
 
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            return slot < INPUT_SLOTS ? super.insertItem(slot, stack, simulate) : stack;
+            return (slot < OUTPUT_START || slot >= UPGRADE_START) ? super.insertItem(slot, stack, simulate) : stack;
         }
 
         @Override

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "ic2:overclocker_upgrade",
+    "ic2:transformer_upgrade",
+    "ic2:energy_storage_upgrade",
+    "ic2:ejector_upgrade",
+    "ic2:pulling_upgrade"
+  ]
+}
