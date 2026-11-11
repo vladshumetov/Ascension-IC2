@@ -83,7 +83,7 @@ public final class AscensionIC2 {
                                         (pos, state) ->
                                                 new TierMachineBlockEntity(
                                                         tier, kind, holder[0].get(), pos, state)),
-                        BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
+                        casingProperties(tier == MachineTier.NANO ? 5.0F : 8.0F));
         DeferredItem<TierMachineBlockItem> item =
                 CONTENT.registerItem(
                         kind.id(),
