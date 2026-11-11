@@ -30,6 +30,15 @@ Nano and Quantum tiers:
 The machines use the standard IC2 recipes, so they stay compatible with existing packs and
 recipe managers.
 
+## Circuits
+
+Each tier has its own circuit, crafted from the previous tier:
+
+- **Nano Circuit** — carbon plates, gold and an advanced circuit.
+- **Quantum Circuit** — advanced alloy, lapotron crystals, iridium and a nano circuit.
+
+Machines require the circuit of their tier, so a quantum machine is a real endgame build.
+
 ## Upgrades
 
 The four upgrade slots accept IC2 upgrades:

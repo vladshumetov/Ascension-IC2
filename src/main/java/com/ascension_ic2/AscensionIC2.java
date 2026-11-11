@@ -129,6 +129,12 @@ public final class AscensionIC2 {
                     () -> new ItemStack(MACHINES.getFirst().item().get()),
                     AscensionIC2::fillTab);
 
+    public static final DeferredItem<Item> NANO_CIRCUIT =
+            CONTENT.registerItem("nano_circuit", () -> new Item(new Item.Properties()));
+
+    public static final DeferredItem<Item> QUANTUM_CIRCUIT =
+            CONTENT.registerItem("quantum_circuit", () -> new Item(new Item.Properties()));
+
     public AscensionIC2(IEventBus modEventBus, ModContainer modContainer) {
         CONTENT.register(modEventBus);
         MENUS.register(modEventBus);
@@ -142,6 +148,8 @@ public final class AscensionIC2 {
         for (MachineRegistration registration : MACHINES) {
             output.accept(registration.item().get());
         }
+        output.accept(NANO_CIRCUIT.get());
+        output.accept(QUANTUM_CIRCUIT.get());
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {

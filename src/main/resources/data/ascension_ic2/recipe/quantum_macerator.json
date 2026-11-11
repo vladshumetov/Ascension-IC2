@@ -1,20 +1,20 @@
 {
     "key":  {
-                "E":  {
-                          "item":  "ic2:advanced_circuit"
-                      },
-                "M":  {
-                          "item":  "ascension_ic2:nano_macerator"
+                "Q":  {
+                          "item":  "ascension_ic2:quantum_circuit"
                       },
                 "I":  {
                           "item":  "ic2:iridium"
+                      },
+                "N":  {
+                          "item":  "ascension_ic2:nano_macerator"
                       }
             },
     "category":  "misc",
     "pattern":  [
-                    "IEI",
-                    "EME",
-                    "IEI"
+                    "QIQ",
+                    "INI",
+                    "QIQ"
                 ],
     "result":  {
                    "id":  "ascension_ic2:quantum_macerator",

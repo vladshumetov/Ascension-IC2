@@ -132,11 +132,11 @@ foreach ($machine in $machines) {
     Write-JsonFile (Join-Path $recipeDir "$id.json") @{
         type = "minecraft:crafting_shaped"
         category = "misc"
-        pattern = @("IEI", "EME", "IEI")
+        pattern = @("QIQ", "INI", "QIQ")
         key = @{
+            Q = @{ item = "ascension_ic2:quantum_circuit" }
             I = @{ item = "ic2:iridium" }
-            E = @{ item = "ic2:advanced_circuit" }
-            M = @{ item = "ascension_ic2:$nano" }
+            N = @{ item = "ascension_ic2:$nano" }
         }
         result = @{
             id = "ascension_ic2:${id}"

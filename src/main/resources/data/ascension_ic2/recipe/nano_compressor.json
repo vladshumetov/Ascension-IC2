@@ -1,7 +1,7 @@
 {
     "key":  {
-                "E":  {
-                          "item":  "ic2:advanced_circuit"
+                "C":  {
+                          "item":  "ascension_ic2:nano_circuit"
                       },
                 "M":  {
                           "item":  "ic2:compressor"
@@ -12,9 +12,9 @@
             },
     "category":  "misc",
     "pattern":  [
-                    "IEI",
-                    "EME",
-                    "IEI"
+                    "ICI",
+                    "CMC",
+                    "ICI"
                 ],
     "result":  {
                    "id":  "ascension_ic2:nano_compressor",

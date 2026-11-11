@@ -10,6 +10,8 @@
   "block.ascension_ic2.quantum_compressor": "Квантовый сжиматель",
   "block.ascension_ic2.quantum_extractor": "Квантовый экстрактор",
   "block.ascension_ic2.quantum_recycler": "Квантовый утилизатор",
+  "item.ascension_ic2.nano_circuit": "Нано-схема",
+  "item.ascension_ic2.quantum_circuit": "Квантовая схема",
   "gui.ascension_ic2.energy": "Энергия: %s / %s EU",
   "gui.ascension_ic2.progress": "Прогресс: %s%%",
   "tooltip.ascension_ic2.energy_tier": "Уровень энергии: %s (вход %s EU/t)",
