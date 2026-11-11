@@ -33,7 +33,15 @@ EU/t follows the IC2 rule `32 * 4^(tier - 1)`. The addon defines 14 levels:
 
 Tiers 1–5 match IC2. Tiers 6–14 are the addon ladder; the addon machines use their own energy
 block, which accepts all 14 tiers. IC2 cables and the standard addon energy block stop at 8192 EU/t,
-so transport above tier 5 will need addon cables.
+so transport above tier 5 needs the addon cables.
+
+The addon currently ships these energy blocks (creative only, recipes are not set up yet):
+
+- **Energy Cable (Tier 6–14)** — one cyan glass-fibre cable per tier, conducts that tier's voltage.
+- **Solar Panel (Tier 1–14)** — generates a full tier packet per tick in daylight with sky access;
+  all panels share one texture.
+
+Feeding a machine with a voltage above its energy tier destroys it.
 
 ## Machines
 

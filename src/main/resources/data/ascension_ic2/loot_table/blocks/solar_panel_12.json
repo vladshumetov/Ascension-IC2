@@ -1,0 +1,21 @@
+{
+    "pools":  [
+                  {
+                      "conditions":  [
+                                         {
+                                             "condition":  "minecraft:survives_explosion"
+                                         }
+                                     ],
+                      "bonus_rolls":  0,
+                      "rolls":  1,
+                      "entries":  [
+                                      {
+                                          "name":  "ascension_ic2:solar_panel_12",
+                                          "type":  "minecraft:item"
+                                      }
+                                  ]
+                  }
+              ],
+    "type":  "minecraft:block",
+    "random_sequence":  "ascension_ic2:blocks/solar_panel_12"
+}

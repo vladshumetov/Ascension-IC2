@@ -1,6 +1,9 @@
 package com.ascension_ic2;
 
 import com.ascension_ic2.config.TiersConfig;
+import com.ascension_ic2.energy.EnergyCableBlockEntity;
+import com.ascension_ic2.energy.EnergyTiers;
+import com.ascension_ic2.energy.SolarPanelBlockEntity;
 import com.ascension_ic2.event.MachineEvents;
 import com.ascension_ic2.machine.MachineTier;
 import com.ascension_ic2.machine.NanoMachineKind;
@@ -52,11 +55,26 @@ public final class AscensionIC2 {
     /** Every registered machine, nano first, then quantum. */
     public static final List<MachineRegistration> MACHINES = new ArrayList<>();
 
+    public record EnergyBlockRegistration(
+            int tier,
+            DeferredBlock<Block> block,
+            DeferredItem<BlockItem> item,
+            DeferredHolder<BlockEntityType<?>, ? extends BlockEntityType<?>> blockEntity) {}
+
+    public static final List<EnergyBlockRegistration> CABLES = new ArrayList<>();
+    public static final List<EnergyBlockRegistration> SOLAR_PANELS = new ArrayList<>();
+
     static {
         for (MachineTier tier : MachineTier.values()) {
             for (TierMachineKind kind : kindsFor(tier)) {
                 MACHINES.add(registerMachine(tier, kind));
             }
+        }
+        for (int tier = 6; tier <= EnergyTiers.MAX_TIER; tier++) {
+            CABLES.add(registerCable(tier));
+        }
+        for (int tier = EnergyTiers.MIN_TIER; tier <= EnergyTiers.MAX_TIER; tier++) {
+            SOLAR_PANELS.add(registerSolarPanel(tier));
         }
     }
 
@@ -95,6 +113,51 @@ public final class AscensionIC2 {
                         (pos, state) -> new TierMachineBlockEntity(tier, kind, holder[0].get(), pos, state),
                         block);
         return new MachineRegistration(tier, kind, block, item, holder[0]);
+    }
+
+    private static EnergyBlockRegistration registerCable(int tier) {
+        @SuppressWarnings("unchecked")
+        DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyCableBlockEntity>>[] holder =
+                new DeferredHolder[1];
+
+        String id = "energy_cable_" + tier;
+        DeferredBlock<Block> block =
+                CONTENT.registerBlock(
+                        id,
+                        Block::new,
+                        BlockBehaviour.Properties.of()
+                                .strength(0.4F)
+                                .sound(SoundType.GLASS));
+        DeferredItem<BlockItem> item = CONTENT.registerBlockItem(id, block);
+        holder[0] =
+                CONTENT.registerBlockEntityType(
+                        id,
+                        (pos, state) -> new EnergyCableBlockEntity(tier, holder[0].get(), pos, state),
+                        block);
+        return new EnergyBlockRegistration(tier, block, item, holder[0]);
+    }
+
+    private static EnergyBlockRegistration registerSolarPanel(int tier) {
+        @SuppressWarnings("unchecked")
+        DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>[] holder =
+                new DeferredHolder[1];
+
+        String id = "solar_panel_" + tier;
+        DeferredBlock<Block> block =
+                CONTENT.registerBlock(
+                        id,
+                        Block::new,
+                        BlockBehaviour.Properties.of()
+                                .strength(3.0F, 6.0F)
+                                .requiresCorrectToolForDrops()
+                                .sound(SoundType.METAL));
+        DeferredItem<BlockItem> item = CONTENT.registerBlockItem(id, block);
+        holder[0] =
+                CONTENT.registerBlockEntityType(
+                        id,
+                        (pos, state) -> new SolarPanelBlockEntity(tier, holder[0].get(), pos, state),
+                        block);
+        return new EnergyBlockRegistration(tier, block, item, holder[0]);
     }
 
     public static final DeferredRegister<MenuType<?>> MENUS =
@@ -182,6 +245,12 @@ public final class AscensionIC2 {
         output.accept(QUANTUM_CIRCUIT.get());
         output.accept(QUANTUM_CRYSTAL.get());
         output.accept(SINGULAR_CRYSTAL.get());
+        for (EnergyBlockRegistration registration : CABLES) {
+            output.accept(registration.item().get());
+        }
+        for (EnergyBlockRegistration registration : SOLAR_PANELS) {
+            output.accept(registration.item().get());
+        }
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {

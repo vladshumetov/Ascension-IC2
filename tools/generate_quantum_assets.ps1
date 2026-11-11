@@ -155,6 +155,8 @@ foreach ($machine in $machines) {
 }
 $allIds += "ascension_ic2:nano_casing"
 $allIds += "ascension_ic2:quantum_casing"
+for ($t = 6; $t -le 14; $t++) { $allIds += "ascension_ic2:energy_cable_$t" }
+for ($t = 1; $t -le 14; $t++) { $allIds += "ascension_ic2:solar_panel_$t" }
 Write-JsonFile (Join-Path $tagMineableDir "pickaxe.json") @{
     replace = $false
     values = $allIds

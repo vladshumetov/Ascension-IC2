@@ -139,6 +139,13 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
             return amount;
         }
 
+        int sinkTier = Math.min(EnergyTiers.MAX_TIER, Math.max(EnergyTiers.MIN_TIER, getSinkTier()));
+        double maxVoltage = EnergyTiers.euPerTick(sinkTier);
+        if (voltage > maxVoltage * 1.001) {
+            explodeFromOvervoltage();
+            return amount;
+        }
+
         double accepted =
                 Math.min(amount, Math.min(availableInputThisTick(), this.capacity - this.stored));
         if (accepted > 0.0) {
@@ -147,6 +154,20 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
             setChanged();
         }
         return amount - accepted;
+    }
+
+    private void explodeFromOvervoltage() {
+        if (this.level == null || this.level.isClientSide) {
+            return;
+        }
+        this.level.removeBlock(this.worldPosition, false);
+        this.level.explode(
+                null,
+                this.worldPosition.getX() + 0.5,
+                this.worldPosition.getY() + 0.5,
+                this.worldPosition.getZ() + 0.5,
+                3.0F,
+                Level.ExplosionInteraction.BLOCK);
     }
 
     @Override
