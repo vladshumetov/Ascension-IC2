@@ -11,6 +11,11 @@ import ic2.core.block.machine.tileentity.TileEntityRecycler;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -56,6 +61,10 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
     private final TierInventory inventory;
     private final int[] laneProgress;
     private final ItemStack[] laneInput;
+
+    // Working state used for sounds and particles.
+    private boolean working;
+    private int effectCooldown;
 
     // Upgrade rates, recalculated whenever the upgrade slots change (same maths as IC2 InvSlotUpgrade).
     private int extraProcessTime;
@@ -245,10 +254,82 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
 
         for (int lane = 0; lane < this.inputSlots; lane++) {
             if (canProcessLane(lane)) {
+                boolean powered = getEnergyPerTick() <= 0 || getStoredEu() >= getEnergyPerTick();
+                tickEffects(powered);
                 return true;
             }
         }
+        tickEffects(false);
         return false;
+    }
+
+    // ---------- Sounds and particles ----------
+
+    private boolean isFurnace() {
+        return "electric_furnace".equals(this.kind.progressSprite());
+    }
+
+    private String operateSound() {
+        return "machine." + this.kind.progressSprite() + ".operate";
+    }
+
+    private void playIc2Sound(String path, float volume, float pitch) {
+        if (this.level == null) {
+            return;
+        }
+        SoundEvent event =
+                BuiltInRegistries.SOUND_EVENT.get(
+                        ResourceLocation.fromNamespaceAndPath("ic2", path));
+        if (event != null) {
+            this.level.playSound(
+                    null, this.worldPosition, event, SoundSource.BLOCKS, volume, pitch);
+        }
+    }
+
+    private void tickEffects(boolean workingNow) {
+        if (this.level == null || this.level.isClientSide) {
+            return;
+        }
+
+        if (workingNow != this.working) {
+            this.working = workingNow;
+            this.effectCooldown = 20;
+            if (workingNow) {
+                playIc2Sound(isFurnace() ? "machine.furnace.electric.start" : operateSound(), 0.6F, 1.0F);
+            } else if (isFurnace()) {
+                playIc2Sound("machine.furnace.electric.stop", 0.6F, 1.0F);
+            }
+        }
+
+        if (!workingNow) {
+            return;
+        }
+        if (--this.effectCooldown > 0) {
+            return;
+        }
+        this.effectCooldown = 20;
+
+        playIc2Sound(
+                isFurnace() ? "machine.furnace.electric.loop" : operateSound(), 0.45F, 1.0F);
+        spawnWorkingParticles();
+    }
+
+    private void spawnWorkingParticles() {
+        if (!(this.level instanceof ServerLevel server)) {
+            return;
+        }
+        double x = this.worldPosition.getX() + 0.5;
+        double y = this.worldPosition.getY();
+        double z = this.worldPosition.getZ() + 0.5;
+        if (isFurnace()) {
+            server.sendParticles(
+                    ParticleTypes.SMOKE, x, y + 1.05, z, 2, 0.25, 0.05, 0.25, 0.01);
+            server.sendParticles(
+                    ParticleTypes.FLAME, x, y + 0.85, z, 1, 0.2, 0.0, 0.2, 0.0);
+        } else {
+            server.sendParticles(
+                    ParticleTypes.ELECTRIC_SPARK, x, y + 0.9, z, 3, 0.3, 0.15, 0.3, 0.02);
+        }
     }
 
     private boolean canProcessLane(int lane) {
