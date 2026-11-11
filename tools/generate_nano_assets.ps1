@@ -246,7 +246,7 @@ $guiDir = Join-Path $assets "textures\gui"
 New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
 
 $guiW = 240
-$guiH = 220
+$guiH = 244
 $gui = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
 $guiGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::None
@@ -268,16 +268,16 @@ foreach ($p in @(@(7, 7), @(($guiW - 8), 7), @(7, ($guiH - 8)), @(($guiW - 8), (
 }
 
 # Player inventory panel
-Rect $gui 8 100 ($guiW - 8) ($guiH - 8) '#1B2532'
-Border $gui 8 100 ($guiW - 8) ($guiH - 8) '#334255'
-Border $gui 9 101 ($guiW - 9) ($guiH - 9) '#243140'
+Rect $gui 8 124 ($guiW - 8) ($guiH - 8) '#1B2532'
+Border $gui 8 124 ($guiW - 8) ($guiH - 8) '#334255'
+Border $gui 9 125 ($guiW - 9) ($guiH - 9) '#243140'
 
 # Machine panel
-Rect $gui 64 16 176 94 '#141C26'
-Border $gui 64 16 176 94 '#3A4B5F'
-Rect $gui 65 17 175 17 '#1F2B3A'
-Rect $gui 64 90 64 94 '#64E6F2'
-Rect $gui 176 90 176 94 '#64E6F2'
+Rect $gui 56 16 184 108 '#141C26'
+Border $gui 56 16 184 108 '#3A4B5F'
+Rect $gui 57 17 183 17 '#1F2B3A'
+Rect $gui 56 104 56 108 '#64E6F2'
+Rect $gui 184 104 184 108 '#64E6F2'
 
 # Title underline
 Rect $gui 12 16 228 16 '#C9A45C'
@@ -306,22 +306,22 @@ function Draw-MachineSlot($bmp, [int]$x, [int]$y) {
 }
 
 foreach ($i in 0..2) {
-    Draw-MachineSlot $gui (78 + $i * 34) 24
-    Draw-MachineSlot $gui (78 + $i * 34) 70
+    Draw-MachineSlot $gui (68 + $i * 44) 32
+    Draw-MachineSlot $gui (68 + $i * 44) 82
 }
 foreach ($row in 0..2) {
     foreach ($col in 0..8) {
-        Draw-PlayerSlot $gui (16 + $col * 24) (108 + $row * 26)
+        Draw-PlayerSlot $gui (16 + $col * 24) (132 + $row * 26)
     }
 }
 foreach ($col in 0..8) {
-    Draw-PlayerSlot $gui (16 + $col * 24) 188
+    Draw-PlayerSlot $gui (16 + $col * 24) 212
 }
 
-foreach ($x in @(78, 112, 146)) {
-    Rect $gui ($x + 4) 48 ($x + 11) 63 '#0A1018'
-    Border $gui ($x + 4) 48 ($x + 11) 63 '#263445'
-    Rect $gui ($x + 7) 50 ($x + 8) 61 '#1E4B57'
+foreach ($x in @(68, 112, 156)) {
+    Rect $gui ($x + 4) 58 ($x + 11) 73 '#0A1018'
+    Border $gui ($x + 4) 58 ($x + 11) 73 '#263445'
+    Rect $gui ($x + 7) 60 ($x + 8) 71 '#1E4B57'
 }
 
 # Vertical progress overlay: 16x16 at (192, 0).
