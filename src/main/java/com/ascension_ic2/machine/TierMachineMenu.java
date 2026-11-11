@@ -116,7 +116,8 @@ public class TierMachineMenu extends AbstractContainerMenu {
                             UPGRADE_POSITIONS[i][1]) {
                         @Override
                         public boolean mayPlace(ItemStack stack) {
-                            return TierMachineBlockEntity.isUpgrade(stack);
+                            return TierMachineBlockEntity.isUpgrade(stack)
+                                    && (machine == null || machine.isUpgradeSuitable(stack));
                         }
                     });
         }

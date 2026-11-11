@@ -11,5 +11,8 @@
   "block.ascension_ic2.quantum_extractor": "Квантовый экстрактор",
   "block.ascension_ic2.quantum_recycler": "Квантовый утилизатор",
   "gui.ascension_ic2.energy": "Энергия: %s / %s EU",
-  "gui.ascension_ic2.progress": "Прогресс: %s%%"
+  "gui.ascension_ic2.progress": "Прогресс: %s%%",
+  "tooltip.ascension_ic2.energy_tier": "Уровень энергии: %s (вход %s EU/t)",
+  "tooltip.ascension_ic2.buffer": "Буфер: %s EU",
+  "tooltip.ascension_ic2.lanes": "Линий: %s, %s предметов за операцию"
 }

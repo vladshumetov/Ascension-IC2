@@ -7,6 +7,7 @@ import com.ascension_ic2.machine.NanoMachineKind;
 import com.ascension_ic2.machine.QuantumMachineKind;
 import com.ascension_ic2.machine.TierMachineBlock;
 import com.ascension_ic2.machine.TierMachineBlockEntity;
+import com.ascension_ic2.machine.TierMachineBlockItem;
 import com.ascension_ic2.machine.TierMachineKind;
 import com.ascension_ic2.machine.TierMachineMenu;
 import ic2.api.registry.AddonEnergyCapabilities;
@@ -17,6 +18,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -45,9 +47,8 @@ public final class AscensionIC2 {
             MachineTier tier,
             TierMachineKind kind,
             DeferredBlock<TierMachineBlock> block,
-            DeferredItem<BlockItem> item,
+            DeferredItem<? extends BlockItem> item,
             DeferredHolder<BlockEntityType<?>, BlockEntityType<TierMachineBlockEntity>> blockEntity) {}
-
     /** Every registered machine, nano first, then quantum. */
     public static final List<MachineRegistration> MACHINES = new ArrayList<>();
 
@@ -82,7 +83,12 @@ public final class AscensionIC2 {
                                                 new TierMachineBlockEntity(
                                                         tier, kind, holder[0].get(), pos, state)),
                         BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
-        DeferredItem<BlockItem> item = CONTENT.registerBlockItem(kind.id(), block);
+        DeferredItem<TierMachineBlockItem> item =
+                CONTENT.registerItem(
+                        kind.id(),
+                        () ->
+                                new TierMachineBlockItem(
+                                        block.get(), new Item.Properties(), tier, kind));
         holder[0] =
                 CONTENT.registerBlockEntityType(
                         kind.id(),

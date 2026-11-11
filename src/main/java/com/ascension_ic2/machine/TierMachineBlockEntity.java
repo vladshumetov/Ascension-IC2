@@ -1,8 +1,16 @@
 package com.ascension_ic2.machine;
 
 import ic2.api.block.AddonMachineBlockEntity;
+import ic2.api.upgrade.IEnergyStorageUpgrade;
+import ic2.api.upgrade.IProcessingUpgrade;
+import ic2.api.upgrade.ITransformerUpgrade;
+import ic2.api.upgrade.IUpgradableBlock;
+import ic2.api.upgrade.IUpgradeItem;
+import ic2.api.upgrade.UpgradableProperty;
 import ic2.core.block.machine.tileentity.TileEntityRecycler;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -21,8 +29,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class TierMachineBlockEntity extends AddonMachineBlockEntity implements MenuProvider {
+public class TierMachineBlockEntity extends AddonMachineBlockEntity
+        implements MenuProvider, IUpgradableBlock {
     public static final int UPGRADE_SLOTS = 4;
+
+    private static final Set<UpgradableProperty> UPGRADABLE_PROPERTIES =
+            Set.of(
+                    UpgradableProperty.Processing,
+                    UpgradableProperty.Transformer,
+                    UpgradableProperty.ItemProducing,
+                    UpgradableProperty.ItemConsuming);
 
     private static final TagKey<Item> UPGRADE_TAG =
             TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("ascension_ic2", "upgrades"));
@@ -40,6 +56,15 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity implements M
     private final TierInventory inventory;
     private final int[] laneProgress;
     private final ItemStack[] laneInput;
+
+    // Upgrade rates, recalculated whenever the upgrade slots change (same maths as IC2 InvSlotUpgrade).
+    private int extraProcessTime;
+    private double processTimeMultiplier = 1.0;
+    private int extraEnergyDemand;
+    private double energyDemandMultiplier = 1.0;
+    private int extraTier;
+    private int extraEnergyStorage;
+    private double energyStorageMultiplier = 1.0;
 
     public TierMachineBlockEntity(
             MachineTier tier,
@@ -60,6 +85,7 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity implements M
         for (int lane = 0; lane < this.inputSlots; lane++) {
             this.laneInput[lane] = ItemStack.EMPTY;
         }
+        recalcUpgrades();
     }
 
     public MachineTier getTier() {
@@ -91,8 +117,10 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity implements M
         return 1;
     }
 
+    /** Processing time in ticks after overclocker upgrades. */
     public int getLaneProcessingTime() {
-        return this.kind.processingTicks();
+        double ticks = (this.kind.processingTicks() + this.extraProcessTime) * this.processTimeMultiplier;
+        return Math.max(1, (int) Math.round(ticks));
     }
 
     public int getLaneProgress(int lane) {
@@ -102,15 +130,117 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity implements M
         return Math.min(this.laneProgress[lane], getLaneProcessingTime());
     }
 
+    /** Energy per tick after overclocker upgrades. */
     @Override
     public int getEnergyPerTick() {
-        return this.kind.energyPerTick();
+        double eu = (this.kind.energyPerTick() + this.extraEnergyDemand) * this.energyDemandMultiplier;
+        return Math.max(1, (int) Math.round(eu));
+    }
+
+    /** Tier after transformer upgrades. The base energy block already caps input at its own limit. */
+    @Override
+    public int getSinkTier() {
+        return super.getSinkTier() + this.extraTier;
+    }
+
+    @Override
+    public int getSourceTier() {
+        return super.getSourceTier() + this.extraTier;
+    }
+
+    // ---------- IC2 upgrades ----------
+
+    @Override
+    public double getEnergy() {
+        return getStoredEu();
+    }
+
+    @Override
+    public boolean useEnergy(double amount) {
+        return removeEu(amount) + 1.0E-9 >= amount;
+    }
+
+    @Override
+    public Set<UpgradableProperty> getUpgradableProperties() {
+        return UPGRADABLE_PROPERTIES;
+    }
+
+    /** Whether IC2 considers this upgrade suitable for the machine (used by the upgrade slot). */
+    public boolean isUpgradeSuitable(ItemStack stack) {
+        return stack.getItem() instanceof IUpgradeItem upgrade
+                && upgrade.isSuitableFor(stack, UPGRADABLE_PROPERTIES);
+    }
+
+    private void recalcUpgrades() {
+        this.extraProcessTime = 0;
+        this.processTimeMultiplier = 1.0;
+        this.extraEnergyDemand = 0;
+        this.energyDemandMultiplier = 1.0;
+        this.extraTier = 0;
+        this.extraEnergyStorage = 0;
+        this.energyStorageMultiplier = 1.0;
+
+        for (int i = 0; i < UPGRADE_SLOTS; i++) {
+            ItemStack stack = this.inventory.getStackInSlot(this.upgradeStart + i);
+            if (stack.isEmpty() || !(stack.getItem() instanceof IUpgradeItem upgrade)) {
+                continue;
+            }
+            int count = stack.getCount();
+
+            if (upgrade instanceof IProcessingUpgrade processing) {
+                this.extraProcessTime += processing.getExtraProcessTime(stack, this) * count;
+                this.processTimeMultiplier *=
+                        Math.pow(processing.getProcessTimeMultiplier(stack, this), count);
+                this.extraEnergyDemand += processing.getExtraEnergyDemand(stack, this) * count;
+                this.energyDemandMultiplier *=
+                        Math.pow(processing.getEnergyDemandMultiplier(stack, this), count);
+            }
+            if (upgrade instanceof IEnergyStorageUpgrade storage) {
+                this.extraEnergyStorage += storage.getExtraEnergyStorage(stack, this) * count;
+                this.energyStorageMultiplier *=
+                        Math.pow(storage.getEnergyStorageMultiplier(stack, this), count);
+            }
+            if (upgrade instanceof ITransformerUpgrade transformer) {
+                this.extraTier += transformer.getExtraTier(stack, this) * count;
+            }
+        }
+    }
+
+    /** Ticks ejector/pulling upgrades; returns true if the upgrade changed anything. */
+    private boolean tickUpgrades() {
+        boolean changed = false;
+        for (int i = 0; i < UPGRADE_SLOTS; i++) {
+            ItemStack stack = this.inventory.getStackInSlot(this.upgradeStart + i);
+            if (!stack.isEmpty() && stack.getItem() instanceof IUpgradeItem upgrade) {
+                changed |= upgrade.onTick(stack, this);
+            }
+        }
+        return changed;
+    }
+
+    private List<ItemStack> applyProcessEnd(List<ItemStack> outputs) {
+        if (outputs.isEmpty()) {
+            return outputs;
+        }
+        Collection<ItemStack> result = outputs;
+        for (int i = 0; i < UPGRADE_SLOTS; i++) {
+            ItemStack stack = this.inventory.getStackInSlot(this.upgradeStart + i);
+            if (!stack.isEmpty() && stack.getItem() instanceof IUpgradeItem upgrade) {
+                result = upgrade.onProcessEnd(stack, this, result);
+            }
+        }
+        return List.copyOf(result);
     }
 
     @Override
     public boolean canProcess() {
         if (this.level == null) {
             return false;
+        }
+
+        // Ejector/pulling upgrades must keep working even when no lane can process.
+        if (tickUpgrades()) {
+            setChanged();
         }
 
         for (int lane = 0; lane < this.inputSlots; lane++) {
@@ -195,7 +325,7 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity implements M
 
             this.inventory.extractInput(lane, plan.inputAmount(), false);
             if (!this.kind.isRecycler() || rollRecyclerChance()) {
-                for (ItemStack output : plan.outputs()) {
+                for (ItemStack output : applyProcessEnd(plan.outputs())) {
                     ItemStack remainder = this.inventory.insertOutput(outputSlot, output.copy(), false);
                     if (!remainder.isEmpty()) {
                         Block.popResource(this.level, this.worldPosition, remainder);
@@ -296,6 +426,7 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity implements M
         if (tag.contains("Inventory")) {
             this.inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         }
+        recalcUpgrades();
 
         int[] saved = tag.getIntArray("LaneProgress");
         for (int lane = 0; lane < this.inputSlots && lane < saved.length; lane++) {
@@ -379,6 +510,9 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity implements M
 
         @Override
         protected void onContentsChanged(int slot) {
+            if (slot >= TierMachineBlockEntity.this.upgradeStart) {
+                recalcUpgrades();
+            }
             TierMachineBlockEntity.this.setChanged();
         }
     }
