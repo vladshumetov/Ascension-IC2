@@ -1,5 +1,7 @@
 # Ascension IC2
 
+[Русская версия](README.ru.md)
+
 Add-on for **IndustrialCraft 2: Refactored** (Minecraft 1.21.1, NeoForge) that adds new tiers of
 classic IC2 machines.
 
@@ -11,9 +13,9 @@ classic IC2 machines.
 | Quantum | 5 | 5 | 12 | 5 |
 | Singular | 7 | 7 | planned | planned |
 
-Every input lane works independently and has its own progress arrow and output slot.
-The number of items processed per operation is configurable in
-`config/ascension_ic2-common.toml` (`nano.itemsPerOperation`, `quantum.itemsPerOperation`).
+Every input lane works independently and has its own progress arrow and output slot. The number
+of items processed per operation is configurable in `config/ascension_ic2-common.toml`
+(`nano.itemsPerOperation`, `quantum.itemsPerOperation`).
 
 ## Machines
 
@@ -25,18 +27,17 @@ Nano and Quantum tiers:
 - Extractor
 - Recycler
 
-They use the standard IC2 recipes, so they stay compatible with existing packs and recipe
-managers.
+The machines use the standard IC2 recipes, so they stay compatible with existing packs and
+recipe managers.
 
 ## Upgrades
 
 The four upgrade slots accept IC2 upgrades:
 
-- **Overclocker** - faster processing, higher EU demand.
-- **Transformer** - raises the machine energy tier.
-- **Ejector / Pulling** (including advanced variants) - automatic item transfer to and from
+- **Overclocker** — faster processing, higher EU demand.
+- **Transformer** — raises the machine energy tier.
+- **Ejector / Pulling** (including advanced variants) — automatic item transfer to and from
   adjacent inventories.
-- Upgrade effects are applied the same way as in IC2 machines.
 
 Energy Storage upgrades are not supported yet because the add-on energy block keeps a fixed
 buffer.
@@ -72,4 +73,4 @@ The built jar is `build/libs/ascension_ic2-neoforge-1.0.0.jar`.
 
 ## License
 
-AGPL-3.0-or-later. Textures derived from IC2 are attributed in `docs/ATTRIBUTION.md`.
+AGPL-3.0-or-later. Textures derived from IC2 are attributed in [docs/ATTRIBUTION.md](docs/ATTRIBUTION.md).
