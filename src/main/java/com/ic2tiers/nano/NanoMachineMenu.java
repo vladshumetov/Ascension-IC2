@@ -74,11 +74,11 @@ public class NanoMachineMenu extends AbstractContainerMenu {
         this.addDataSlots(this.data);
 
         for (int i = 0; i < INPUT_SLOTS; i++) {
-            this.addSlot(new Slot(this.container, i, 62 + i * 24, 17));
+            this.addSlot(new Slot(this.container, i, 66 + i * 26, 17));
         }
         for (int i = 0; i < NanoMachineBlockEntity.OUTPUT_SLOTS; i++) {
             this.addSlot(
-                    new Slot(this.container, NanoMachineBlockEntity.OUTPUT_START + i, 62 + i * 24, 56) {
+                    new Slot(this.container, NanoMachineBlockEntity.OUTPUT_START + i, 66 + i * 26, 56) {
                         @Override
                         public boolean mayPlace(ItemStack stack) {
                             return false;
@@ -89,11 +89,11 @@ public class NanoMachineMenu extends AbstractContainerMenu {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
                 this.addSlot(
-                        new Slot(playerInventory, col + row * 9 + 9, 6 + col * 20, 86 + row * 22));
+                        new Slot(playerInventory, col + row * 9 + 9, 7 + col * 21, 86 + row * 21));
             }
         }
         for (int col = 0; col < 9; col++) {
-            this.addSlot(new Slot(playerInventory, col, 6 + col * 20, 152));
+            this.addSlot(new Slot(playerInventory, col, 7 + col * 21, 149));
         }
     }
 

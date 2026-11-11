@@ -245,7 +245,7 @@ Write-JsonFile (Join-Path $tagBlockDir "needs_iron_tool.json") @{
 $guiDir = Join-Path $assets "textures\gui"
 New-Item -ItemType Directory -Path $guiDir -Force | Out-Null
 
-$guiW = 188
+$guiW = 198
 $guiH = 174
 $gui = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $guiGraphics = [System.Drawing.Graphics]::FromImage($gui)
@@ -273,15 +273,15 @@ Border $gui 4 84 ($guiW - 5) ($guiH - 4) '#334255'
 Border $gui 5 85 ($guiW - 6) ($guiH - 5) '#243140'
 
 # Machine panel
-Rect $gui 48 12 139 78 '#141C26'
-Border $gui 48 12 139 78 '#3A4B5F'
-Rect $gui 49 13 138 13 '#1F2B3A'
-Rect $gui 48 74 48 78 '#64E6F2'
-Rect $gui 139 74 139 78 '#64E6F2'
+Rect $gui 54 12 145 78 '#141C26'
+Border $gui 54 12 145 78 '#3A4B5F'
+Rect $gui 55 13 144 13 '#1F2B3A'
+Rect $gui 54 74 54 78 '#64E6F2'
+Rect $gui 145 74 145 78 '#64E6F2'
 
 # Title underline
-Rect $gui 8 12 179 12 '#C9A45C'
-Rect $gui 8 13 179 13 '#6E5A32'
+Rect $gui 8 12 189 12 '#C9A45C'
+Rect $gui 8 13 189 13 '#6E5A32'
 
 function Draw-PlayerSlot($bmp, [int]$x, [int]$y) {
     Rect $bmp ($x - 1) ($y - 1) ($x + 16) ($y + 16) '#0D141C'
@@ -306,32 +306,32 @@ function Draw-MachineSlot($bmp, [int]$x, [int]$y) {
 }
 
 foreach ($i in 0..2) {
-    Draw-MachineSlot $gui (62 + $i * 24) 17
-    Draw-MachineSlot $gui (62 + $i * 24) 56
+    Draw-MachineSlot $gui (66 + $i * 26) 17
+    Draw-MachineSlot $gui (66 + $i * 26) 56
 }
 foreach ($row in 0..2) {
     foreach ($col in 0..8) {
-        Draw-PlayerSlot $gui (6 + $col * 20) (86 + $row * 22)
+        Draw-PlayerSlot $gui (7 + $col * 21) (86 + $row * 21)
     }
 }
 foreach ($col in 0..8) {
-    Draw-PlayerSlot $gui (6 + $col * 20) 152
+    Draw-PlayerSlot $gui (7 + $col * 21) 149
 }
 
-foreach ($x in @(62, 86, 110)) {
+foreach ($x in @(66, 92, 118)) {
     Rect $gui ($x + 4) 37 ($x + 11) 52 '#0A1018'
     Border $gui ($x + 4) 37 ($x + 11) 52 '#263445'
     Rect $gui ($x + 7) 39 ($x + 8) 50 '#1E4B57'
 }
 
 # Vertical progress overlay: 16x16 at (192, 0).
-Rect $gui 198 0 201 10 '#4FE3F2'
-Rect $gui 198 0 199 10 '#B9F6FF'
+Rect $gui 214 0 217 10 '#4FE3F2'
+Rect $gui 214 0 215 10 '#B9F6FF'
 foreach ($y in 10..15) {
     $half = $y - 9
-    Rect $gui (198 - $half) $y (201 + $half) $y '#4FE3F2'
+    Rect $gui (214 - $half) $y (217 + $half) $y '#4FE3F2'
 }
-Rect $gui 198 10 199 15 '#B9F6FF'
+Rect $gui 214 10 215 15 '#B9F6FF'
 
 $guiGraphics.Dispose()
 Save $gui (Join-Path $guiDir "nano_machine.png")

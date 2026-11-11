@@ -16,7 +16,7 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
     public NanoMachineScreen(
             NanoMachineMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageWidth = 188;
+        this.imageWidth = 198;
         this.imageHeight = 174;
         this.inventoryLabelY = 76;
     }
@@ -32,9 +32,9 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
             if (progress > 0) {
                 guiGraphics.blit(
                         TEXTURE,
-                        this.leftPos + 62 + lane * 24,
+                        this.leftPos + 66 + lane * 26,
                         this.topPos + 37,
-                        192,
+                        208,
                         0,
                         16,
                         progress);
@@ -43,18 +43,17 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
     }
 
     @Override
+    public void renderBackground(
+            GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
+    }
+
+    @Override
     protected void renderLabels(
             GuiGraphics guiGraphics, int mouseX, int mouseY) {
         String title = this.title.getString();
         int titleX = (this.imageWidth - this.font.width(title)) / 2;
         guiGraphics.drawString(this.font, title, titleX, 4, 0xFFF2D38A, true);
-        guiGraphics.drawString(
-                this.font,
-                Component.translatable("gui.ic2_tiers.nano").getString(),
-                8,
-                4,
-                0xFF64E6F2,
-                true);
         guiGraphics.drawString(
                 this.font,
                 Component.translatable("container.inventory").getString(),
@@ -67,7 +66,6 @@ public class NanoMachineScreen extends AbstractContainerScreen<NanoMachineMenu> 
     @Override
     public void render(
             GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
