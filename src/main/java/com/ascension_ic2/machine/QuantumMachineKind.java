@@ -10,16 +10,16 @@ import net.minecraft.world.level.Level;
  * {@code quantum.itemsPerOperation} items per operation (12 by default).
  */
 public enum QuantumMachineKind implements TierMachineKind {
-    MACERATOR("macerator", "ic2:macerator", 150, 2048, (level, input) -> NanoMachineKind.basic(Recipes.macerator, level, input)),
+    MACERATOR("macerator", "ic2:macerator", 150, 131072, (level, input) -> NanoMachineKind.basic(Recipes.macerator, level, input)),
     ELECTRIC_FURNACE(
             "electric_furnace",
             "ic2:electric_furnace",
             50,
-            4096,
+            262144,
             (level, input) -> NanoMachineKind.furnace(input)),
-    COMPRESSOR("compressor", "ic2:compressor", 150, 2048, (level, input) -> NanoMachineKind.basic(Recipes.compressor, level, input)),
-    EXTRACTOR("extractor", "ic2:extractor", 150, 2048, (level, input) -> NanoMachineKind.basic(Recipes.extractor, level, input)),
-    RECYCLER("recycler", "ic2:recycler", 30, 1024, (level, input) -> NanoMachineKind.basic(Recipes.recycler, input));
+    COMPRESSOR("compressor", "ic2:compressor", 150, 131072, (level, input) -> NanoMachineKind.basic(Recipes.compressor, level, input)),
+    EXTRACTOR("extractor", "ic2:extractor", 150, 131072, (level, input) -> NanoMachineKind.basic(Recipes.extractor, level, input)),
+    RECYCLER("recycler", "ic2:recycler", 30, 65536, (level, input) -> NanoMachineKind.basic(Recipes.recycler, input));
 
     private final String baseId;
     private final String id;

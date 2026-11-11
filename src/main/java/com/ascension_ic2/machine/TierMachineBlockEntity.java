@@ -1,7 +1,7 @@
 package com.ascension_ic2.machine;
 
-import ic2.api.block.AddonMachineBlockEntity;
 import com.ascension_ic2.client.MachineSoundHandler;
+import com.ascension_ic2.energy.TierEnergyBlockEntity;
 import ic2.api.upgrade.IEnergyStorageUpgrade;
 import ic2.api.upgrade.IProcessingUpgrade;
 import ic2.api.upgrade.ITransformerUpgrade;
@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class TierMachineBlockEntity extends AddonMachineBlockEntity
+public class TierMachineBlockEntity extends TierEnergyBlockEntity
         implements MenuProvider, IUpgradableBlock {
     public static final int UPGRADE_SLOTS = 4;
 
@@ -85,7 +85,7 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
             BlockEntityType<?> type,
             BlockPos pos,
             BlockState state) {
-        super(type, pos, state, tier.energyTier(), tier.capacity(), tier.maxTransfer(), 0.0);
+        super(type, pos, state, tier.energyTier(), tier.capacity(), tier.maxTransfer(), tier.maxTransfer());
         this.tier = tier;
         this.kind = kind;
         this.inputSlots = tier.lanes();
@@ -125,11 +125,6 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
         return this.slotCount;
     }
 
-    @Override
-    public int getProcessingTime() {
-        return 1;
-    }
-
     /** Processing time in ticks after overclocker upgrades. */
     public int getLaneProcessingTime() {
         double ticks = (this.kind.processingTicks() + this.extraProcessTime) * this.processTimeMultiplier;
@@ -144,7 +139,6 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
     }
 
     /** Energy per tick after overclocker upgrades. */
-    @Override
     public int getEnergyPerTick() {
         double eu = (this.kind.energyPerTick() + this.extraEnergyDemand) * this.energyDemandMultiplier;
         return Math.max(1, (int) Math.round(eu));
@@ -245,7 +239,6 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
         return List.copyOf(result);
     }
 
-    @Override
     public boolean canProcess() {
         if (this.level == null) {
             return false;
@@ -420,6 +413,23 @@ public class TierMachineBlockEntity extends AddonMachineBlockEntity
     }
 
     @Override
+    public void serverTick() {
+        if (this.level == null || this.level.isClientSide) {
+            return;
+        }
+        if (!canProcess()) {
+            return;
+        }
+        int eu = getEnergyPerTick();
+        if (eu > 0) {
+            if (getStoredEu() < eu) {
+                return;
+            }
+            removeEu(eu);
+        }
+        processOperation();
+    }
+
     public void processOperation() {
         if (this.level == null) {
             return;

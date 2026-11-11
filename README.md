@@ -9,8 +9,8 @@ classic IC2 machines.
 
 | Tier | Inputs | Outputs | Items per operation | Energy tier |
 |------|--------|---------|---------------------|-------------|
-| Nano | 3 | 3 | 4 | 4 |
-| Quantum | 5 | 5 | 12 | 5 |
+| Nano | 3 | 3 | 4 | 6 |
+| Quantum | 5 | 5 | 12 | 8 |
 | Singular | 7 | 7 | planned | planned |
 
 Every input lane works independently and has its own progress arrow and output slot. The number
@@ -31,8 +31,9 @@ EU/t follows the IC2 rule `32 * 4^(tier - 1)`. The addon defines 14 levels:
 | 6 | 32 768 | 13 | 536 870 912 |
 | 7 | 131 072 | 14 | 2 147 483 648 |
 
-Tiers 1–5 match IC2. Tiers 6–14 are the addon ladder and need high-tier addon energy transport:
-IC2 cables and the standard addon energy block stop at tier 5.
+Tiers 1–5 match IC2. Tiers 6–14 are the addon ladder; the addon machines use their own energy
+block, which accepts all 14 tiers. IC2 cables and the standard addon energy block stop at 8192 EU/t,
+so transport above tier 5 will need addon cables.
 
 ## Machines
 

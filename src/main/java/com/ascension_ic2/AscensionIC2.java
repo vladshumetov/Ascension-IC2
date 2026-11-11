@@ -10,7 +10,6 @@ import com.ascension_ic2.machine.TierMachineBlockEntity;
 import com.ascension_ic2.machine.TierMachineBlockItem;
 import com.ascension_ic2.machine.TierMachineKind;
 import com.ascension_ic2.machine.TierMachineMenu;
-import ic2.api.registry.AddonEnergyCapabilities;
 import ic2.api.registry.Ic2AddonContent;
 import java.util.ArrayList;
 import java.util.List;
@@ -188,7 +187,10 @@ public final class AscensionIC2 {
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         for (MachineRegistration registration : MACHINES) {
             BlockEntityType<TierMachineBlockEntity> type = registration.blockEntity().get();
-            AddonEnergyCapabilities.registerEnergyStorage(event, type);
+                event.registerBlockEntity(
+                        Capabilities.EnergyStorage.BLOCK,
+                        type,
+                        (blockEntity, side) -> blockEntity.getEnergyStorage(side));
             event.registerBlockEntity(
                     Capabilities.ItemHandler.BLOCK,
                     type,

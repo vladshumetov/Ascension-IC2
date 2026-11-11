@@ -10,8 +10,8 @@ import net.minecraft.resources.ResourceLocation;
  * driven by these values so the nano and quantum tiers use the same code.
  */
 public enum MachineTier {
-    NANO("nano", 3, 86, 4),
-    QUANTUM("quantum", 5, 60, 5);
+    NANO("nano", 3, 86, 6),
+    QUANTUM("quantum", 5, 60, 8);
 
     public static final int INPUT_Y = 28;
     public static final int OUTPUT_Y = 76;
