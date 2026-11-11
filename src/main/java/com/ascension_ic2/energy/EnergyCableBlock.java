@@ -35,14 +35,9 @@ public class EnergyCableBlock extends Block implements EntityBlock {
     public static final BooleanProperty DOWN = PipeBlock.DOWN;
     private static final Map<Direction, BooleanProperty> PROPERTIES = PipeBlock.PROPERTY_BY_DIRECTION;
 
-    private static final VoxelShape CORE =
-            Shapes.box(5.0 / 16.0, 5.0 / 16.0, 5.0 / 16.0, 11.0 / 16.0, 11.0 / 16.0, 11.0 / 16.0);
-    private static final VoxelShape ARM_NORTH = Shapes.box(6.0 / 16.0, 6.0 / 16.0, 0.0, 10.0 / 16.0, 10.0 / 16.0, 5.0 / 16.0);
-    private static final VoxelShape ARM_SOUTH = Shapes.box(6.0 / 16.0, 6.0 / 16.0, 11.0 / 16.0, 10.0 / 16.0, 10.0 / 16.0, 1.0);
-    private static final VoxelShape ARM_WEST = Shapes.box(0.0, 6.0 / 16.0, 6.0 / 16.0, 5.0 / 16.0, 10.0 / 16.0, 10.0 / 16.0);
-    private static final VoxelShape ARM_EAST = Shapes.box(11.0 / 16.0, 6.0 / 16.0, 6.0 / 16.0, 1.0, 10.0 / 16.0, 10.0 / 16.0);
-    private static final VoxelShape ARM_UP = Shapes.box(6.0 / 16.0, 11.0 / 16.0, 6.0 / 16.0, 10.0 / 16.0, 1.0, 10.0 / 16.0);
-    private static final VoxelShape ARM_DOWN = Shapes.box(6.0 / 16.0, 0.0, 6.0 / 16.0, 10.0 / 16.0, 5.0 / 16.0, 10.0 / 16.0);
+    // Selection matches the 4x4x4 cable core (IC2 core_4); arms are visual only.
+    private static final VoxelShape CORE_SHAPE =
+            Shapes.box(6.0 / 16.0, 6.0 / 16.0, 6.0 / 16.0, 10.0 / 16.0, 10.0 / 16.0, 10.0 / 16.0);
 
     private final BiFunction<BlockPos, BlockState, ? extends BlockEntity> factory;
 
@@ -137,23 +132,6 @@ public class EnergyCableBlock extends Block implements EntityBlock {
     @Override
     protected VoxelShape getShape(
             BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        VoxelShape shape = CORE;
-        for (Direction direction : Direction.values()) {
-            if (state.getValue(PROPERTIES.get(direction))) {
-                shape = Shapes.or(shape, arm(direction));
-            }
-        }
-        return shape;
-    }
-
-    private static VoxelShape arm(Direction direction) {
-        return switch (direction) {
-            case NORTH -> ARM_NORTH;
-            case SOUTH -> ARM_SOUTH;
-            case WEST -> ARM_WEST;
-            case EAST -> ARM_EAST;
-            case UP -> ARM_UP;
-            case DOWN -> ARM_DOWN;
-        };
+        return CORE_SHAPE;
     }
 }
