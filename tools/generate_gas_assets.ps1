@@ -107,7 +107,7 @@ Rect $cell 5 13 10 14 (C '#10131A')
 Rect $cell 4 3 11 4 $metalLight
 Rect $cell 6 6 9 10 (C '#7FCB5A')
 Rect $cell 6 6 9 7 (C '#B6F58E')
-$cell.Save((Join-Path $assets "textures\item\gas_cell.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+$cell.Save((Join-Path $assets "textures\item\natural_gas_cell.png"), [System.Drawing.Imaging.ImageFormat]::Png)
 $cell.Dispose()
 
 Write-JsonFile (Join-Path $assets "blockstates\gas_generator.json") @{
@@ -138,9 +138,9 @@ Write-JsonFile (Join-Path $assets "models\item\natural_gas_bucket.json") @{
     parent = "minecraft:item/generated"
     textures = @{ layer0 = "ascension_ic2:item/natural_gas_bucket" }
 }
-Write-JsonFile (Join-Path $assets "models\item\gas_cell.json") @{
+Write-JsonFile (Join-Path $assets "models\item\natural_gas_cell.json") @{
     parent = "minecraft:item/generated"
-    textures = @{ layer0 = "ascension_ic2:item/gas_cell" }
+    textures = @{ layer0 = "ascension_ic2:item/natural_gas_cell" }
 }
 Write-JsonFile (Join-Path $data "loot_table\blocks\gas_generator.json") @{
     type = "minecraft:block"

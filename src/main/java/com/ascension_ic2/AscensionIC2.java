@@ -5,8 +5,7 @@ import com.ascension_ic2.energy.EnergyCableBlock;
 import com.ascension_ic2.energy.GasGeneratorBlock;
 import com.ascension_ic2.energy.GasGeneratorBlockEntity;
 import com.ascension_ic2.energy.GasGeneratorMenu;
-import com.ascension_ic2.fluid.GasCellFluidHandler;
-import com.ascension_ic2.fluid.GasCellItem;
+import ic2.core.item.ItemClassicCell;
 import com.ascension_ic2.fluid.NaturalGas;
 import com.ascension_ic2.energy.EnergyCableBlockEntity;
 import com.ascension_ic2.energy.EnergyTiers;
@@ -284,9 +283,13 @@ public final class AscensionIC2 {
         GAS_GENERATOR_BE = holder[0];
     }
 
-    public static final DeferredItem<GasCellItem> GAS_CELL =
+    public static final DeferredItem<ItemClassicCell> NATURAL_GAS_CELL =
             CONTENT.registerItem(
-                    "gas_cell", () -> new GasCellItem(new Item.Properties().stacksTo(1)));
+                    "natural_gas_cell",
+                    () ->
+                            new ItemClassicCell(
+                                    new Item.Properties().stacksTo(1),
+                                    NaturalGas.SOURCE.get()));
     public static final DeferredHolder<MenuType<?>, MenuType<GasGeneratorMenu>>
             GAS_GENERATOR_MENU =
                     MENUS.register(
@@ -381,7 +384,7 @@ public final class AscensionIC2 {
         }
         output.accept(NaturalGas.BUCKET.get());
         output.accept(GAS_GENERATOR.get());
-        output.accept(GAS_CELL.get());
+        output.accept(NATURAL_GAS_CELL.get());
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -400,9 +403,5 @@ public final class AscensionIC2 {
                 Capabilities.FluidHandler.BLOCK,
                 GAS_GENERATOR_BE.get(),
                 (blockEntity, side) -> blockEntity.getTank());
-        event.registerItem(
-                Capabilities.FluidHandler.ITEM,
-                (stack, context) -> new GasCellFluidHandler(stack),
-                GAS_CELL.get());
     }
 }

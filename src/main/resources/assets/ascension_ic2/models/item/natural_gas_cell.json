@@ -1,6 +1,6 @@
 {
     "textures":  {
-                     "layer0":  "ascension_ic2:item/gas_cell"
+                     "layer0":  "ascension_ic2:item/natural_gas_cell"
                  },
     "parent":  "minecraft:item/generated"
 }
