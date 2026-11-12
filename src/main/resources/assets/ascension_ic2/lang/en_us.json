@@ -60,5 +60,12 @@
   "gui.ascension_ic2.gas.status": "Status",
   "gui.ascension_ic2.gas.running": "Generating",
   "gui.ascension_ic2.gas.idle": "No gas",
-  "block.ascension_ic2.natural_gas": "Natural Gas"
+  "block.ascension_ic2.natural_gas": "Natural Gas",
+  "jade.ascension_ic2.solar.energy": "Energy: %s / %s EU",
+  "jade.ascension_ic2.solar.generation": "Generation: %s EU/t",
+  "jade.ascension_ic2.solar.tier": "Tier: %s",
+  "jade.ascension_ic2.gas.energy": "Energy: %s / %s EU",
+  "jade.ascension_ic2.gas.gas": "Gas: %s / %s mB",
+  "jade.ascension_ic2.gas.output": "Output: %s EU/t",
+  "config.jade.plugin_ascension_ic2.energy": "Energy"
 }

@@ -45,6 +45,7 @@ repositories {
 
 dependencies {
     compileOnly files('libs/ic2r-neoforge-1.2.6.jar')
+    compileOnly files('libs/Jade-1.21-NeoForge-15.1.6.jar')
     runtimeOnly files('libs/ic2r-neoforge-1.2.6.jar')
 }
 
