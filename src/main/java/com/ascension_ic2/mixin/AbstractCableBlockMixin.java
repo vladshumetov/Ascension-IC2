@@ -34,7 +34,7 @@ public abstract class AbstractCableBlockMixin {
                         || level.getBlockState(pos).getBlock() instanceof EnergyCableBlock;
         if (connect && !ascension$logged) {
             ascension$logged = true;
-            com.ascension_ic2.AscensionIC2.LOGGER.info(
+            com.ascension_ic2.AscensionIC2.LOGGER.debug(
                     "Cable mixin active: IC2 connects to addon cable at {}", pos);
         }
         return connect;

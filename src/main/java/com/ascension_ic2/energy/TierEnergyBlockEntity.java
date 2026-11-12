@@ -90,7 +90,7 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
                 && !this.registered) {
             EnergyNet.instance.addBlockEntityTile(this);
             this.registered = true;
-            com.ascension_ic2.AscensionIC2.LOGGER.info(
+            com.ascension_ic2.AscensionIC2.LOGGER.debug(
                     "EnergyNet tile registered: {} tier {} at {}",
                     getClass().getSimpleName(),
                     this.tier,
@@ -155,7 +155,7 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
                 : voltage > maxVoltage * 1.001;
         overvoltage |= amount > maxVoltage * 1.001;
         if (overvoltage) {
-            com.ascension_ic2.AscensionIC2.LOGGER.info(
+            com.ascension_ic2.AscensionIC2.LOGGER.debug(
                     "Overvoltage: amount={}, voltage={}, sinkTier={}, maxVoltage={}",
                     amount, voltage, sinkTier, maxVoltage);
             explodeFromOvervoltage();

@@ -139,7 +139,7 @@ public class SolarPanelBlockEntity extends BlockEntity
                 && !this.registered) {
             EnergyNet.instance.addBlockEntityTile(this);
             this.registered = true;
-            com.ascension_ic2.AscensionIC2.LOGGER.info(
+            com.ascension_ic2.AscensionIC2.LOGGER.debug(
                     "EnergyNet solar registered: tier {} at {}", this.tier, this.worldPosition);
         }
     }

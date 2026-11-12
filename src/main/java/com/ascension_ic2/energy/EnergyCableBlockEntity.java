@@ -73,7 +73,7 @@ public class EnergyCableBlockEntity extends BlockEntity
                 && !this.registered) {
             EnergyNet.instance.addBlockEntityTile(this);
             this.registered = true;
-            com.ascension_ic2.AscensionIC2.LOGGER.info(
+            com.ascension_ic2.AscensionIC2.LOGGER.debug(
                     "EnergyNet cable registered: tier {} at {}", this.tier, this.worldPosition);
         }
     }
@@ -98,7 +98,7 @@ public class EnergyCableBlockEntity extends BlockEntity
     @Override
     public boolean acceptsEnergyFrom(IEnergyEmitter emitter, Direction side) {
         if (!(emitter instanceof EnergyCableBlockEntity)) {
-            com.ascension_ic2.AscensionIC2.LOGGER.info(
+            com.ascension_ic2.AscensionIC2.LOGGER.debug(
                     "cable accepts energy from {} at {} side {}", emitter.getClass().getSimpleName(), this.worldPosition, side);
         }
         return true;
