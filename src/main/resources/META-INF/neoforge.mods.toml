@@ -2,6 +2,9 @@ modLoader = "javafml"
 loaderVersion = "[4,)"
 license = "AGPL-3.0-or-later"
 
+[[mods]]
+modId = "ascension_ic2"
+version = "${mod_version}"
 displayName = "Ascension IC2"
 logoFile = "logo.png"
 authors = "Emeyshen"
