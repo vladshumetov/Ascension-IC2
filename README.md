@@ -52,9 +52,9 @@ ASP-style solar panels:
 Underground natural gas springs generate in the overworld. Gas can be collected with a bucket or
 a 1000 mB gas cell and burned in the Natural Gas Generator:
 
-- 1 mB/tick produces 20 EU/t.
-- 1000 mB produce 20 000 EU.
-- The generator has a 4000 mB tank and a 40 000 EU buffer.
+- 1 mB/tick produces 30 EU/t.
+- 1000 mB produce 30 000 EU.
+- The generator has a 4000 mB tank and a 60 000 EU buffer.
 
 Feeding a machine with a voltage above its energy tier destroys it.
 
