@@ -126,7 +126,10 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
 
     @Override
     public double getDemandedEnergy() {
-        return Math.min(availableInputThisTick(), Math.max(0.0, this.capacity - this.stored));
+        // Do not cap by the per-tick input limit here: EnergyNet compares the packet amount with
+        // the sink tier to decide overvoltage explosions. Capping to the tier maximum would hide
+        // an overvoltage packet and the machine would never explode.
+        return Math.max(0.0, this.capacity - this.stored);
     }
 
     @Override
