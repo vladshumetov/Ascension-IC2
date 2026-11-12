@@ -97,13 +97,11 @@ public final class AscensionIC2 {
         for (int tier = EnergyTiers.MIN_TIER; tier <= EnergyTiers.MAX_TIER; tier++) {
             SOLAR_PANELS.add(registerSolarPanel(tier));
         }
-        if (!isAdvancedSolarPanelsLoaded()) {
-            ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("advanced_solar_panel", 1, 8.0));
-            ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("hybrid_solar_panel", 2, 64.0));
-            ADVANCED_SOLAR_PANELS.add(
-                    registerAdvancedSolarPanel("ultimate_hybrid_solar_panel", 3, 512.0));
-            ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("quantum_solar_panel", 5, 4096.0));
-        }
+        ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("advanced_solar_panel", 1, 8.0));
+        ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("hybrid_solar_panel", 2, 64.0));
+        ADVANCED_SOLAR_PANELS.add(
+                registerAdvancedSolarPanel("ultimate_hybrid_solar_panel", 3, 512.0));
+        ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("quantum_solar_panel", 5, 4096.0));
     }
 
     /** Our four ASP-style panels are skipped when the real Advanced Solar Panels mod is installed. */
@@ -389,8 +387,10 @@ public final class AscensionIC2 {
         for (EnergyBlockRegistration registration : SOLAR_PANELS) {
             output.accept(registration.item().get());
         }
-        for (AdvancedSolarRegistration registration : ADVANCED_SOLAR_PANELS) {
-            output.accept(registration.item().get());
+        if (!isAdvancedSolarPanelsLoaded()) {
+            for (AdvancedSolarRegistration registration : ADVANCED_SOLAR_PANELS) {
+                output.accept(registration.item().get());
+            }
         }
         output.accept(GAS_GENERATOR.get());
         output.accept(NATURAL_GAS_CELL.get());
