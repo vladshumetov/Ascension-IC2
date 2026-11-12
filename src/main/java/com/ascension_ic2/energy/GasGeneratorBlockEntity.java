@@ -25,15 +25,15 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 /**
  * Natural gas generator: burns 1 mB per tick for 225 EU/t, so 1000 mB produce 225 000 EU.
- * Buffer: 4000 mB of gas and 450 000 EU.
+ * Buffer: 4000 mB of gas and 40 000 EU. 1000 mB produce 20 000 EU, like geothermal lava.
  */
 public class GasGeneratorBlockEntity extends BlockEntity
         implements IEnergySource, ILocatable, IAddonServerTickable, MenuProvider {
     public static final int TANK_CAPACITY = 4000;
     public static final int GAS_PER_TICK = 1;
-    public static final int EU_PER_TICK = 225;
-    public static final double EU_CAPACITY = 450_000.0;
-    public static final int SOURCE_TIER = 3;
+    public static final int EU_PER_TICK = 20;
+    public static final double EU_CAPACITY = 40_000.0;
+    public static final int SOURCE_TIER = 1;
 
     private final FluidTank tank =
             new FluidTank(

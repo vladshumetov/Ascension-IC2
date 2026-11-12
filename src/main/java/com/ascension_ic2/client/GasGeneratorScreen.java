@@ -70,7 +70,7 @@ public class GasGeneratorScreen extends AbstractContainerScreen<GasGeneratorMenu
                 this.menu.getGas() + " / " + this.menu.getGasCapacity() + " mB");
         label(guiGraphics, "gui.ascension_ic2.gas.buffer", 63,
                 this.menu.getEnergy() + " / " + this.menu.getEnergyCapacity() + " EU");
-        label(guiGraphics, "gui.ascension_ic2.gas.output", 84, "225 EU/t");
+        label(guiGraphics, "gui.ascension_ic2.gas.output", 84, com.ascension_ic2.energy.GasGeneratorBlockEntity.EU_PER_TICK + " EU/t");
         guiGraphics.drawString(
                 this.font,
                 Component.translatable("gui.ascension_ic2.gas.status"),
