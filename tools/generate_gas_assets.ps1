@@ -190,7 +190,7 @@ Write-JsonFile (Join-Path $data "worldgen\configured_feature\natural_gas_spring.
 Write-JsonFile (Join-Path $data "worldgen\placed_feature\natural_gas_spring.json") @{
     feature = "ascension_ic2:natural_gas_spring"
     placement = @(
-        @{ type = "minecraft:count"; count = 20 },
+        @{ type = "minecraft:count"; count = 8 },
         @{ type = "minecraft:in_square" },
         @{
             type = "minecraft:height_range"

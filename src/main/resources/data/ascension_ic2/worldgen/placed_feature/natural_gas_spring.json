@@ -2,7 +2,7 @@
     "feature":  "ascension_ic2:natural_gas_spring",
     "placement":  [
                       {
-                          "count":  20,
+                          "count":  8,
                           "type":  "minecraft:count"
                       },
                       {
