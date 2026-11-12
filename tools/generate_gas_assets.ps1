@@ -72,15 +72,17 @@ $side.Save((Join-Path $assets "textures\block\gas_generator_side.png"), [System.
 $bottom.Save((Join-Path $assets "textures\block\gas_generator_bottom.png"), [System.Drawing.Imaging.ImageFormat]::Png)
 $top.Dispose(); $side.Dispose(); $bottom.Dispose()
 
-# Cell icon.
+# Cell centre overlay: the IC2 empty cell is drawn as layer0, this only tints its central window.
 $cell = New-Bmp 16 16
-Rect $cell 5 1 10 14 $metal
-Rect $cell 5 1 10 2 $metalLight
-Rect $cell 5 13 10 14 (C '#10131A')
-Rect $cell 4 3 11 4 $metalLight
-Rect $cell 6 6 9 10 (C '#7FCB5A')
-Rect $cell 6 6 9 7 (C '#B6F58E')
-$cell.Save((Join-Path $assets "textures\item\natural_gas_cell.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+for ($y = 3; $y -le 12; $y++) {
+    $t2 = ($y - 3) / 9.0
+    $r = [int](110 + 20 * $t2)
+    $g = [int](200 + 35 * $t2)
+    $b = [int](240 + 15 * $t2)
+    Px $cell 7 $y ([System.Drawing.Color]::FromArgb(255, $r, $g, $b))
+    Px $cell 8 $y ([System.Drawing.Color]::FromArgb(255, [Math]::Min(255, $r + 10), [Math]::Min(255, $g + 10), 255))
+}
+$cell.Save((Join-Path $assets "textures\item\natural_gas_cell_center.png"), [System.Drawing.Imaging.ImageFormat]::Png)
 $cell.Dispose()
 
 Write-JsonFile (Join-Path $assets "blockstates\gas_generator.json") @{
@@ -109,7 +111,10 @@ Write-JsonFile (Join-Path $assets "models\item\gas_generator.json") @{
 }
 Write-JsonFile (Join-Path $assets "models\item\natural_gas_cell.json") @{
     parent = "minecraft:item/generated"
-    textures = @{ layer0 = "ascension_ic2:item/natural_gas_cell" }
+    textures = @{
+        layer0 = "ic2:item/cell/empty_cell"
+        layer1 = "ascension_ic2:item/natural_gas_cell_center"
+    }
 }
 Write-JsonFile (Join-Path $data "loot_table\blocks\gas_generator.json") @{
     type = "minecraft:block"
