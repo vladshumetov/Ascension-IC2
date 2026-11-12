@@ -163,7 +163,7 @@ $allIds = @(
     "ascension_ic2:nano_casing",
     "ascension_ic2:quantum_casing"
 )
-foreach ($t in @(6, 8, 10, 13)) { $allIds += "ascension_ic2:energy_cable_$t" }
+foreach ($t in @(6, 7, 8, 9, 10, 13)) { $allIds += "ascension_ic2:energy_cable_$t" }
 for ($t = 1; $t -le 13; $t++) { $allIds += "ascension_ic2:solar_panel_$t" }
 Write-JsonFile (Join-Path $tagMineableDir "pickaxe.json") @{ replace = $false; values = $allIds }
 Write-JsonFile (Join-Path $tagBlockDir "needs_iron_tool.json") @{ replace = $false; values = $allIds }

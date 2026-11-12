@@ -36,7 +36,7 @@ so transport above tier 5 needs the addon cables.
 
 The addon currently ships these energy blocks (creative only, recipes are not set up yet):
 
-- **Energy Cable (Tiers 6, 8, 10, 13)** — one cyan glass-fibre cable for each of these tiers, conducts that tier's voltage.
+- **Energy Cable (Tiers 6, 7, 8, 9, 10, 13)** — one cyan glass-fibre cable for each of these tiers, conducts that tier's voltage.
 - **Solar Panel (Tier 1-13)** — generates a full tier packet per tick in daylight with sky access;
   all panels share one texture.
 

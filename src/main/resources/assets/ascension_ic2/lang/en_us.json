@@ -22,6 +22,8 @@
   "tooltip.ascension_ic2.buffer": "Buffer: %s EU",
   "tooltip.ascension_ic2.lanes": "Lanes: %s, %s items per operation",
   "block.ascension_ic2.energy_cable_6": "Energy Cable (Tier 6)",
+  "block.ascension_ic2.energy_cable_7": "Energy Cable (Tier 7)",
+  "block.ascension_ic2.energy_cable_9": "Energy Cable (Tier 9)",
   "block.ascension_ic2.energy_cable_8": "Energy Cable (Tier 8)",
   "block.ascension_ic2.energy_cable_10": "Energy Cable (Tier 10)",
   "block.ascension_ic2.energy_cable_13": "Energy Cable (Tier 13)",

@@ -3,7 +3,7 @@ param(
     [string]$Ic2Jar = ""
 )
 
-# Generates the high-tier energy blocks: cables for tiers 6, 8, 10, 13 and solar panels for tiers 1..13.
+# Generates the high-tier energy blocks: cables for tiers 6, 7, 8, 9, 10, 13 and solar panels for tiers 1..13.
 # No recipes on purpose. Cables use one recoloured glass fibre texture; all solar panels share
 # the IC2 solar generator top texture.
 
@@ -153,7 +153,7 @@ $allIds = @(
     "ascension_ic2:nano_casing", "ascension_ic2:quantum_casing"
 )
 
-foreach ($tier in @(6, 8, 10, 13)) {
+foreach ($tier in @(6, 7, 8, 9, 10, 13)) {
     $id = "energy_cable_$tier"
     Write-CableBlock $id
     $allIds += "ascension_ic2:$id"
