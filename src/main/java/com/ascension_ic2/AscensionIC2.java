@@ -97,13 +97,23 @@ public final class AscensionIC2 {
         for (int tier = EnergyTiers.MIN_TIER; tier <= EnergyTiers.MAX_TIER; tier++) {
             SOLAR_PANELS.add(registerSolarPanel(tier));
         }
-        ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("advanced_solar_panel", 1, 8.0));
-        ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("hybrid_solar_panel", 2, 64.0));
-        ADVANCED_SOLAR_PANELS.add(
-                registerAdvancedSolarPanel("ultimate_hybrid_solar_panel", 3, 512.0));
-        ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("quantum_solar_panel", 5, 4096.0));
+        if (!isAdvancedSolarPanelsLoaded()) {
+            ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("advanced_solar_panel", 1, 8.0));
+            ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("hybrid_solar_panel", 2, 64.0));
+            ADVANCED_SOLAR_PANELS.add(
+                    registerAdvancedSolarPanel("ultimate_hybrid_solar_panel", 3, 512.0));
+            ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("quantum_solar_panel", 5, 4096.0));
+        }
     }
 
+    /** Our four ASP-style panels are skipped when the real Advanced Solar Panels mod is installed. */
+    private static boolean isAdvancedSolarPanelsLoaded() {
+        var modList = net.neoforged.fml.ModList.get();
+        return modList != null
+                && (modList.isLoaded("advanced_solar_panels")
+                        || modList.isLoaded("advancedsolarpanels")
+                        || modList.isLoaded("advanced_solar_panel"));
+    }
     private static TierMachineKind[] kindsFor(MachineTier tier) {
         return switch (tier) {
             case NANO -> NanoMachineKind.values();
