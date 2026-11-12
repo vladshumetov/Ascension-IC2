@@ -1,6 +1,7 @@
 package com.ascension_ic2.energy;
 
 import ic2.api.block.IAddonServerTickable;
+import ic2.api.energy.ICableConnectable;
 import ic2.api.energy.tile.IEnergyTile;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * Cable block shaped and connected like the IC2 glass fibre cable: a core with arms on the sides
  * that touch another energy tile.
  */
-public class EnergyCableBlock extends Block implements EntityBlock {
+public class EnergyCableBlock extends Block implements EntityBlock, ICableConnectable {
     public static final BooleanProperty NORTH = PipeBlock.NORTH;
     public static final BooleanProperty EAST = PipeBlock.EAST;
     public static final BooleanProperty SOUTH = PipeBlock.SOUTH;
@@ -65,6 +66,11 @@ public class EnergyCableBlock extends Block implements EntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
+    }
+
+    @Override
+    public boolean isCableConnectable(Level world, BlockPos pos, net.minecraft.core.Direction side) {
+        return true;
     }
 
     @Nullable

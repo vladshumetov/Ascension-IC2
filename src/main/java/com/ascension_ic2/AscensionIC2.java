@@ -300,7 +300,7 @@ public final class AscensionIC2 {
             CONTENT.registerItem("singular_crystal", () -> new Item(new Item.Properties()));
 
     public AscensionIC2(IEventBus modEventBus, ModContainer modContainer) {
-        CableConnectableRegistry.register(EnergyCableBlock.class, (world, pos, side) -> true);
+        CableConnectableRegistry.registerSelf(EnergyCableBlock.class);
         CONTENT.register(modEventBus);
         MENUS.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, TiersConfig.SPEC);
