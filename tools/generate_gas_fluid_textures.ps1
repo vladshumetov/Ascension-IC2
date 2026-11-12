@@ -39,9 +39,10 @@ function Recolor([string]$entryName, [string]$outName) {
                     continue
                 }
                 $lum = (0.299 * $c.R + 0.587 * $c.G + 0.114 * $c.B) / 255.0
-                $r = [int](60 + 80 * $lum)
-                $g = [int](150 + 80 * $lum)
-                $b = [int](200 + 55 * $lum)
+                $f = 0.45 + 0.7 * $lum
+                $r = [int](30 * $f)
+                $g = [int](220 * $f)
+                $b = [int](210 * $f)
                 $dst.SetPixel($x, $y, [System.Drawing.Color]::FromArgb($c.A, [Math]::Min(255, $r), [Math]::Min(255, $g), [Math]::Min(255, $b)))
             }
         }

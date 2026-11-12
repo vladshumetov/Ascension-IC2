@@ -35,7 +35,7 @@ public final class MachineClientEvents {
 
                     @Override
                     public int getTintColor() {
-                        return 0xFFB9F27C;
+                        return 0xFFFFFFFF;
                     }
                 },
                 NaturalGas.TYPE.get());

@@ -59,5 +59,6 @@
   "gui.ascension_ic2.gas.output": "Выход",
   "gui.ascension_ic2.gas.status": "Статус",
   "gui.ascension_ic2.gas.running": "Генерирует",
-  "gui.ascension_ic2.gas.idle": "Нет газа"
+  "gui.ascension_ic2.gas.idle": "Нет газа",
+  "block.ascension_ic2.natural_gas": "Природный газ"
 }
