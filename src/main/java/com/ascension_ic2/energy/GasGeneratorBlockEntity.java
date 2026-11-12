@@ -25,14 +25,14 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 /**
  * Natural gas generator: burns 1 mB per tick for 225 EU/t, so 1000 mB produce 225 000 EU.
- * Buffer: 4000 mB of gas and 40 000 EU. 1000 mB produce 30 000 EU, 1.5x geothermal lava.
+ * Buffer: 4000 mB of gas and 40 000 EU. 1 mB is consumed every 3 ticks, so 1000 mB produce 96 000 EU (4.8x lava).
  */
 public class GasGeneratorBlockEntity extends BlockEntity
         implements IEnergySource, ILocatable, IAddonServerTickable, MenuProvider {
     public static final int TANK_CAPACITY = 4000;
-    public static final int GAS_PER_TICK = 1;
-    public static final int EU_PER_TICK = 30;
-    public static final double EU_CAPACITY = 60_000.0;
+    public static final int TICKS_PER_MB = 3;
+    public static final int EU_PER_TICK = 32;
+    public static final double EU_CAPACITY = 96_000.0;
     public static final int SOURCE_TIER = 1;
 
     private final FluidTank tank =
@@ -43,6 +43,7 @@ public class GasGeneratorBlockEntity extends BlockEntity
                                     || stack.getFluid() == NaturalGas.FLOWING.get());
     private double stored;
     private long tick = Long.MIN_VALUE;
+    private int burnCounter;
     private double usedThisTick;
     private boolean registered;
 
@@ -68,7 +69,7 @@ public class GasGeneratorBlockEntity extends BlockEntity
     }
 
     public boolean isGenerating() {
-        return this.tank.getFluidAmount() >= GAS_PER_TICK && this.stored < EU_CAPACITY;
+        return this.tank.getFluidAmount() > 0 && this.stored < EU_CAPACITY;
     }
 
     @Override
@@ -102,9 +103,12 @@ public class GasGeneratorBlockEntity extends BlockEntity
             return;
         }
         beginTick();
-        if (this.tank.getFluidAmount() >= GAS_PER_TICK && this.stored < EU_CAPACITY) {
-            this.tank.drain(GAS_PER_TICK, IFluidHandler.FluidAction.EXECUTE);
+        if (this.tank.getFluidAmount() > 0 && this.stored < EU_CAPACITY) {
             this.stored = Math.min(EU_CAPACITY, this.stored + EU_PER_TICK);
+            if (++this.burnCounter >= TICKS_PER_MB) {
+                this.burnCounter = 0;
+                this.tank.drain(1, IFluidHandler.FluidAction.EXECUTE);
+            }
             setChanged();
         }
     }
