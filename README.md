@@ -111,13 +111,12 @@ buffer.
 ## Planned
 
 - Singular tier (7 inputs and 7 outputs).
-- 10 tiers of solar panels.
-- 10 tiers of solar panels themed around Botania, with matching resources and textures.
-- 10 tiers of solar panels themed around Blood Magic, with matching resources and textures.
-- Botania: a machine that turns flowers and resources into mana using EU.
-- Blood Magic: a machine that reproduces alchemy slot recipes (single slot, with upgrades).
-- Blood Magic: a blood generator that produces blood from EU.
 - Upgrade effects for the remaining IC2 upgrade types.
+
+## Deferred
+
+Solar panel tiers (base, Botania, Blood Magic), the Botania mana machine and the Blood Magic
+machines are planned for a later version, once Botania and Blood Magic are available in the pack.
 
 ## Building
 
