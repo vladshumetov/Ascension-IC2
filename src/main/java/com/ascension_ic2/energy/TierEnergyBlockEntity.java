@@ -148,7 +148,16 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
 
         int sinkTier = Math.min(EnergyTiers.MAX_TIER, Math.max(EnergyTiers.MIN_TIER, getSinkTier()));
         double maxVoltage = EnergyTiers.euPerTick(sinkTier);
-        if (voltage > maxVoltage * 1.001) {
+        // IC2 1.2.6 passes the tier number as "voltage"; some IC2 versions pass EU. Handle both.
+        boolean voltageIsTier = voltage <= EnergyTiers.MAX_TIER + 0.001;
+        boolean overvoltage = voltageIsTier
+                ? voltage > sinkTier + 0.001
+                : voltage > maxVoltage * 1.001;
+        overvoltage |= amount > maxVoltage * 1.001;
+        if (overvoltage) {
+            com.ascension_ic2.AscensionIC2.LOGGER.info(
+                    "Overvoltage: amount={}, voltage={}, sinkTier={}, maxVoltage={}",
+                    amount, voltage, sinkTier, maxVoltage);
             explodeFromOvervoltage();
             return amount;
         }
