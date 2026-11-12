@@ -1,0 +1,27 @@
+{
+    "feature":  "ascension_ic2:natural_gas_spring",
+    "placement":  [
+                      {
+                          "count":  20,
+                          "type":  "minecraft:count"
+                      },
+                      {
+                          "type":  "minecraft:in_square"
+                      },
+                      {
+                          "height":  {
+                                         "min_inclusive":  {
+                                                               "absolute":  -56
+                                                           },
+                                         "type":  "minecraft:uniform",
+                                         "max_inclusive":  {
+                                                               "absolute":  40
+                                                           }
+                                     },
+                          "type":  "minecraft:height_range"
+                      },
+                      {
+                          "type":  "minecraft:biome"
+                      }
+                  ]
+}

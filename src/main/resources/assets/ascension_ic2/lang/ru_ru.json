@@ -50,5 +50,15 @@
   "gui.ascension_ic2.solar.tier": "Уровень",
   "gui.ascension_ic2.solar.status": "Статус",
   "gui.ascension_ic2.solar.day": "Генерирует",
-  "gui.ascension_ic2.solar.night": "Нет солнца"
+  "gui.ascension_ic2.solar.night": "Нет солнца",
+  "fluid_type.ascension_ic2.natural_gas": "Природный газ",
+  "item.ascension_ic2.natural_gas_bucket": "Ведро природного газа",
+  "item.ascension_ic2.gas_cell": "Капсула природного газа",
+  "block.ascension_ic2.gas_generator": "Газовый генератор",
+  "gui.ascension_ic2.gas.gas": "Газ",
+  "gui.ascension_ic2.gas.buffer": "Буфер",
+  "gui.ascension_ic2.gas.output": "Выход",
+  "gui.ascension_ic2.gas.status": "Статус",
+  "gui.ascension_ic2.gas.running": "Генерирует",
+  "gui.ascension_ic2.gas.idle": "Нет газа"
 }

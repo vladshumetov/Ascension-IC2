@@ -2,6 +2,12 @@ package com.ascension_ic2;
 
 import com.ascension_ic2.config.TiersConfig;
 import com.ascension_ic2.energy.EnergyCableBlock;
+import com.ascension_ic2.energy.GasGeneratorBlock;
+import com.ascension_ic2.energy.GasGeneratorBlockEntity;
+import com.ascension_ic2.energy.GasGeneratorMenu;
+import com.ascension_ic2.fluid.GasCellFluidHandler;
+import com.ascension_ic2.fluid.GasCellItem;
+import com.ascension_ic2.fluid.NaturalGas;
 import com.ascension_ic2.energy.EnergyCableBlockEntity;
 import com.ascension_ic2.energy.EnergyTiers;
 import com.ascension_ic2.energy.SolarPanelBlock;
@@ -246,6 +252,49 @@ public final class AscensionIC2 {
                                     (id, inventory, buf) ->
                                             new TierMachineMenu(MachineTier.QUANTUM, id, inventory, buf)));
 
+    public static final DeferredBlock<GasGeneratorBlock> GAS_GENERATOR_BLOCK;
+    public static final DeferredItem<BlockItem> GAS_GENERATOR;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GasGeneratorBlockEntity>>
+            GAS_GENERATOR_BE;
+
+    static {
+        @SuppressWarnings("unchecked")
+        DeferredHolder<BlockEntityType<?>, BlockEntityType<GasGeneratorBlockEntity>>[] holder =
+                new DeferredHolder[1];
+        GAS_GENERATOR_BLOCK =
+                CONTENT.registerBlock(
+                        "gas_generator",
+                        properties ->
+                                new GasGeneratorBlock(
+                                        properties,
+                                        (pos, state) ->
+                                                new GasGeneratorBlockEntity(
+                                                        holder[0].get(), pos, state)),
+                        BlockBehaviour.Properties.of()
+                                .strength(3.0F, 6.0F)
+                                .requiresCorrectToolForDrops()
+                                .sound(SoundType.METAL));
+        GAS_GENERATOR = CONTENT.registerBlockItem("gas_generator", GAS_GENERATOR_BLOCK);
+        holder[0] =
+                CONTENT.registerBlockEntityType(
+                        "gas_generator",
+                        (pos, state) ->
+                                new GasGeneratorBlockEntity(holder[0].get(), pos, state),
+                        GAS_GENERATOR_BLOCK);
+        GAS_GENERATOR_BE = holder[0];
+    }
+
+    public static final DeferredItem<GasCellItem> GAS_CELL =
+            CONTENT.registerItem(
+                    "gas_cell", () -> new GasCellItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<MenuType<?>, MenuType<GasGeneratorMenu>>
+            GAS_GENERATOR_MENU =
+                    MENUS.register(
+                            "gas_generator",
+                            () ->
+                                    IMenuTypeExtension.create(
+                                            (id, inventory, buf) ->
+                                                    new GasGeneratorMenu(id, inventory, buf)));
     public static final DeferredHolder<MenuType<?>, MenuType<SolarPanelMenu>> SOLAR_MENU =
             MENUS.register(
                     "solar_panel",
@@ -301,6 +350,8 @@ public final class AscensionIC2 {
 
     public AscensionIC2(IEventBus modEventBus, ModContainer modContainer) {
         CableConnectableRegistry.registerSelf(EnergyCableBlock.class);
+        NaturalGas.TYPES.register(modEventBus);
+        NaturalGas.FLUIDS.register(modEventBus);
         CONTENT.register(modEventBus);
         MENUS.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, TiersConfig.SPEC);
@@ -328,6 +379,9 @@ public final class AscensionIC2 {
         for (AdvancedSolarRegistration registration : ADVANCED_SOLAR_PANELS) {
             output.accept(registration.item().get());
         }
+        output.accept(NaturalGas.BUCKET.get());
+        output.accept(GAS_GENERATOR.get());
+        output.accept(GAS_CELL.get());
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -342,5 +396,13 @@ public final class AscensionIC2 {
                     type,
                     (blockEntity, side) -> blockEntity.getInventory());
         }
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                GAS_GENERATOR_BE.get(),
+                (blockEntity, side) -> blockEntity.getTank());
+        event.registerItem(
+                Capabilities.FluidHandler.ITEM,
+                (stack, context) -> new GasCellFluidHandler(stack),
+                GAS_CELL.get());
     }
 }

@@ -1,0 +1,6 @@
+{
+    "textures":  {
+                     "layer0":  "ascension_ic2:item/natural_gas_bucket"
+                 },
+    "parent":  "minecraft:item/generated"
+}

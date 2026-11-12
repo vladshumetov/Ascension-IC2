@@ -1,0 +1,12 @@
+{
+    "textures":  {
+                     "north":  "ascension_ic2:block/gas_generator_side",
+                     "south":  "ascension_ic2:block/gas_generator_side",
+                     "up":  "ascension_ic2:block/gas_generator_top",
+                     "west":  "ascension_ic2:block/gas_generator_side",
+                     "particle":  "ascension_ic2:block/gas_generator_side",
+                     "east":  "ascension_ic2:block/gas_generator_side",
+                     "down":  "ascension_ic2:block/gas_generator_bottom"
+                 },
+    "parent":  "minecraft:block/cube"
+}
