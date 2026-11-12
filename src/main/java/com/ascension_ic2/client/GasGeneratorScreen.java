@@ -67,9 +67,9 @@ public class GasGeneratorScreen extends AbstractContainerScreen<GasGeneratorMenu
                 0xFFB7E0EA,
                 false);
         label(guiGraphics, "gui.ascension_ic2.gas.gas", 42,
-                this.menu.getGas() + " / " + this.menu.getGasCapacity() + " mB");
+                GuiNumbers.format(this.menu.getGas()) + " / " + GuiNumbers.format(this.menu.getGasCapacity()) + " mB");
         label(guiGraphics, "gui.ascension_ic2.gas.buffer", 63,
-                this.menu.getEnergy() + " / " + this.menu.getEnergyCapacity() + " EU");
+                GuiNumbers.format(this.menu.getEnergy()) + " / " + GuiNumbers.format(this.menu.getEnergyCapacity()) + " EU");
         label(guiGraphics, "gui.ascension_ic2.gas.output", 84, com.ascension_ic2.energy.GasGeneratorBlockEntity.EU_PER_TICK + " EU/t");
         guiGraphics.drawString(
                 this.font,
@@ -106,6 +106,17 @@ public class GasGeneratorScreen extends AbstractContainerScreen<GasGeneratorMenu
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+        if (this.isHovering(BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT, mouseX, mouseY)) {
+            guiGraphics.renderTooltip(
+                    this.font,
+                    Component.translatable(
+                            "gui.ascension_ic2.energy",
+                            GuiNumbers.format(this.menu.getEnergy()),
+                            GuiNumbers.format(this.menu.getEnergyCapacity())),
+                    mouseX,
+                    mouseY);
+            return;
+        }
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 }

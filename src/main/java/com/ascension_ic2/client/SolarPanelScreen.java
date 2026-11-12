@@ -69,11 +69,11 @@ public class SolarPanelScreen extends AbstractContainerScreen<SolarPanelMenu> {
                 false);
 
         label(guiGraphics, "gui.ascension_ic2.solar.generation", 42,
-                this.menu.getGeneration() + " EU/t");
+                GuiNumbers.format(this.menu.getGeneration()) + " EU/t");
         label(guiGraphics, "gui.ascension_ic2.solar.output", 63,
-                this.menu.getOutput() + " EU/t");
+                GuiNumbers.format(this.menu.getOutput()) + " EU/t");
         label(guiGraphics, "gui.ascension_ic2.solar.buffer", 84,
-                this.menu.getStored() + " / " + this.menu.getCapacity() + " EU");
+                GuiNumbers.format(this.menu.getStored()) + " / " + GuiNumbers.format(this.menu.getCapacity()) + " EU");
         label(guiGraphics, "gui.ascension_ic2.solar.tier", 105,
                 Integer.toString(this.menu.getTier()));
 
@@ -112,6 +112,17 @@ public class SolarPanelScreen extends AbstractContainerScreen<SolarPanelMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+        if (this.isHovering(BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT, mouseX, mouseY)) {
+            guiGraphics.renderTooltip(
+                    this.font,
+                    Component.translatable(
+                            "gui.ascension_ic2.energy",
+                            GuiNumbers.format(this.menu.getStored()),
+                            GuiNumbers.format(this.menu.getCapacity())),
+                    mouseX,
+                    mouseY);
+            return;
+        }
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 }

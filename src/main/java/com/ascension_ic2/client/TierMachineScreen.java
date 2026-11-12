@@ -110,7 +110,9 @@ public class TierMachineScreen extends AbstractContainerScreen<TierMachineMenu> 
     private Component hoverTooltip(int mouseX, int mouseY) {
         if (this.isHovering(ENERGY_HIT_X, ENERGY_HIT_Y, ENERGY_HIT_W, ENERGY_HIT_H, mouseX, mouseY)) {
             return Component.translatable(
-                    "gui.ascension_ic2.energy", this.menu.getEnergy(), this.menu.getCapacity());
+                    "gui.ascension_ic2.energy",
+                    GuiNumbers.format(this.menu.getEnergy()),
+                    GuiNumbers.format(this.menu.getCapacity()));
         }
         MachineTier tier = this.menu.getTier();
         for (int lane = 0; lane < this.menu.getInputSlots(); lane++) {
