@@ -1,6 +1,12 @@
 package com.ascension_ic2.energy;
 
 import ic2.api.block.IAddonServerTickable;
+import ic2.core.fluid.Ic2FluidStack;
+import ic2.core.item.ItemClassicCell;
+import com.ascension_ic2.fluid.NaturalGas;
+import org.apache.commons.lang3.mutable.MutableObject;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import java.util.function.BiFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -73,12 +79,59 @@ public class GasGeneratorBlock extends Block implements EntityBlock {
         if (!(level.getBlockEntity(pos) instanceof GasGeneratorBlockEntity generator)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
+        if (stack.getItem() instanceof ItemClassicCell cell) {
+            if (!level.isClientSide) {
+                emptyGasCell(level, player, stack, hand, cell, generator);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             serverPlayer.openMenu(generator, buffer -> buffer.writeBlockPos(pos));
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
+    private static boolean emptyGasCell(
+            Level level,
+            Player player,
+            ItemStack stack,
+            InteractionHand hand,
+            ItemClassicCell cell,
+            GasGeneratorBlockEntity generator) {
+        Ic2FluidStack gas = cell.getFluidStack(stack);
+        if (gas.isEmpty()
+                || (gas.getFluid() != NaturalGas.SOURCE.get()
+                        && gas.getFluid() != NaturalGas.FLOWING.get())) {
+            return false;
+        }
+        int accepted =
+                generator
+                        .getTank()
+                        .fill(
+                                new FluidStack(gas.getFluid(), gas.getAmountMb()),
+                                IFluidHandler.FluidAction.EXECUTE);
+        if (accepted <= 0) {
+            return false;
+        }
+        MutableObject<ItemStack> replaced = new MutableObject<>(stack);
+        int drained =
+                cell.drainMb(
+                        stack, gas.copyWithAmountMb(accepted), false, replaced);
+        if (drained <= 0) {
+            return false;
+        }
+        if (!level.isClientSide) {
+            player.setItemInHand(hand, replaced.getValue() == null ? ItemStack.EMPTY : replaced.getValue());
+            level.playSound(
+                    null,
+                    generator.getBlockPos(),
+                    net.minecraft.sounds.SoundEvents.BUCKET_EMPTY,
+                    net.minecraft.sounds.SoundSource.BLOCKS,
+                    1.0F,
+                    1.0F);
+        }
+        return true;
+    }
     private static InteractionResult openMenu(Level level, BlockPos pos, Player player) {
         if (!(level.getBlockEntity(pos) instanceof GasGeneratorBlockEntity generator)) {
             return InteractionResult.PASS;
