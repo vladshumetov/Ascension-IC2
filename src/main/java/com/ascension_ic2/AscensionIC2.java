@@ -136,6 +136,7 @@ public final class AscensionIC2 {
                                                         tier, holder[0].get(), pos, state)),
                         BlockBehaviour.Properties.of()
                                 .strength(0.4F)
+                                .noOcclusion()
                                 .sound(SoundType.GLASS));
         DeferredItem<BlockItem> item = CONTENT.registerBlockItem(id, block);
         holder[0] =

@@ -134,10 +134,12 @@ function Write-CableBlock([string]$Id) {
 $cableModelDir = Join-Path $blockModelDir "cable"
 New-Item -ItemType Directory -Path $cableModelDir -Force | Out-Null
 Write-JsonFile (Join-Path $cableModelDir "energy_core.json") @{
+    render_type = "minecraft:cutout"
     parent = "ic2:block/cable/shape/core_4"
     textures = @{ texture = "ascension_ic2:block/energy_cable" }
 }
 Write-JsonFile (Join-Path $cableModelDir "energy_side.json") @{
+    render_type = "minecraft:cutout"
     parent = "ic2:block/cable/shape/side_4"
     textures = @{ texture = "ascension_ic2:block/energy_cable" }
 }
