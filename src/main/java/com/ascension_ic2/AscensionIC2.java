@@ -2,6 +2,9 @@ package com.ascension_ic2;
 
 import com.ascension_ic2.config.TiersConfig;
 import com.ascension_ic2.energy.BloodGeneratorBlock;
+import com.ascension_ic2.energy.BotaniaGreenhouseBlock;
+import com.ascension_ic2.energy.BotaniaGreenhouseBlockEntity;
+import com.ascension_ic2.energy.BotaniaGreenhouseMenu;
 import com.ascension_ic2.energy.BloodGeneratorBlockEntity;
 import com.ascension_ic2.energy.BloodGeneratorMenu;
 import com.ascension_ic2.energy.EnergyCableBlock;
@@ -303,6 +306,38 @@ public final class AscensionIC2 {
         GAS_GENERATOR_BE = holder[0];
     }
 
+    public static final DeferredBlock<BotaniaGreenhouseBlock> BOTANIA_GREENHOUSE_BLOCK;
+    public static final DeferredItem<BlockItem> BOTANIA_GREENHOUSE;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BotaniaGreenhouseBlockEntity>>
+            BOTANIA_GREENHOUSE_BE;
+
+    static {
+        @SuppressWarnings("unchecked")
+        DeferredHolder<BlockEntityType<?>, BlockEntityType<BotaniaGreenhouseBlockEntity>>[] holder =
+                new DeferredHolder[1];
+        BOTANIA_GREENHOUSE_BLOCK =
+                CONTENT.registerBlock(
+                        "botania_greenhouse",
+                        properties ->
+                                new BotaniaGreenhouseBlock(
+                                        properties,
+                                        (pos, state) ->
+                                                new BotaniaGreenhouseBlockEntity(
+                                                        holder[0].get(), pos, state)),
+                        BlockBehaviour.Properties.of()
+                                .strength(3.0F, 6.0F)
+                                .requiresCorrectToolForDrops()
+                                .sound(SoundType.METAL));
+        BOTANIA_GREENHOUSE =
+                CONTENT.registerBlockItem("botania_greenhouse", BOTANIA_GREENHOUSE_BLOCK);
+        holder[0] =
+                CONTENT.registerBlockEntityType(
+                        "botania_greenhouse",
+                        (pos, state) ->
+                                new BotaniaGreenhouseBlockEntity(holder[0].get(), pos, state),
+                        BOTANIA_GREENHOUSE_BLOCK);
+        BOTANIA_GREENHOUSE_BE = holder[0];
+    }
     public static final DeferredBlock<BloodGeneratorBlock> BLOOD_GENERATOR_BLOCK;
     public static final DeferredItem<BlockItem> BLOOD_GENERATOR;
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BloodGeneratorBlockEntity>>
@@ -341,6 +376,14 @@ public final class AscensionIC2 {
                             new ItemClassicCell(
                                     new Item.Properties().stacksTo(1),
                                     NaturalGas.SOURCE.get()));
+    public static final DeferredHolder<MenuType<?>, MenuType<BotaniaGreenhouseMenu>>
+            BOTANIA_GREENHOUSE_MENU =
+                    MENUS.register(
+                            "botania_greenhouse",
+                            () ->
+                                    IMenuTypeExtension.create(
+                                            (id, inventory, buf) ->
+                                                    new BotaniaGreenhouseMenu(id, inventory, buf)));
     public static final DeferredHolder<MenuType<?>, MenuType<BloodGeneratorMenu>>
             BLOOD_GENERATOR_MENU =
                     MENUS.register(
@@ -458,6 +501,7 @@ public final class AscensionIC2 {
         output.accept(GAS_GENERATOR.get());
         output.accept(NATURAL_GAS_CELL.get());
         output.accept(BLOOD_GENERATOR.get());
+        output.accept(BOTANIA_GREENHOUSE.get());
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -484,5 +528,9 @@ public final class AscensionIC2 {
                 Capabilities.FluidHandler.BLOCK,
                 BLOOD_GENERATOR_BE.get(),
                 (blockEntity, side) -> blockEntity.getTank());
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                BOTANIA_GREENHOUSE_BE.get(),
+                (blockEntity, side) -> blockEntity.getInventory());
     }
 }

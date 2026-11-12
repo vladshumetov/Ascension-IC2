@@ -69,5 +69,7 @@
   "jade.ascension_ic2.gas.output": "Output: %s EU/t",
   "config.jade.plugin_ascension_ic2.energy": "Energy",
   "block.ascension_ic2.blood_generator": "Blood Generator",
-  "gui.ascension_ic2.blood.blood": "Blood"
+  "gui.ascension_ic2.blood.blood": "Blood",
+  "block.ascension_ic2.botania_greenhouse": "Botania Greenhouse",
+  "gui.ascension_ic2.mana": "Mana"
 }

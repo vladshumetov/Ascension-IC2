@@ -45,6 +45,16 @@ public class BloodGeneratorBlockEntity extends TierEnergyBlockEntity implements 
         super(type, pos, state, ENERGY_TIER, EU_CAPACITY, EU_PER_TICK, 0.0);
     }
 
+    @Override
+    protected boolean acceptsOvervoltage() {
+        return true;
+    }
+
+    @Override
+    protected boolean unlimitedInput() {
+        return true;
+    }
+
     public static net.minecraft.world.level.material.Fluid bloodFluid() {
         return net.minecraft.core.registries.BuiltInRegistries.FLUID.get(BLOOD_FLUID);
     }

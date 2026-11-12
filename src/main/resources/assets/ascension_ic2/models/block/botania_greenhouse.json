@@ -1,0 +1,12 @@
+{
+    "textures":  {
+                     "north":  "ascension_ic2:block/botania_greenhouse_side",
+                     "south":  "ascension_ic2:block/botania_greenhouse_side",
+                     "up":  "ascension_ic2:block/botania_greenhouse_top",
+                     "west":  "ascension_ic2:block/botania_greenhouse_side",
+                     "particle":  "ascension_ic2:block/botania_greenhouse_side",
+                     "east":  "ascension_ic2:block/botania_greenhouse_side",
+                     "down":  "ascension_ic2:block/botania_greenhouse_bottom"
+                 },
+    "parent":  "minecraft:block/cube"
+}

@@ -132,6 +132,14 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
         return Math.max(0.0, this.capacity - this.stored);
     }
 
+    protected boolean acceptsOvervoltage() {
+        return false;
+    }
+
+    protected boolean unlimitedInput() {
+        return false;
+    }
+
     @Override
     public int getSinkTier() {
         return this.tier;
@@ -154,7 +162,7 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
                 ? voltage > sinkTier + 0.001
                 : voltage > maxVoltage * 1.001;
         overvoltage |= amount > maxVoltage * 1.001;
-        if (overvoltage) {
+        if (overvoltage && !acceptsOvervoltage()) {
             com.ascension_ic2.AscensionIC2.LOGGER.debug(
                     "Overvoltage: amount={}, voltage={}, sinkTier={}, maxVoltage={}",
                     amount, voltage, sinkTier, maxVoltage);
@@ -162,8 +170,9 @@ public abstract class TierEnergyBlockEntity extends BlockEntity
             return amount;
         }
 
+        double inputCap = unlimitedInput() ? Double.MAX_VALUE : availableInputThisTick();
         double accepted =
-                Math.min(amount, Math.min(availableInputThisTick(), this.capacity - this.stored));
+                Math.min(amount, Math.min(inputCap, this.capacity - this.stored));
         if (accepted > 0.0) {
             this.stored += accepted;
             this.inputUsedThisTick += accepted;
