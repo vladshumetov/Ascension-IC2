@@ -1,8 +1,0 @@
-{
-    "step":  "underground_decoration",
-    "features":  [
-                     "ascension_ic2:natural_gas_spring"
-                 ],
-    "type":  "neoforge:add_features",
-    "biomes":  "#minecraft:is_overworld"
-}

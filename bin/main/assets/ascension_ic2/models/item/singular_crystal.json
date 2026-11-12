@@ -1,6 +1,0 @@
-{
-    "textures":  {
-                     "layer0":  "ascension_ic2:item/singular_crystal"
-                 },
-    "parent":  "minecraft:item/generated"
-}

@@ -1,7 +1,0 @@
-{
-    "render_type":  "minecraft:cutout",
-    "parent":  "ic2:block/cable/shape/side_4",
-    "textures":  {
-                     "texture":  "ascension_ic2:block/energy_cable"
-                 }
-}

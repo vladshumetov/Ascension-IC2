@@ -8,3 +8,5 @@ out/
 libs/*.jar
 *.log
 examples/
+
+bin/
