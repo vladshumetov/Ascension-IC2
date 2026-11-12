@@ -1,6 +1,9 @@
 package com.ascension_ic2;
 
 import com.ascension_ic2.config.TiersConfig;
+import com.ascension_ic2.energy.BloodGeneratorBlock;
+import com.ascension_ic2.energy.BloodGeneratorBlockEntity;
+import com.ascension_ic2.energy.BloodGeneratorMenu;
 import com.ascension_ic2.energy.EnergyCableBlock;
 import com.ascension_ic2.energy.GasGeneratorBlock;
 import com.ascension_ic2.energy.GasGeneratorBlockEntity;
@@ -300,6 +303,37 @@ public final class AscensionIC2 {
         GAS_GENERATOR_BE = holder[0];
     }
 
+    public static final DeferredBlock<BloodGeneratorBlock> BLOOD_GENERATOR_BLOCK;
+    public static final DeferredItem<BlockItem> BLOOD_GENERATOR;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BloodGeneratorBlockEntity>>
+            BLOOD_GENERATOR_BE;
+
+    static {
+        @SuppressWarnings("unchecked")
+        DeferredHolder<BlockEntityType<?>, BlockEntityType<BloodGeneratorBlockEntity>>[] holder =
+                new DeferredHolder[1];
+        BLOOD_GENERATOR_BLOCK =
+                CONTENT.registerBlock(
+                        "blood_generator",
+                        properties ->
+                                new BloodGeneratorBlock(
+                                        properties,
+                                        (pos, state) ->
+                                                new BloodGeneratorBlockEntity(
+                                                        holder[0].get(), pos, state)),
+                        BlockBehaviour.Properties.of()
+                                .strength(3.0F, 6.0F)
+                                .requiresCorrectToolForDrops()
+                                .sound(SoundType.METAL));
+        BLOOD_GENERATOR = CONTENT.registerBlockItem("blood_generator", BLOOD_GENERATOR_BLOCK);
+        holder[0] =
+                CONTENT.registerBlockEntityType(
+                        "blood_generator",
+                        (pos, state) ->
+                                new BloodGeneratorBlockEntity(holder[0].get(), pos, state),
+                        BLOOD_GENERATOR_BLOCK);
+        BLOOD_GENERATOR_BE = holder[0];
+    }
     public static final DeferredItem<ItemClassicCell> NATURAL_GAS_CELL =
             CONTENT.registerItem(
                     "natural_gas_cell",
@@ -307,6 +341,14 @@ public final class AscensionIC2 {
                             new ItemClassicCell(
                                     new Item.Properties().stacksTo(1),
                                     NaturalGas.SOURCE.get()));
+    public static final DeferredHolder<MenuType<?>, MenuType<BloodGeneratorMenu>>
+            BLOOD_GENERATOR_MENU =
+                    MENUS.register(
+                            "blood_generator",
+                            () ->
+                                    IMenuTypeExtension.create(
+                                            (id, inventory, buf) ->
+                                                    new BloodGeneratorMenu(id, inventory, buf)));
     public static final DeferredHolder<MenuType<?>, MenuType<GasGeneratorMenu>>
             GAS_GENERATOR_MENU =
                     MENUS.register(
@@ -415,6 +457,7 @@ public final class AscensionIC2 {
         }
         output.accept(GAS_GENERATOR.get());
         output.accept(NATURAL_GAS_CELL.get());
+        output.accept(BLOOD_GENERATOR.get());
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
@@ -432,6 +475,14 @@ public final class AscensionIC2 {
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 GAS_GENERATOR_BE.get(),
+                (blockEntity, side) -> blockEntity.getTank());
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                BLOOD_GENERATOR_BE.get(),
+                (blockEntity, side) -> blockEntity.getInventory());
+        event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                BLOOD_GENERATOR_BE.get(),
                 (blockEntity, side) -> blockEntity.getTank());
     }
 }

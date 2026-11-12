@@ -67,5 +67,7 @@
   "jade.ascension_ic2.gas.energy": "Energy: %s / %s EU",
   "jade.ascension_ic2.gas.gas": "Gas: %s / %s mB",
   "jade.ascension_ic2.gas.output": "Output: %s EU/t",
-  "config.jade.plugin_ascension_ic2.energy": "Energy"
+  "config.jade.plugin_ascension_ic2.energy": "Energy",
+  "block.ascension_ic2.blood_generator": "Blood Generator",
+  "gui.ascension_ic2.blood.blood": "Blood"
 }

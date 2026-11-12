@@ -1,0 +1,6 @@
+{
+    "textures":  {
+                     "layer0":  "ascension_ic2:item/nano_circuit"
+                 },
+    "parent":  "minecraft:item/generated"
+}

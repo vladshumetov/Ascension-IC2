@@ -1,0 +1,38 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "AGPL-3.0-or-later"
+
+[[mods]]
+modId = "ascension_ic2"
+version = "${mod_version}"
+displayName = "Ascension IC2"
+logoFile = "logo.png"
+authors = "Emeyshen"
+description = '''
+Adds nano, quantum and singular tiers of classic IndustrialCraft 2 machines.
+The nano tier starts with three input slots and four items processed per operation.
+'''
+
+[[mixins]]
+config = "ascension_ic2.mixins.json"
+
+[[dependencies.ascension_ic2]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.ascension_ic2]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.22)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.ascension_ic2]]
+modId = "ic2"
+type = "required"
+versionRange = "[1.0.3,)"
+ordering = "AFTER"
+side = "BOTH"

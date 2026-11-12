@@ -1,0 +1,27 @@
+{
+    "key":  {
+                "Y":  {
+                          "item":  "ascension_ic2:quantum_circuit"
+                      },
+                "M":  {
+                          "item":  "ascension_ic2:nano_extractor"
+                      },
+                "B":  {
+                          "item":  "ascension_ic2:quantum_casing"
+                      },
+                "X":  {
+                          "item":  "ic2:iridium"
+                      }
+            },
+    "category":  "misc",
+    "pattern":  [
+                    "XMX",
+                    "YBY",
+                    "XMX"
+                ],
+    "result":  {
+                   "id":  "ascension_ic2:quantum_extractor",
+                   "count":  1
+               },
+    "type":  "minecraft:crafting_shaped"
+}

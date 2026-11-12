@@ -45,5 +45,6 @@ public final class MachineClientEvents {
         event.register(AscensionIC2.QUANTUM_MENU.get(), TierMachineScreen::new);
         event.register(AscensionIC2.SOLAR_MENU.get(), SolarPanelScreen::new);
         event.register(AscensionIC2.GAS_GENERATOR_MENU.get(), GasGeneratorScreen::new);
+        event.register(AscensionIC2.BLOOD_GENERATOR_MENU.get(), BloodGeneratorScreen::new);
     }
 }

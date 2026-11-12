@@ -36,6 +36,7 @@
                    "ascension_ic2:hybrid_solar_panel",
                    "ascension_ic2:ultimate_hybrid_solar_panel",
                    "ascension_ic2:quantum_solar_panel",
-                   "ascension_ic2:gas_generator"
+                   "ascension_ic2:gas_generator",
+                   "ascension_ic2:blood_generator"
                ]
 }

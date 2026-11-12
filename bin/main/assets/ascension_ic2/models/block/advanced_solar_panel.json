@@ -1,0 +1,12 @@
+{
+    "textures":  {
+                     "north":  "ascension_ic2:block/advanced_solar_panel_side",
+                     "south":  "ascension_ic2:block/advanced_solar_panel_side",
+                     "up":  "ascension_ic2:block/advanced_solar_panel_top",
+                     "west":  "ascension_ic2:block/advanced_solar_panel_side",
+                     "particle":  "ascension_ic2:block/advanced_solar_panel_side",
+                     "east":  "ascension_ic2:block/advanced_solar_panel_side",
+                     "down":  "ascension_ic2:block/advanced_solar_panel_bottom"
+                 },
+    "parent":  "minecraft:block/cube"
+}

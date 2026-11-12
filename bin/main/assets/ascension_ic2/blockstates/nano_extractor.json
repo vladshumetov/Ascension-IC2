@@ -1,0 +1,19 @@
+{
+    "variants":  {
+                     "facing=north":  {
+                                          "model":  "ascension_ic2:block/nano_extractor"
+                                      },
+                     "facing=south":  {
+                                          "model":  "ascension_ic2:block/nano_extractor",
+                                          "y":  180
+                                      },
+                     "facing=east":  {
+                                         "model":  "ascension_ic2:block/nano_extractor",
+                                         "y":  90
+                                     },
+                     "facing=west":  {
+                                         "model":  "ascension_ic2:block/nano_extractor",
+                                         "y":  270
+                                     }
+                 }
+}
