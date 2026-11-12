@@ -2,7 +2,7 @@ param(
     [string]$ProjectRoot = ""
 )
 
-# Generates natural gas assets: fluid textures, bucket/cell icons, gas generator block model,
+# Generates natural gas assets: fluid textures, gas cell icon, gas generator block model,
 # loot/tags, lang keys and the underground spring worldgen data.
 
 $ErrorActionPreference = "Stop"
@@ -72,33 +72,6 @@ $side.Save((Join-Path $assets "textures\block\gas_generator_side.png"), [System.
 $bottom.Save((Join-Path $assets "textures\block\gas_generator_bottom.png"), [System.Drawing.Imaging.ImageFormat]::Png)
 $top.Dispose(); $side.Dispose(); $bottom.Dispose()
 
-# Fluid textures: semi-transparent green swirls.
-foreach ($kind in "still", "flowing") {
-    $bmp = New-Bmp 16 16
-    for ($y = 0; $y -lt 16; $y++) {
-        for ($x = 0; $x -lt 16; $x++) {
-            $n = (($x * 5 + $y * 11 + ($(if ($kind -eq 'flowing') { $x * $y } else { 0 }))) % 9)
-            $alpha = 150 + (($n * 7) % 60)
-            $g = 150 + (($n * 9) % 80)
-            Px $bmp $x $y ([System.Drawing.Color]::FromArgb($alpha, 90, $g, 70))
-        }
-    }
-    $bmp.Save((Join-Path $assets "textures\block\natural_gas_$kind.png"), [System.Drawing.Imaging.ImageFormat]::Png)
-    $bmp.Dispose()
-}
-
-# Bucket icon.
-$bucket = New-Bmp 16 16
-Rect $bucket 3 5 12 14 $metal
-Rect $bucket 3 5 12 5 $metalLight
-Rect $bucket 3 13 12 14 (C '#10131A')
-Rect $bucket 4 6 11 8 (C '#7FCB5A')
-Rect $bucket 4 6 11 6 (C '#B6F58E')
-Rect $bucket 2 5 2 12 $metalLight
-Rect $bucket 13 5 13 12 $metalLight
-$bucket.Save((Join-Path $assets "textures\item\natural_gas_bucket.png"), [System.Drawing.Imaging.ImageFormat]::Png)
-$bucket.Dispose()
-
 # Cell icon.
 $cell = New-Bmp 16 16
 Rect $cell 5 1 10 14 $metal
@@ -133,10 +106,6 @@ Write-JsonFile (Join-Path $assets "models\block\natural_gas.json") @{
 }
 Write-JsonFile (Join-Path $assets "models\item\gas_generator.json") @{
     parent = "ascension_ic2:block/gas_generator"
-}
-Write-JsonFile (Join-Path $assets "models\item\natural_gas_bucket.json") @{
-    parent = "minecraft:item/generated"
-    textures = @{ layer0 = "ascension_ic2:item/natural_gas_bucket" }
 }
 Write-JsonFile (Join-Path $assets "models\item\natural_gas_cell.json") @{
     parent = "minecraft:item/generated"

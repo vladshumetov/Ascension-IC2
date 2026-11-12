@@ -382,7 +382,6 @@ public final class AscensionIC2 {
         for (AdvancedSolarRegistration registration : ADVANCED_SOLAR_PANELS) {
             output.accept(registration.item().get());
         }
-        output.accept(NaturalGas.BUCKET.get());
         output.accept(GAS_GENERATOR.get());
         output.accept(NATURAL_GAS_CELL.get());
     }

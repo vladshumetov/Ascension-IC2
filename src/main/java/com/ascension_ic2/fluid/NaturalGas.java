@@ -2,9 +2,6 @@ package com.ascension_ic2.fluid;
 
 import com.ascension_ic2.AscensionIC2;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -12,7 +9,6 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
@@ -55,20 +51,10 @@ public final class NaturalGas {
                             .strength(100.0F)
                             .noLootTable());
 
-    public static final DeferredItem<BucketItem> BUCKET =
-            AscensionIC2.CONTENT.registerItem(
-                    "natural_gas_bucket",
-                    () ->
-                            new BucketItem(
-                                    SOURCE.get(),
-                                    new Item.Properties()
-                                            .stacksTo(1)
-                                            .craftRemainder(Items.BUCKET)));
 
     private static BaseFlowingFluid.Properties properties() {
         return new BaseFlowingFluid.Properties(TYPE, SOURCE, FLOWING)
                 .block(BLOCK)
-                .bucket(BUCKET)
                 .slopeFindDistance(4)
                 .levelDecreasePerBlock(1);
     }

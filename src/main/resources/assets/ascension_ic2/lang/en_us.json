@@ -52,7 +52,6 @@
   "gui.ascension_ic2.solar.day": "Generating",
   "gui.ascension_ic2.solar.night": "No sunlight",
   "fluid_type.ascension_ic2.natural_gas": "Natural Gas",
-  "item.ascension_ic2.natural_gas_bucket": "Natural Gas Bucket",
   "item.ascension_ic2.natural_gas_cell": "Natural Gas Cell",
   "block.ascension_ic2.gas_generator": "Natural Gas Generator",
   "gui.ascension_ic2.gas.gas": "Gas",

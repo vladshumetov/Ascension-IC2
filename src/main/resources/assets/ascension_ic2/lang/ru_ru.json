@@ -52,7 +52,6 @@
   "gui.ascension_ic2.solar.day": "Генерирует",
   "gui.ascension_ic2.solar.night": "Нет солнца",
   "fluid_type.ascension_ic2.natural_gas": "Природный газ",
-  "item.ascension_ic2.natural_gas_bucket": "Ведро природного газа",
   "item.ascension_ic2.natural_gas_cell": "Капсула природного газа",
   "block.ascension_ic2.gas_generator": "Газовый генератор",
   "gui.ascension_ic2.gas.gas": "Газ",
