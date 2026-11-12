@@ -21,7 +21,7 @@ function Rect($bmp, [int]$x0, [int]$y0, [int]$x1, [int]$y1, [System.Drawing.Colo
     for ($y = $y0; $y -le $y1; $y++) { for ($x = $x0; $x -le $x1; $x++) { Px $bmp $x $y $c } }
 }
 
-$bmp = New-Object System.Drawing.Bitmap(176, 120, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+$bmp = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $top = C '#171D39'
 $bottom = C '#10162E'
 
