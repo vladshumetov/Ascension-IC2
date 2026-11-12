@@ -30,8 +30,13 @@ public class AscensionJeiPlugin implements IModPlugin {
         for (AscensionIC2.AdvancedSolarRegistration panel : AscensionIC2.ADVANCED_SOLAR_PANELS) {
             hidden.add(new ItemStack(panel.item().get()));
         }
+        for (AscensionIC2.EnergyBlockRegistration panel : AscensionIC2.SOLAR_PANELS) {
+            if (panel.tier() <= 4) {
+                hidden.add(new ItemStack(panel.item().get()));
+            }
+        }
         if (!hidden.isEmpty()) {
-            AscensionIC2.LOGGER.debug("Hiding {} ASP panels from JEI", hidden.size());
+            AscensionIC2.LOGGER.debug("Hiding {} solar panels from JEI", hidden.size());
             runtime.getIngredientManager()
                     .removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, hidden);
         }

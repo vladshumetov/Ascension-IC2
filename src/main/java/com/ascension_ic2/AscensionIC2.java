@@ -369,6 +369,11 @@ public final class AscensionIC2 {
             CONTENT.registerItem("singular_crystal", () -> new Item(new Item.Properties()));
 
     public AscensionIC2(IEventBus modEventBus, ModContainer modContainer) {
+        for (var id : net.minecraft.core.registries.BuiltInRegistries.ITEM.keySet()) {
+            if (id.getPath().contains("solar_panel")) {
+                LOGGER.info("Solar item registered: {}", id);
+            }
+        }
         CableConnectableRegistry.registerSelf(EnergyCableBlock.class);
         NaturalGas.TYPES.register(modEventBus);
         NaturalGas.FLUIDS.register(modEventBus);
@@ -393,7 +398,11 @@ public final class AscensionIC2 {
         for (EnergyBlockRegistration registration : CABLES) {
             output.accept(registration.item().get());
         }
+        boolean aspLoaded = isAdvancedSolarPanelsLoaded();
         for (EnergyBlockRegistration registration : SOLAR_PANELS) {
+            if (aspLoaded && registration.tier() <= 4) {
+                continue;
+            }
             output.accept(registration.item().get());
         }
         if (!isAdvancedSolarPanelsLoaded()) {
