@@ -8,6 +8,10 @@ import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.info.ILocatable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -129,5 +133,29 @@ public class EnergyCableBlockEntity extends BlockEntity
     public void removeInsulation() {}
 
     @Override
-    public void removeConductor() {}
+    public void removeConductor() {
+        if (this.level == null || this.level.isClientSide) {
+            return;
+        }
+        this.level.playSound(
+                null,
+                this.worldPosition,
+                SoundEvents.GENERIC_EXTINGUISH_FIRE,
+                SoundSource.BLOCKS,
+                4.0F,
+                1.0F);
+        if (this.level instanceof ServerLevel server) {
+            server.sendParticles(
+                    ParticleTypes.SMOKE,
+                    this.worldPosition.getX() + 0.5,
+                    this.worldPosition.getY() + 0.95,
+                    this.worldPosition.getZ() + 0.5,
+                    8,
+                    0.3,
+                    0.15,
+                    0.3,
+                    0.02);
+        }
+        this.level.removeBlock(this.worldPosition, false);
+    }
 }
