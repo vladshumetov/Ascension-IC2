@@ -44,8 +44,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly files('libs/ic2r-neoforge-1.2.11.jar')
-    runtimeOnly files('libs/ic2r-neoforge-1.2.11.jar')
+    compileOnly files('libs/ic2r-neoforge-1.2.6.jar')
+    runtimeOnly files('libs/ic2r-neoforge-1.2.6.jar')
 }
 
 tasks.withType(JavaCompile).configureEach {

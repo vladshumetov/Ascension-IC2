@@ -112,7 +112,7 @@ Energy Storage пока не поддерживается: энергетиче�
 
 ## Сборка
 
-Нужны JDK 21 и `libs/ic2r-neoforge-1.2.11.jar` (не хранится в репозитории).
+Нужны JDK 21 и `libs/ic2r-neoforge-1.2.6.jar` (не хранится в репозитории).
 
 ```powershell
 $env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'

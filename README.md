@@ -112,7 +112,7 @@ buffer.
 
 ## Building
 
-Requires JDK 21 and `libs/ic2r-neoforge-1.2.11.jar` (not stored in the repository).
+Requires JDK 21 and `libs/ic2r-neoforge-1.2.6.jar` (not stored in the repository).
 
 ```powershell
 $env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'

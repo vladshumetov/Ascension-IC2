@@ -16,6 +16,7 @@ import com.ascension_ic2.machine.TierMachineBlockEntity;
 import com.ascension_ic2.machine.TierMachineBlockItem;
 import com.ascension_ic2.machine.TierMachineKind;
 import com.ascension_ic2.machine.TierMachineMenu;
+import ic2.api.energy.CableConnectableRegistry;
 import ic2.api.registry.Ic2AddonContent;
 import java.util.ArrayList;
 import java.util.List;
@@ -299,6 +300,7 @@ public final class AscensionIC2 {
             CONTENT.registerItem("singular_crystal", () -> new Item(new Item.Properties()));
 
     public AscensionIC2(IEventBus modEventBus, ModContainer modContainer) {
+        CableConnectableRegistry.register(EnergyCableBlock.class, (world, pos, side) -> true);
         CONTENT.register(modEventBus);
         MENUS.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, TiersConfig.SPEC);
