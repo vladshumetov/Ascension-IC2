@@ -12,10 +12,11 @@ public class SolarPanelScreen extends AbstractContainerScreen<SolarPanelMenu> {
     private static final ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath(
                     AscensionIC2.MOD_ID, "textures/gui/solar_panel.png");
-    private static final int BAR_X = 15;
-    private static final int BAR_Y = 89;
-    private static final int BAR_WIDTH = 146;
-    private static final int BAR_HEIGHT = 5;
+    private static final int TEXTURE_SIZE = 512;
+    private static final int BAR_X = 22;
+    private static final int BAR_Y = 133;
+    private static final int BAR_WIDTH = 219;
+    private static final int BAR_HEIGHT = 10;
 
     private static final int COLOR_LABEL = 0xFFA9C1CF;
     private static final int COLOR_VALUE = 0xFFFFFFFF;
@@ -25,13 +26,22 @@ public class SolarPanelScreen extends AbstractContainerScreen<SolarPanelMenu> {
     public SolarPanelScreen(
             SolarPanelMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageWidth = 176;
-        this.imageHeight = 120;
+        this.imageWidth = 264;
+        this.imageHeight = 180;
     }
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(
+                TEXTURE,
+                this.leftPos,
+                this.topPos,
+                0.0F,
+                0.0F,
+                this.imageWidth,
+                this.imageHeight,
+                TEXTURE_SIZE,
+                TEXTURE_SIZE);
         int fill = this.menu.getEnergyScaled(BAR_WIDTH);
         if (fill > 0) {
             int x1 = this.leftPos + BAR_X;
@@ -54,24 +64,24 @@ public class SolarPanelScreen extends AbstractContainerScreen<SolarPanelMenu> {
                 this.font,
                 title,
                 (this.imageWidth - this.font.width(title)) / 2,
-                6,
+                9,
                 0xFFB7E0EA,
                 false);
 
-        label(guiGraphics, "gui.ascension_ic2.solar.generation", 16, 28,
+        label(guiGraphics, "gui.ascension_ic2.solar.generation", 42,
                 this.menu.getGeneration() + " EU/t");
-        label(guiGraphics, "gui.ascension_ic2.solar.output", 16, 42,
+        label(guiGraphics, "gui.ascension_ic2.solar.output", 63,
                 this.menu.getOutput() + " EU/t");
-        label(guiGraphics, "gui.ascension_ic2.solar.buffer", 16, 56,
+        label(guiGraphics, "gui.ascension_ic2.solar.buffer", 84,
                 this.menu.getStored() + " / " + this.menu.getCapacity() + " EU");
-        label(guiGraphics, "gui.ascension_ic2.solar.tier", 16, 70,
+        label(guiGraphics, "gui.ascension_ic2.solar.tier", 105,
                 Integer.toString(this.menu.getTier()));
 
         guiGraphics.drawString(
                 this.font,
                 Component.translatable("gui.ascension_ic2.solar.status"),
-                16,
-                82,
+                24,
+                123,
                 COLOR_LABEL,
                 false);
         Component status = Component.translatable(
@@ -81,20 +91,19 @@ public class SolarPanelScreen extends AbstractContainerScreen<SolarPanelMenu> {
         guiGraphics.drawString(
                 this.font,
                 status,
-                86,
-                82,
+                108,
+                123,
                 this.menu.isProducing() ? COLOR_OK : COLOR_IDLE,
                 false);
     }
 
-    private void label(
-            GuiGraphics guiGraphics, String key, int x, int y, String value) {
+    private void label(GuiGraphics guiGraphics, String key, int y, String value) {
         guiGraphics.drawString(
-                this.font, Component.translatable(key), x, y, COLOR_LABEL, false);
+                this.font, Component.translatable(key), 24, y, COLOR_LABEL, false);
         guiGraphics.drawString(
                 this.font,
                 value,
-                this.imageWidth - 16 - this.font.width(value),
+                this.imageWidth - 24 - this.font.width(value),
                 y,
                 COLOR_VALUE,
                 false);
