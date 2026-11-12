@@ -31,6 +31,7 @@ public class AscensionJeiPlugin implements IModPlugin {
             hidden.add(new ItemStack(panel.item().get()));
         }
         if (!hidden.isEmpty()) {
+            AscensionIC2.LOGGER.debug("Hiding {} ASP panels from JEI", hidden.size());
             runtime.getIngredientManager()
                     .removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, hidden);
         }

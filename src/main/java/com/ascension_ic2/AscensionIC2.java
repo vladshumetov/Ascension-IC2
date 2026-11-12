@@ -397,9 +397,12 @@ public final class AscensionIC2 {
             output.accept(registration.item().get());
         }
         if (!isAdvancedSolarPanelsLoaded()) {
+            LOGGER.debug("Adding ASP panels to creative tab");
             for (AdvancedSolarRegistration registration : ADVANCED_SOLAR_PANELS) {
                 output.accept(registration.item().get());
             }
+        } else {
+            LOGGER.debug("Skipping ASP panels in creative: ASP detected");
         }
         output.accept(GAS_GENERATOR.get());
         output.accept(NATURAL_GAS_CELL.get());
