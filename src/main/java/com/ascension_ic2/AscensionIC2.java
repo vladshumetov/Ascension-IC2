@@ -105,12 +105,21 @@ public final class AscensionIC2 {
     }
 
     /** Our four ASP-style panels are skipped when the real Advanced Solar Panels mod is installed. */
-    private static boolean isAdvancedSolarPanelsLoaded() {
+    public static boolean isAdvancedSolarPanelsLoaded() {
         var modList = net.neoforged.fml.ModList.get();
-        return modList != null
-                && (modList.isLoaded("advanced_solar_panels")
-                        || modList.isLoaded("advancedsolarpanels")
-                        || modList.isLoaded("advanced_solar_panel"));
+        if (modList == null) {
+            return false;
+        }
+        boolean a = modList.isLoaded("advanced_solar_panels");
+        boolean b = modList.isLoaded("advancedsolarpanels");
+        boolean c = modList.isLoaded("advanced_solar_panel");
+        LOGGER.debug("ASP check: advanced_solar_panels={}, advancedsolarpanels={}, advanced_solar_panel={}", a, b, c);
+        for (var mod : modList.getMods()) {
+            if (mod.getModId().toLowerCase(java.util.Locale.ROOT).contains("solar")) {
+                LOGGER.debug("Solar mod present: {} ({})", mod.getModId(), mod.getDisplayName());
+            }
+        }
+        return a || b || c;
     }
     private static TierMachineKind[] kindsFor(MachineTier tier) {
         return switch (tier) {
