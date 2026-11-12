@@ -43,5 +43,12 @@
   "block.ascension_ic2.advanced_solar_panel": "Продвинутая солнечная панель",
   "block.ascension_ic2.hybrid_solar_panel": "Гибридная солнечная панель",
   "block.ascension_ic2.ultimate_hybrid_solar_panel": "Ультимейт гибридная солнечная панель",
-  "block.ascension_ic2.quantum_solar_panel": "Квантовая солнечная панель"
+  "block.ascension_ic2.quantum_solar_panel": "Квантовая солнечная панель",
+  "gui.ascension_ic2.solar.generation": "Генерация",
+  "gui.ascension_ic2.solar.output": "Выход",
+  "gui.ascension_ic2.solar.buffer": "Буфер",
+  "gui.ascension_ic2.solar.tier": "Уровень",
+  "gui.ascension_ic2.solar.status": "Статус",
+  "gui.ascension_ic2.solar.day": "Генерирует",
+  "gui.ascension_ic2.solar.night": "Нет солнца"
 }

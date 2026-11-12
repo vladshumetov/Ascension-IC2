@@ -5,6 +5,7 @@ import com.ascension_ic2.energy.EnergyCableBlock;
 import com.ascension_ic2.energy.EnergyCableBlockEntity;
 import com.ascension_ic2.energy.EnergyTiers;
 import com.ascension_ic2.energy.SolarPanelBlock;
+import com.ascension_ic2.energy.SolarPanelMenu;
 import com.ascension_ic2.energy.SolarPanelBlockEntity;
 import com.ascension_ic2.event.MachineEvents;
 import com.ascension_ic2.machine.MachineTier;
@@ -244,6 +245,12 @@ public final class AscensionIC2 {
                                     (id, inventory, buf) ->
                                             new TierMachineMenu(MachineTier.QUANTUM, id, inventory, buf)));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<SolarPanelMenu>> SOLAR_MENU =
+            MENUS.register(
+                    "solar_panel",
+                    () ->
+                            IMenuTypeExtension.create(
+                                    (id, inventory, buf) -> new SolarPanelMenu(id, inventory, buf)));
     public static DeferredHolder<MenuType<?>, MenuType<TierMachineMenu>> menuFor(MachineTier tier) {
         return switch (tier) {
             case NANO -> NANO_MENU;

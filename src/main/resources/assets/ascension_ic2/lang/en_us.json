@@ -43,5 +43,12 @@
   "block.ascension_ic2.advanced_solar_panel": "Advanced Solar Panel",
   "block.ascension_ic2.hybrid_solar_panel": "Hybrid Solar Panel",
   "block.ascension_ic2.ultimate_hybrid_solar_panel": "Ultimate Hybrid Solar Panel",
-  "block.ascension_ic2.quantum_solar_panel": "Quantum Solar Panel"
+  "block.ascension_ic2.quantum_solar_panel": "Quantum Solar Panel",
+  "gui.ascension_ic2.solar.generation": "Generation",
+  "gui.ascension_ic2.solar.output": "Output",
+  "gui.ascension_ic2.solar.buffer": "Buffer",
+  "gui.ascension_ic2.solar.tier": "Tier",
+  "gui.ascension_ic2.solar.status": "Status",
+  "gui.ascension_ic2.solar.day": "Generating",
+  "gui.ascension_ic2.solar.night": "No sunlight"
 }

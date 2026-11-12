@@ -14,5 +14,6 @@ public final class MachineClientEvents {
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(AscensionIC2.NANO_MENU.get(), TierMachineScreen::new);
         event.register(AscensionIC2.QUANTUM_MENU.get(), TierMachineScreen::new);
+        event.register(AscensionIC2.SOLAR_MENU.get(), SolarPanelScreen::new);
     }
 }
