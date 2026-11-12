@@ -1,0 +1,6 @@
+{
+    "textures":  {
+                     "all":  "ascension_ic2:block/hybrid_solar_panel"
+                 },
+    "parent":  "minecraft:block/cube_all"
+}

@@ -20,19 +20,37 @@ import net.minecraft.world.level.block.state.BlockState;
 public class SolarPanelBlockEntity extends BlockEntity
         implements IEnergySource, ILocatable, IAddonServerTickable {
     private final int tier;
+    private final double outputEuPerTick;
     private boolean registered;
     private long sourceTick = Long.MIN_VALUE;
     private double usedThisTick;
 
     public SolarPanelBlockEntity(
             int tier, BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        this(tier, EnergyTiers.euPerTick(tier), type, pos, state);
+    }
+
+    public SolarPanelBlockEntity(
+            int sourceTier,
+            double outputEuPerTick,
+            BlockEntityType<?> type,
+            BlockPos pos,
+            BlockState state) {
         super(type, pos, state);
-        EnergyTiers.checkTier(tier);
-        this.tier = tier;
+        EnergyTiers.checkTier(sourceTier);
+        if (!Double.isFinite(outputEuPerTick) || outputEuPerTick <= 0.0) {
+            throw new IllegalArgumentException("outputEuPerTick must be finite and positive");
+        }
+        this.tier = sourceTier;
+        this.outputEuPerTick = outputEuPerTick;
     }
 
     public int getTier() {
         return this.tier;
+    }
+
+    public double getOutputEuPerTick() {
+        return this.outputEuPerTick;
     }
 
     @Override
@@ -104,15 +122,13 @@ public class SolarPanelBlockEntity extends BlockEntity
         if (!canGenerate()) {
             return 0.0;
         }
-        double perTick = EnergyTiers.euPerTick(this.tier);
-        return Math.max(0.0, perTick - this.usedThisTick);
+        return Math.max(0.0, this.outputEuPerTick - this.usedThisTick);
     }
 
     @Override
     public void drawEnergy(double amount) {
         beginSourceTick();
-        double perTick = EnergyTiers.euPerTick(this.tier);
-        double available = Math.max(0.0, perTick - this.usedThisTick);
+        double available = Math.max(0.0, this.outputEuPerTick - this.usedThisTick);
         this.usedThisTick += Math.min(amount, available);
     }
 

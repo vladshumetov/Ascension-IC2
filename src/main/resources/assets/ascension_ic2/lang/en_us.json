@@ -39,5 +39,9 @@
   "block.ascension_ic2.solar_panel_10": "Solar Panel (Tier 10)",
   "block.ascension_ic2.solar_panel_11": "Solar Panel (Tier 11)",
   "block.ascension_ic2.solar_panel_12": "Solar Panel (Tier 12)",
-  "block.ascension_ic2.solar_panel_13": "Solar Panel (Tier 13)"
+  "block.ascension_ic2.solar_panel_13": "Solar Panel (Tier 13)",
+  "block.ascension_ic2.advanced_solar_panel": "Advanced Solar Panel",
+  "block.ascension_ic2.hybrid_solar_panel": "Hybrid Solar Panel",
+  "block.ascension_ic2.ultimate_hybrid_solar_panel": "Ultimate Hybrid Solar Panel",
+  "block.ascension_ic2.quantum_solar_panel": "Quantum Solar Panel"
 }

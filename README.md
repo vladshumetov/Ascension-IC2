@@ -40,6 +40,13 @@ The addon currently ships these energy blocks (creative only, recipes are not se
 - **Solar Panel (Tier 1-13)** — generates a full tier packet per tick in daylight with sky access;
   all panels share one texture.
 
+ASP-style solar panels:
+
+- **Advanced Solar Panel** — 8 EU/t.
+- **Hybrid Solar Panel** — 64 EU/t.
+- **Ultimate Hybrid Solar Panel** — 512 EU/t.
+- **Quantum Solar Panel** — 4 096 EU/t.
+
 Feeding a machine with a voltage above its energy tier destroys it.
 
 ## Machines

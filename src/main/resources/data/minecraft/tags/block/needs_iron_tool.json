@@ -31,6 +31,10 @@
                    "ascension_ic2:solar_panel_10",
                    "ascension_ic2:solar_panel_11",
                    "ascension_ic2:solar_panel_12",
-                   "ascension_ic2:solar_panel_13"
+                   "ascension_ic2:solar_panel_13",
+                   "ascension_ic2:advanced_solar_panel",
+                   "ascension_ic2:hybrid_solar_panel",
+                   "ascension_ic2:ultimate_hybrid_solar_panel",
+                   "ascension_ic2:quantum_solar_panel"
                ]
 }

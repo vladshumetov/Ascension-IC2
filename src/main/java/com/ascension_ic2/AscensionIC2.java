@@ -68,6 +68,16 @@ public final class AscensionIC2 {
     public static final List<EnergyBlockRegistration> CABLES = new ArrayList<>();
     public static final List<EnergyBlockRegistration> SOLAR_PANELS = new ArrayList<>();
 
+    public record AdvancedSolarRegistration(
+            String id,
+            int sourceTier,
+            double outputEuPerTick,
+            DeferredBlock<Block> block,
+            DeferredItem<BlockItem> item,
+            DeferredHolder<BlockEntityType<?>, ? extends BlockEntityType<?>> blockEntity) {}
+
+    public static final List<AdvancedSolarRegistration> ADVANCED_SOLAR_PANELS = new ArrayList<>();
+
     static {
         for (MachineTier tier : MachineTier.values()) {
             for (TierMachineKind kind : kindsFor(tier)) {
@@ -80,6 +90,11 @@ public final class AscensionIC2 {
         for (int tier = EnergyTiers.MIN_TIER; tier <= EnergyTiers.MAX_TIER; tier++) {
             SOLAR_PANELS.add(registerSolarPanel(tier));
         }
+        ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("advanced_solar_panel", 1, 8.0));
+        ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("hybrid_solar_panel", 2, 64.0));
+        ADVANCED_SOLAR_PANELS.add(
+                registerAdvancedSolarPanel("ultimate_hybrid_solar_panel", 3, 512.0));
+        ADVANCED_SOLAR_PANELS.add(registerAdvancedSolarPanel("quantum_solar_panel", 5, 4096.0));
     }
 
     private static TierMachineKind[] kindsFor(MachineTier tier) {
@@ -175,6 +190,41 @@ public final class AscensionIC2 {
         return new EnergyBlockRegistration(tier, block, item, holder[0]);
     }
 
+    private static AdvancedSolarRegistration registerAdvancedSolarPanel(
+            String id, int sourceTier, double outputEuPerTick) {
+        @SuppressWarnings("unchecked")
+        DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>[] holder =
+                new DeferredHolder[1];
+
+        DeferredBlock<Block> block =
+                CONTENT.registerBlock(
+                        id,
+                        properties ->
+                                new SolarPanelBlock(
+                                        properties,
+                                        (pos, state) ->
+                                                new SolarPanelBlockEntity(
+                                                        sourceTier,
+                                                        outputEuPerTick,
+                                                        holder[0].get(),
+                                                        pos,
+                                                        state)),
+                        BlockBehaviour.Properties.of()
+                                .strength(3.0F, 6.0F)
+                                .requiresCorrectToolForDrops()
+                                .sound(SoundType.METAL));
+        DeferredItem<BlockItem> item = CONTENT.registerBlockItem(id, block);
+        holder[0] =
+                CONTENT.registerBlockEntityType(
+                        id,
+                        (pos, state) ->
+                                new SolarPanelBlockEntity(
+                                        sourceTier, outputEuPerTick, holder[0].get(), pos, state),
+                        block);
+        return new AdvancedSolarRegistration(
+                id, sourceTier, outputEuPerTick, block, item, holder[0]);
+    }
+
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, MOD_ID);
 
@@ -264,6 +314,9 @@ public final class AscensionIC2 {
             output.accept(registration.item().get());
         }
         for (EnergyBlockRegistration registration : SOLAR_PANELS) {
+            output.accept(registration.item().get());
+        }
+        for (AdvancedSolarRegistration registration : ADVANCED_SOLAR_PANELS) {
             output.accept(registration.item().get());
         }
     }

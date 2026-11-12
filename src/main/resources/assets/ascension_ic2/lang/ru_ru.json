@@ -39,5 +39,9 @@
   "block.ascension_ic2.solar_panel_10": "Солнечная панель (тир 10)",
   "block.ascension_ic2.solar_panel_11": "Солнечная панель (тир 11)",
   "block.ascension_ic2.solar_panel_12": "Солнечная панель (тир 12)",
-  "block.ascension_ic2.solar_panel_13": "Солнечная панель (тир 13)"
+  "block.ascension_ic2.solar_panel_13": "Солнечная панель (тир 13)",
+  "block.ascension_ic2.advanced_solar_panel": "Продвинутая солнечная панель",
+  "block.ascension_ic2.hybrid_solar_panel": "Гибридная солнечная панель",
+  "block.ascension_ic2.ultimate_hybrid_solar_panel": "Ультимейт гибридная солнечная панель",
+  "block.ascension_ic2.quantum_solar_panel": "Квантовая солнечная панель"
 }
