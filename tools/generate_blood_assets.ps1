@@ -30,7 +30,7 @@ function Rect($bmp, [int]$x0, [int]$y0, [int]$x1, [int]$y1, [System.Drawing.Colo
 function New-Bmp([int]$w, [int]$h) { return New-Object System.Drawing.Bitmap($w, $h, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb) }
 
 $dark = C '#1B0A0D'
-$metal = C '#3A1218'
+$metal = C '#563258'
 $metalLight = C '#6E2A2F'
 $blood = C '#A01818'
 $bloodLight = C '#E05A5A'
@@ -105,8 +105,8 @@ $top.Dispose(); $side.Dispose(); $bottom.Dispose()
 
 # GUI: 240x230 working area on a 256x256 canvas.
 $gui = New-Bmp 256 256
-$topColor = C '#2A0E12'
-$bottomColor = C '#17080B'
+$topColor = C '#261831'
+$bottomColor = C '#2E1F3B'
 for ($y = 0; $y -lt 230; $y++) {
     $t = $y / 229.0
     $r = [int]($topColor.R + ($bottomColor.R - $topColor.R) * $t)
@@ -118,60 +118,60 @@ Rect $gui 0 0 239 0 (C '#05080C')
 Rect $gui 0 229 239 229 (C '#05080C')
 Rect $gui 0 0 0 229 (C '#05080C')
 Rect $gui 239 0 239 229 (C '#05080C')
-Rect $gui 8 3 231 3 (C '#C9A3A3')
+Rect $gui 8 3 231 3 (C '#B2A8B4')
 
 # Title banner.
-Rect $gui 50 2 189 14 (C '#3A1218')
-Rect $gui 50 2 189 2 (C '#7A2A2A')
-Rect $gui 50 14 189 14 (C '#7A2A2A')
-Rect $gui 50 2 50 14 (C '#7A2A2A')
-Rect $gui 189 2 189 14 (C '#7A2A2A')
-Rect $gui 51 3 188 3 (C '#E0B7B7')
+Rect $gui 50 2 189 14 (C '#563258')
+Rect $gui 50 2 189 2 (C '#8B8B8B')
+Rect $gui 50 14 189 14 (C '#8B8B8B')
+Rect $gui 50 2 50 14 (C '#8B8B8B')
+Rect $gui 189 2 189 14 (C '#8B8B8B')
+Rect $gui 51 3 188 3 (C '#FFE698')
 
 function Draw-MachineSlot([int]$x, [int]$y) {
-    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y + 18) (C '#140609')
-    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y - 3) (C '#7A2A2A')
-    Rect $gui ($x - 3) ($y + 18) ($x + 18) ($y + 18) (C '#7A2A2A')
-    Rect $gui ($x - 3) ($y - 3) ($x - 3) ($y + 18) (C '#7A2A2A')
-    Rect $gui ($x + 18) ($y - 3) ($x + 18) ($y + 18) (C '#7A2A2A')
-    Rect $gui ($x - 2) ($y - 2) ($x + 17) ($y + 17) (C '#0D0406')
+    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y + 18) (C '#252529')
+    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y - 3) (C '#8B8B8B')
+    Rect $gui ($x - 3) ($y + 18) ($x + 18) ($y + 18) (C '#8B8B8B')
+    Rect $gui ($x - 3) ($y - 3) ($x - 3) ($y + 18) (C '#8B8B8B')
+    Rect $gui ($x + 18) ($y - 3) ($x + 18) ($y + 18) (C '#8B8B8B')
+    Rect $gui ($x - 2) ($y - 2) ($x + 17) ($y + 17) (C '#373737')
 }
 Draw-MachineSlot 112 28
 foreach ($pos in @(@(8, 28), @(8, 62), @(216, 28), @(216, 62))) { Draw-MachineSlot $pos[0] $pos[1] }
 
 # Two bars: blood (top) and energy (bottom).
 foreach ($y in 96, 104) {
-    Rect $gui 24 ($y - 1) 215 ($y + 6) (C '#140609')
-    Rect $gui 24 ($y - 1) 215 ($y - 1) (C '#7A2A2A')
-    Rect $gui 24 ($y + 6) 215 ($y + 6) (C '#7A2A2A')
-    Rect $gui 24 ($y - 1) 24 ($y + 6) (C '#7A2A2A')
-    Rect $gui 215 ($y - 1) 215 ($y + 6) (C '#7A2A2A')
+    Rect $gui 24 ($y - 1) 215 ($y + 6) (C '#252529')
+    Rect $gui 24 ($y - 1) 215 ($y - 1) (C '#8B8B8B')
+    Rect $gui 24 ($y + 6) 215 ($y + 6) (C '#8B8B8B')
+    Rect $gui 24 ($y - 1) 24 ($y + 6) (C '#8B8B8B')
+    Rect $gui 215 ($y - 1) 215 ($y + 6) (C '#8B8B8B')
     Rect $gui 25 $y 214 ($y + 4) (C '#1A090C')
 }
 
 # Player inventory.
-Rect $gui 32 132 207 217 (C '#3A2A2A')
-Rect $gui 32 132 207 132 (C '#7A2A2A')
-Rect $gui 32 217 207 217 (C '#7A2A2A')
-Rect $gui 32 132 32 217 (C '#7A2A2A')
-Rect $gui 207 132 207 217 (C '#7A2A2A')
+Rect $gui 32 132 207 217 (C '#C6C6C6')
+Rect $gui 32 132 207 132 (C '#8B8B8B')
+Rect $gui 32 217 207 217 (C '#8B8B8B')
+Rect $gui 32 132 32 217 (C '#8B8B8B')
+Rect $gui 207 132 207 217 (C '#8B8B8B')
 for ($row = 0; $row -lt 3; $row++) {
     for ($col = 0; $col -lt 9; $col++) {
         $x = 40 + $col * 18; $y = 140 + $row * 18
-        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#140609')
-        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#7A2A2A')
-        Rect $gui ($x - 1) ($y + 16) ($x + 16) ($y + 16) (C '#0D0406')
-        Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#7A2A2A')
-        Rect $gui ($x + 16) ($y - 1) ($x + 16) ($y + 16) (C '#0D0406')
+        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#252529')
+        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#8B8B8B')
+        Rect $gui ($x - 1) ($y + 16) ($x + 16) ($y + 16) (C '#373737')
+        Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#8B8B8B')
+        Rect $gui ($x + 16) ($y - 1) ($x + 16) ($y + 16) (C '#373737')
     }
 }
 foreach ($col in 0..8) {
     $x = 40 + $col * 18; $y = 198
-    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#140609')
-    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#7A2A2A')
-    Rect $gui ($x - 1) ($y + 16) ($x + 16) ($y + 16) (C '#0D0406')
-    Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#7A2A2A')
-    Rect $gui ($x + 16) ($y - 1) ($x + 16) ($y + 16) (C '#0D0406')
+    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#252529')
+    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#8B8B8B')
+    Rect $gui ($x - 1) ($y + 16) ($x + 16) ($y + 16) (C '#373737')
+    Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#8B8B8B')
+    Rect $gui ($x + 16) ($y - 1) ($x + 16) ($y + 16) (C '#373737')
 }
 $gui.Save((Join-Path $assets "textures\gui\blood_generator.png"), [System.Drawing.Imaging.ImageFormat]::Png)
 $gui.Dispose()

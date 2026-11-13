@@ -75,7 +75,7 @@ public class BloodGeneratorScreen extends AbstractContainerScreen<BloodGenerator
                 title,
                 (this.imageWidth - this.font.width(title)) / 2,
                 4,
-                0xFFE0B7B7,
+                0xFFFFE698,
                 false);
     }
 

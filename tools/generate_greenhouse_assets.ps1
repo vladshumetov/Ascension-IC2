@@ -30,7 +30,7 @@ function New-Bmp([int]$w, [int]$h) { return New-Object System.Drawing.Bitmap($w,
 
 $dark = C '#08160D'
 $metal = C '#1E3A2A'
-$metalLight = C '#4F8163'
+$metalLight = C '#373737'
 $green = C '#2E8B57'
 $greenLight = C '#9AE870'
 
@@ -98,8 +98,8 @@ $bottom.Save((Join-Path $assets "textures\block\botania_greenhouse_bottom.png"),
 $top.Dispose(); $side.Dispose(); $bottom.Dispose()
 
 $gui = New-Bmp 256 256
-$topColor = C '#0E2A18'
-$bottomColor = C '#07130B'
+$topColor = C '#C6C6C6'
+$bottomColor = C '#C6C6C6'
 for ($y = 0; $y -lt 230; $y++) {
     $t = $y / 229.0
     $r = [int]($topColor.R + ($bottomColor.R - $topColor.R) * $t)
@@ -107,24 +107,24 @@ for ($y = 0; $y -lt 230; $y++) {
     $b = [int]($topColor.B + ($bottomColor.B - $topColor.B) * $t)
     Rect $gui 0 $y 239 $y ([System.Drawing.Color]::FromArgb(255, $r, $g, $b))
 }
-Rect $gui 0 0 239 0 (C '#05080C')
-Rect $gui 0 229 239 229 (C '#05080C')
-Rect $gui 0 0 0 229 (C '#05080C')
-Rect $gui 239 0 239 229 (C '#05080C')
-Rect $gui 8 3 231 3 (C '#B7E0EA')
-Rect $gui 50 2 189 14 (C '#1F3F2B')
-Rect $gui 50 2 189 2 (C '#4F8163')
-Rect $gui 50 14 189 14 (C '#4F8163')
-Rect $gui 50 2 50 14 (C '#4F8163')
-Rect $gui 189 2 189 14 (C '#4F8163')
-Rect $gui 51 3 188 3 (C '#B7E0EA')
+Rect $gui 0 0 239 0 (C '#373737')
+Rect $gui 0 229 239 229 (C '#373737')
+Rect $gui 0 0 0 229 (C '#373737')
+Rect $gui 239 0 239 229 (C '#373737')
+Rect $gui 8 3 231 3 (C '#FFFFFF')
+Rect $gui 50 2 189 14 (C '#8B8B8B')
+Rect $gui 50 2 189 2 (C '#373737')
+Rect $gui 50 14 189 14 (C '#373737')
+Rect $gui 50 2 50 14 (C '#373737')
+Rect $gui 189 2 189 14 (C '#373737')
+Rect $gui 51 3 188 3 (C '#FFFFFF')
 
 function Draw-Slot([int]$x, [int]$y) {
-    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y + 18) (C '#0A1A10')
-    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y - 3) (C '#4F8163')
-    Rect $gui ($x - 3) ($y + 18) ($x + 18) ($y + 18) (C '#4F8163')
-    Rect $gui ($x - 3) ($y - 3) ($x - 3) ($y + 18) (C '#4F8163')
-    Rect $gui ($x + 18) ($y - 3) ($x + 18) ($y + 18) (C '#4F8163')
+    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y + 18) (C '#8B8B8B')
+    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y - 3) (C '#373737')
+    Rect $gui ($x - 3) ($y + 18) ($x + 18) ($y + 18) (C '#373737')
+    Rect $gui ($x - 3) ($y - 3) ($x - 3) ($y + 18) (C '#373737')
+    Rect $gui ($x + 18) ($y - 3) ($x + 18) ($y + 18) (C '#373737')
     Rect $gui ($x - 2) ($y - 2) ($x + 17) ($y + 17) (C '#07130B')
 }
 foreach ($x in 86, 112, 138) { Draw-Slot $x 28 }
@@ -132,35 +132,35 @@ foreach ($x in 86, 112, 138) { Draw-Slot $x 58 }
 foreach ($pos in @(@(8, 28), @(8, 62), @(216, 28), @(216, 62))) { Draw-Slot $pos[0] $pos[1] }
 
 foreach ($y in 96, 104) {
-    Rect $gui 24 ($y - 1) 215 ($y + 6) (C '#0A1A10')
-    Rect $gui 24 ($y - 1) 215 ($y - 1) (C '#4F8163')
-    Rect $gui 24 ($y + 6) 215 ($y + 6) (C '#4F8163')
-    Rect $gui 24 ($y - 1) 24 ($y + 6) (C '#4F8163')
-    Rect $gui 215 ($y - 1) 215 ($y + 6) (C '#4F8163')
+    Rect $gui 24 ($y - 1) 215 ($y + 6) (C '#8B8B8B')
+    Rect $gui 24 ($y - 1) 215 ($y - 1) (C '#373737')
+    Rect $gui 24 ($y + 6) 215 ($y + 6) (C '#373737')
+    Rect $gui 24 ($y - 1) 24 ($y + 6) (C '#373737')
+    Rect $gui 215 ($y - 1) 215 ($y + 6) (C '#373737')
     Rect $gui 25 $y 214 ($y + 4) (C '#07130B')
 }
 
-Rect $gui 32 132 207 217 (C '#2A3A2E')
-Rect $gui 32 132 207 132 (C '#4F8163')
-Rect $gui 32 217 207 217 (C '#4F8163')
-Rect $gui 32 132 32 217 (C '#4F8163')
-Rect $gui 207 132 207 217 (C '#4F8163')
+Rect $gui 32 132 207 217 (C '#C6C6C6')
+Rect $gui 32 132 207 132 (C '#373737')
+Rect $gui 32 217 207 217 (C '#373737')
+Rect $gui 32 132 32 217 (C '#373737')
+Rect $gui 207 132 207 217 (C '#373737')
 for ($row = 0; $row -lt 3; $row++) {
     for ($col = 0; $col -lt 9; $col++) {
         $x = 40 + $col * 18; $y = 140 + $row * 18
-        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#0A1A10')
-        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#4F8163')
+        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#8B8B8B')
+        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#373737')
         Rect $gui ($x - 1) ($y + 16) ($x + 16) ($y + 16) (C '#07130B')
-        Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#4F8163')
+        Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#373737')
         Rect $gui ($x + 16) ($y - 1) ($x + 16) ($y + 16) (C '#07130B')
     }
 }
 foreach ($col in 0..8) {
     $x = 40 + $col * 18; $y = 198
-    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#0A1A10')
-    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#4F8163')
+    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#8B8B8B')
+    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#373737')
     Rect $gui ($x - 1) ($y + 16) ($x + 16) ($y + 16) (C '#07130B')
-    Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#4F8163')
+    Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#373737')
     Rect $gui ($x + 16) ($y - 1) ($x + 16) ($y + 16) (C '#07130B')
 }
 $gui.Save((Join-Path $assets "textures\gui\botania_greenhouse.png"), [System.Drawing.Imaging.ImageFormat]::Png)
