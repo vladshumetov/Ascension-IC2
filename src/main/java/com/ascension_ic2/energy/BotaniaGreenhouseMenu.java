@@ -40,7 +40,7 @@ public class BotaniaGreenhouseMenu extends AbstractContainerMenu {
         super(AscensionIC2.BOTANIA_GREENHOUSE_MENU.get(), containerId);
         this.machine = machine;
         this.slotCount = BotaniaGreenhouseBlockEntity.SLOT_COUNT;
-        this.upgradeStart = BotaniaGreenhouseBlockEntity.FLOWER_SLOTS;
+        this.upgradeStart = BotaniaGreenhouseBlockEntity.UPGRADE_START;
         this.container = machine != null ? new MachineContainer(machine) : new SimpleContainer(this.slotCount);
         this.data =
                 new ContainerData() {
@@ -85,7 +85,14 @@ public class BotaniaGreenhouseMenu extends AbstractContainerMenu {
                         }
                     });
         }
-        for (int i = 0; i < BotaniaGreenhouseBlockEntity.UPGRADE_SLOTS; i++) {
+        for (int i = 0; i < BotaniaGreenhouseBlockEntity.RESOURCE_SLOTS; i++) {
+            this.addSlot(
+                    new Slot(
+                            this.container,
+                            BotaniaGreenhouseBlockEntity.FLOWER_SLOTS + i,
+                            FLOWER_X + i * FLOWER_STEP,
+                            FLOWER_Y + 30));
+        }        for (int i = 0; i < BotaniaGreenhouseBlockEntity.UPGRADE_SLOTS; i++) {
             this.addSlot(
                     new Slot(
                             this.container,

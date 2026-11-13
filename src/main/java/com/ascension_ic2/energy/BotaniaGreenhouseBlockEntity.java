@@ -1,25 +1,32 @@
 package com.ascension_ic2.energy;
 
 import com.ascension_ic2.integration.botania.BotaniaManaCompat;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 /**
- * Botania greenhouse: consumes Botania flowers and 256 EU/t to create mana, pushing it into
- * adjacent mana pools. Accepts any voltage and never explodes.
+ * Botania greenhouse: keeps generating/functional Botania flowers alive and consumes resource
+ * items (water buckets, lava buckets, coal, food...) to create mana. Accepts any voltage and
+ * never explodes. Mana is pushed into adjacent ManaPools/ManaReceivers (also Applied Botanics).
  */
 public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity implements MenuProvider {
     public static final int ENERGY_TIER = 3;
@@ -27,14 +34,21 @@ public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity implemen
     public static final double EU_CAPACITY = 1_024_000.0;
     public static final int MANA_PER_TICK = 100;
     public static final int MANA_CAPACITY = 100_000;
-    public static final int FLOWER_TICKS = 100;
+    public static final int RESOURCE_TICKS = 100;
     public static final int FLOWER_SLOTS = 3;
+    public static final int RESOURCE_SLOTS = 3;
     public static final int UPGRADE_SLOTS = 4;
-    public static final int SLOT_COUNT = FLOWER_SLOTS + UPGRADE_SLOTS;
+    public static final int UPGRADE_START = FLOWER_SLOTS + RESOURCE_SLOTS;
+    public static final int SLOT_COUNT = UPGRADE_START + UPGRADE_SLOTS;
+
+    private static final TagKey<Item> GENERATING_FLOWERS =
+            TagKey.create(
+                    Registries.ITEM,
+                    ResourceLocation.fromNamespaceAndPath("botania", "generating_special_flowers"));
 
     private final ItemStackHandler inventory = new ItemStackHandler(SLOT_COUNT);
     private int mana;
-    private int flowerProgress;
+    private int resourceProgress;
 
     public BotaniaGreenhouseBlockEntity(
             BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -63,37 +77,73 @@ public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity implemen
         return MANA_CAPACITY;
     }
 
+    public int getResourceStart() {
+        return FLOWER_SLOTS;
+    }
+
     public boolean isGenerating() {
-        return hasFlower() && getStoredEu() >= EU_PER_TICK && this.mana < MANA_CAPACITY;
+        return getFlower() != null
+                && hasResourceFor(getFlower())
+                && getStoredEu() >= EU_PER_TICK
+                && this.mana < MANA_CAPACITY;
     }
 
     public static boolean isBotaniaFlower(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-        var id = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        return "botania".equals(id.getNamespace())
-                && (id.getPath().contains("flower") || id.getPath().contains("mushroom"));
+        return !stack.isEmpty() && stack.is(GENERATING_FLOWERS);
     }
 
-    private boolean hasFlower() {
+    private ItemStack getFlower() {
         for (int slot = 0; slot < FLOWER_SLOTS; slot++) {
-            if (isBotaniaFlower(this.inventory.getStackInSlot(slot))) {
+            ItemStack stack = this.inventory.getStackInSlot(slot);
+            if (isBotaniaFlower(stack)) {
+                return stack;
+            }
+        }
+        return null;
+    }
+
+    private boolean hasResourceFor(ItemStack flower) {
+        for (int slot = FLOWER_SLOTS; slot < FLOWER_SLOTS + RESOURCE_SLOTS; slot++) {
+            if (resourceMatches(flower, this.inventory.getStackInSlot(slot))) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean consumeFlower() {
-        for (int slot = 0; slot < FLOWER_SLOTS; slot++) {
+    private boolean consumeResource(ItemStack flower) {
+        for (int slot = FLOWER_SLOTS; slot < FLOWER_SLOTS + RESOURCE_SLOTS; slot++) {
             ItemStack stack = this.inventory.getStackInSlot(slot);
-            if (isBotaniaFlower(stack)) {
+            if (resourceMatches(flower, stack)) {
                 this.inventory.extractItem(slot, 1, false);
                 return true;
             }
         }
         return false;
+    }
+
+    /** Resource mapping for the common generating flowers, mirroring their Botania fuel type. */
+    private static boolean resourceMatches(ItemStack flower, ItemStack resource) {
+        if (resource.isEmpty()) {
+            return false;
+        }
+        String path = BuiltInRegistries.ITEM.getKey(flower.getItem()).getPath();
+        if (path.contains("hydroangeas")) {
+            return resource.is(Items.WATER_BUCKET);
+        }
+        if (path.contains("thermalily")) {
+            return resource.is(Items.LAVA_BUCKET);
+        }
+        if (path.contains("gourmaryllis")) {
+            return resource.get(DataComponents.FOOD) != null;
+        }
+        if (path.contains("endoflame")) {
+            return resource.is(ItemTags.COALS)
+                    || resource.is(Items.CHARCOAL)
+                    || resource.is(Items.BLAZE_ROD);
+        }
+        // Other generating flowers accept a generic resource for now.
+        return true;
     }
 
     @Override
@@ -115,9 +165,12 @@ public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity implemen
                 this.mana = Math.max(0, this.mana - (MANA_PER_TICK - leftover));
             }
         }
-        if (++this.flowerProgress >= FLOWER_TICKS) {
-            this.flowerProgress = 0;
-            consumeFlower();
+        if (++this.resourceProgress >= RESOURCE_TICKS) {
+            this.resourceProgress = 0;
+            ItemStack flower = getFlower();
+            if (flower != null) {
+                consumeResource(flower);
+            }
         }
         setChanged();
     }
@@ -137,7 +190,7 @@ public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity implemen
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("Mana", this.mana);
-        tag.putInt("FlowerProgress", this.flowerProgress);
+        tag.putInt("ResourceProgress", this.resourceProgress);
         tag.put("Inventory", this.inventory.serializeNBT(registries));
     }
 
@@ -145,7 +198,7 @@ public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity implemen
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.mana = Math.max(0, Math.min(MANA_CAPACITY, tag.getInt("Mana")));
-        this.flowerProgress = Math.max(0, tag.getInt("FlowerProgress"));
+        this.resourceProgress = Math.max(0, tag.getInt("ResourceProgress"));
         if (tag.contains("Inventory")) {
             this.inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
         }

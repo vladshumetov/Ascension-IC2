@@ -99,6 +99,7 @@ function Draw-Slot([int]$x, [int]$y) {
     Rect $gui ($x - 2) ($y - 2) ($x + 17) ($y + 17) (C '#07130B')
 }
 foreach ($x in 86, 112, 138) { Draw-Slot $x 28 }
+foreach ($x in 86, 112, 138) { Draw-Slot $x 58 }
 foreach ($pos in @(@(8, 28), @(8, 62), @(216, 28), @(216, 62))) { Draw-Slot $pos[0] $pos[1] }
 
 foreach ($y in 96, 104) {

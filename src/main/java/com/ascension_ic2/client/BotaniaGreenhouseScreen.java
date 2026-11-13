@@ -43,8 +43,8 @@ public class BotaniaGreenhouseScreen extends AbstractContainerScreen<BotaniaGree
         if (mana > 0) {
             int x1 = this.leftPos + BAR_X;
             int y1 = this.topPos + MANA_BAR_Y;
-            guiGraphics.fill(x1, y1, x1 + mana, y1 + BAR_HEIGHT, 0xFF2E8B57);
-            guiGraphics.fill(x1, y1, x1 + mana, y1 + 1, 0xFF9AE870);
+            guiGraphics.fill(x1, y1, x1 + mana, y1 + BAR_HEIGHT, 0xFF3F6FD8);
+            guiGraphics.fill(x1, y1, x1 + mana, y1 + 1, 0xFF9FD8FF);
         }
         int energy = this.menu.getEnergyScaled(BAR_WIDTH);
         if (energy > 0) {
