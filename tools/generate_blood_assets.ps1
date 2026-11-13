@@ -37,30 +37,64 @@ $bloodLight = C '#E05A5A'
 
 function New-MachineTexture([bool]$top) {
     $bmp = New-Bmp 16 16
-    Rect $bmp 0 0 15 15 $dark
+    $frame = C '#0F1013'
+    $metal = C '#36373F'
+    $metalMid = C '#56545D'
+    $metalLight = C '#756D7B'
+    $metalHigh = C '#B2A8B4'
+    $red = C '#E70010'
+    $redDark = C '#A80025'
+    $orange = C '#FF7027'
+    $deep = C '#660026'
+
+    Rect $bmp 0 0 15 15 $frame
     Rect $bmp 1 1 14 14 $metal
+    # Bevel.
     Rect $bmp 1 1 14 2 $metalLight
-    Rect $bmp 1 14 14 14 (C '#100508')
-    Rect $bmp 14 1 14 14 (C '#100508')
-    foreach ($pos in @(@(2, 2), @(13, 2), @(2, 13), @(13, 13))) { Px $bmp $pos[0] $pos[1] $metalLight }
+    Rect $bmp 1 1 2 14 $metalMid
+    Rect $bmp 1 14 14 14 (C '#080F0D')
+    Rect $bmp 14 1 14 14 (C '#080F0D')
+    # Corner plates with bolts.
+    foreach ($pos in @(@(1, 1), @(12, 1), @(1, 12), @(12, 12))) {
+        Rect $bmp $pos[0] $pos[1] ($pos[0] + 2) ($pos[1] + 2) $metalMid
+        Px $bmp $pos[0] $pos[1] $metalHigh
+        Px $bmp ($pos[0] + 2) ($pos[1] + 2) $frame
+    }
+    # Recessed inner panel.
+    Rect $bmp 4 4 11 11 (C '#252529')
+    Rect $bmp 4 4 11 4 $frame
+    Rect $bmp 4 11 11 11 $frame
+    Rect $bmp 4 4 4 11 $frame
+    Rect $bmp 11 4 11 11 $frame
     if ($top) {
-        Rect $bmp 3 3 12 12 (C '#16080A')
-        foreach ($y in 4, 7, 10) {
-            Rect $bmp 4 $y 11 $y (C '#5A1010')
-            Rect $bmp 4 ($y + 1) 11 ($y + 1) $blood
+        # Central cross core with orange/red heat accents.
+        Rect $bmp 7 4 8 11 $redDark
+        Rect $bmp 4 7 11 8 $redDark
+        Rect $bmp 7 6 8 9 $red
+        Rect $bmp 6 7 9 8 $red
+        Px $bmp 7 7 $orange
+        Px $bmp 8 8 $orange
+        Px $bmp 7 8 $metalHigh
+        # Vent slots in the corners.
+        foreach ($pos in @(@(5, 5), @(10, 5), @(5, 10), @(10, 10))) {
+            Px $bmp $pos[0] $pos[1] $metalLight
         }
-        Px $bmp 7 5 $bloodLight
-        Px $bmp 8 8 $bloodLight
+        Rect $bmp 5 5 6 6 $deep
+        Rect $bmp 9 5 10 6 $deep
+        Rect $bmp 5 9 6 10 $deep
+        Rect $bmp 9 9 10 10 $deep
     } else {
-        Rect $bmp 4 4 11 11 (C '#16080A')
-        Rect $bmp 5 7 10 7 $blood
-        Rect $bmp 5 8 10 8 $bloodLight
-        Rect $bmp 6 5 9 5 (C '#5A1010')
-        Rect $bmp 6 10 9 10 (C '#5A1010')
+        # Side: twin red rails and central vent.
+        Rect $bmp 5 5 6 10 $redDark
+        Rect $bmp 9 5 10 10 $redDark
+        Rect $bmp 7 5 8 10 $metalMid
+        Rect $bmp 7 7 8 8 $orange
+        Rect $bmp 5 12 10 12 $deep
+        Px $bmp 5 12 $red
+        Px $bmp 10 12 $red
     }
     return $bmp
 }
-
 $top = New-MachineTexture $true
 $side = New-MachineTexture $false
 $bottom = New-MachineTexture $false

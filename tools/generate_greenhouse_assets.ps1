@@ -36,30 +36,59 @@ $greenLight = C '#9AE870'
 
 function New-MachineTexture([bool]$top) {
     $bmp = New-Bmp 16 16
-    Rect $bmp 0 0 15 15 $dark
+    $frame = C '#221739'
+    $metal = C '#19374D'
+    $metalLight = C '#216B47'
+    $green = C '#1D9849'
+    $leaf = C '#8FC547'
+    $yellow = C '#F1E453'
+    $orange = C '#E57523'
+    $red = C '#6C1614'
+    $white = C '#FEFFE0'
+
+    Rect $bmp 0 0 15 15 $frame
     Rect $bmp 1 1 14 14 $metal
     Rect $bmp 1 1 14 2 $metalLight
-    Rect $bmp 1 14 14 14 (C '#050C08')
-    Rect $bmp 14 1 14 14 (C '#050C08')
-    foreach ($pos in @(@(2, 2), @(13, 2), @(2, 13), @(13, 13))) { Px $bmp $pos[0] $pos[1] $metalLight }
+    Rect $bmp 1 14 14 14 (C '#020619')
+    Rect $bmp 14 1 14 14 (C '#020619')
+    foreach ($pos in @(@(1, 1), @(12, 1), @(1, 12), @(12, 12))) {
+        Rect $bmp $pos[0] $pos[1] ($pos[0] + 2) ($pos[1] + 2) $metalLight
+        Px $bmp $pos[0] $pos[1] $leaf
+        Px $bmp ($pos[0] + 2) ($pos[1] + 2) $frame
+    }
+    Rect $bmp 4 4 11 11 (C '#0B1C11')
+    Rect $bmp 4 4 11 4 $frame
+    Rect $bmp 4 11 11 11 $frame
+    Rect $bmp 4 4 4 11 $frame
+    Rect $bmp 11 4 11 11 $frame
     if ($top) {
-        Rect $bmp 3 3 12 12 (C '#0B1C11')
-        foreach ($y in 4, 7, 10) {
-            Rect $bmp 4 $y 11 $y $green
-            Rect $bmp 4 ($y + 1) 11 ($y + 1) $greenLight
+        # Flower bed: alternating colourful cells and a bright centre.
+        for ($y = 0; $y -lt 6; $y++) {
+            for ($x = 0; $x -lt 6; $x++) {
+                $color = switch ((($x / 2) + ($y / 2)) % 4) {
+                    0 { $green }
+                    1 { $leaf }
+                    2 { $yellow }
+                    default { $orange }
+                }
+                Rect $bmp (5 + $x) (5 + $y) (5 + $x) (5 + $y) $color
+            }
         }
-        Px $bmp 7 5 $greenLight
-        Px $bmp 8 8 $greenLight
+        Rect $bmp 7 7 8 8 $white
+        Px $bmp 7 7 $leaf
+        Px $bmp 8 8 $red
     } else {
-        Rect $bmp 4 4 11 11 (C '#0B1C11')
-        Rect $bmp 5 7 10 7 $green
-        Rect $bmp 5 8 10 8 $greenLight
-        Rect $bmp 6 5 9 5 $green
-        Rect $bmp 6 10 9 10 $green
+        # Side: green rails, seed window in the middle.
+        Rect $bmp 5 5 6 10 $green
+        Rect $bmp 9 5 10 10 $green
+        Rect $bmp 7 5 8 10 $metalLight
+        Rect $bmp 7 7 8 8 $yellow
+        Rect $bmp 5 12 10 12 $leaf
+        Px $bmp 5 12 $white
+        Px $bmp 10 12 $orange
     }
     return $bmp
 }
-
 $top = New-MachineTexture $true
 $side = New-MachineTexture $false
 $bottom = New-MachineTexture $false
