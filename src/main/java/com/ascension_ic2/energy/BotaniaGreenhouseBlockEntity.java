@@ -65,6 +65,30 @@ public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity implemen
         return true;
     }
 
+    private static boolean ascension$injectLogged;
+
+    @Override
+    public double injectEnergy(
+            net.minecraft.core.Direction direction, double amount, double voltage) {
+        if (!Double.isFinite(amount) || amount <= 0.0) {
+            return 0.0;
+        }
+        if (this.level == null || this.level.isClientSide) {
+            return amount;
+        }
+        if (!ascension$injectLogged) {
+            ascension$injectLogged = true;
+            com.ascension_ic2.AscensionIC2.LOGGER.debug(
+                    "Greenhouse injectEnergy: amount={}, voltage={}, stored={}",
+                    amount, voltage, getStoredEu());
+        }
+        double accepted = Math.min(amount, getCapacityEu() - getStoredEu());
+        if (accepted > 0.0) {
+            addEu(accepted);
+            setChanged();
+        }
+        return amount - accepted;
+    }
     public ItemStackHandler getInventory() {
         return this.inventory;
     }
