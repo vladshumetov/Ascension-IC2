@@ -98,8 +98,8 @@ $bottom.Save((Join-Path $assets "textures\block\botania_greenhouse_bottom.png"),
 $top.Dispose(); $side.Dispose(); $bottom.Dispose()
 
 $gui = New-Bmp 256 256
-$topColor = C '#C6C6C6'
-$bottomColor = C '#C6C6C6'
+$topColor = C '#48C0A2'
+$bottomColor = C '#38A3A5'
 for ($y = 0; $y -lt 230; $y++) {
     $t = $y / 229.0
     $r = [int]($topColor.R + ($bottomColor.R - $topColor.R) * $t)
@@ -107,63 +107,64 @@ for ($y = 0; $y -lt 230; $y++) {
     $b = [int]($topColor.B + ($bottomColor.B - $topColor.B) * $t)
     Rect $gui 0 $y 239 $y ([System.Drawing.Color]::FromArgb(255, $r, $g, $b))
 }
-Rect $gui 0 0 239 0 (C '#373737')
-Rect $gui 0 229 239 229 (C '#373737')
-Rect $gui 0 0 0 229 (C '#373737')
-Rect $gui 239 0 239 229 (C '#373737')
-Rect $gui 8 3 231 3 (C '#FFFFFF')
-Rect $gui 50 2 189 14 (C '#8B8B8B')
-Rect $gui 50 2 189 2 (C '#373737')
-Rect $gui 50 14 189 14 (C '#373737')
-Rect $gui 50 2 50 14 (C '#373737')
-Rect $gui 189 2 189 14 (C '#373737')
-Rect $gui 51 3 188 3 (C '#FFFFFF')
+Rect $gui 0 0 239 0 (C '#22577A')
+Rect $gui 0 229 239 229 (C '#22577A')
+Rect $gui 0 0 0 229 (C '#22577A')
+Rect $gui 239 0 239 229 (C '#22577A')
+Rect $gui 8 3 231 3 (C '#A3F4AB')
+
+# Title banner.
+Rect $gui 50 2 189 14 (C '#2C7690')
+Rect $gui 50 2 189 2 (C '#22577A')
+Rect $gui 50 14 189 14 (C '#22577A')
+Rect $gui 50 2 50 14 (C '#22577A')
+Rect $gui 189 2 189 14 (C '#22577A')
+Rect $gui 51 3 188 3 (C '#C7F9CC')
 
 function Draw-Slot([int]$x, [int]$y) {
-    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y + 18) (C '#8B8B8B')
-    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y - 3) (C '#373737')
-    Rect $gui ($x - 3) ($y + 18) ($x + 18) ($y + 18) (C '#373737')
-    Rect $gui ($x - 3) ($y - 3) ($x - 3) ($y + 18) (C '#373737')
-    Rect $gui ($x + 18) ($y - 3) ($x + 18) ($y + 18) (C '#373737')
-    Rect $gui ($x - 2) ($y - 2) ($x + 17) ($y + 17) (C '#07130B')
+    Rect $gui ($x - 3) ($y - 3) ($x + 18) ($y + 18) (C '#22577A')
+    Rect $gui ($x - 2) ($y - 2) ($x + 17) ($y + 17) (C '#C7F9CC')
+    Rect $gui ($x - 2) ($y - 2) ($x + 17) ($y - 2) (C '#A3F4AB')
+    Rect $gui ($x - 2) ($y - 2) ($x - 2) ($y + 17) (C '#A3F4AB')
+    Rect $gui ($x - 2) ($y + 17) ($x + 17) ($y + 17) (C '#2C7690')
+    Rect $gui ($x + 17) ($y - 2) ($x + 17) ($y + 17) (C '#2C7690')
 }
 foreach ($x in 86, 112, 138) { Draw-Slot $x 28 }
 foreach ($x in 86, 112, 138) { Draw-Slot $x 58 }
 foreach ($pos in @(@(8, 28), @(8, 62), @(216, 28), @(216, 62))) { Draw-Slot $pos[0] $pos[1] }
 
+# Two bars: mana (top) and energy (bottom).
 foreach ($y in 96, 104) {
-    Rect $gui 24 ($y - 1) 215 ($y + 6) (C '#8B8B8B')
-    Rect $gui 24 ($y - 1) 215 ($y - 1) (C '#373737')
-    Rect $gui 24 ($y + 6) 215 ($y + 6) (C '#373737')
-    Rect $gui 24 ($y - 1) 24 ($y + 6) (C '#373737')
-    Rect $gui 215 ($y - 1) 215 ($y + 6) (C '#373737')
-    Rect $gui 25 $y 214 ($y + 4) (C '#07130B')
+    Rect $gui 24 ($y - 1) 215 ($y + 6) (C '#22577A')
+    Rect $gui 25 $y 214 ($y + 4) (C '#2C7690')
 }
 
-Rect $gui 32 132 207 217 (C '#C6C6C6')
-Rect $gui 32 132 207 132 (C '#373737')
-Rect $gui 32 217 207 217 (C '#373737')
-Rect $gui 32 132 32 217 (C '#373737')
-Rect $gui 207 132 207 217 (C '#373737')
+# Player inventory.
+Rect $gui 32 132 207 217 (C '#C7F9CC')
+Rect $gui 32 132 207 132 (C '#22577A')
+Rect $gui 32 217 207 217 (C '#22577A')
+Rect $gui 32 132 32 217 (C '#22577A')
+Rect $gui 207 132 207 217 (C '#22577A')
 for ($row = 0; $row -lt 3; $row++) {
     for ($col = 0; $col -lt 9; $col++) {
         $x = 40 + $col * 18; $y = 140 + $row * 18
-        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#8B8B8B')
-        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#373737')
-        Rect $gui ($x - 1) ($y + 16) ($x + 16) ($y + 16) (C '#07130B')
-        Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#373737')
-        Rect $gui ($x + 16) ($y - 1) ($x + 16) ($y + 16) (C '#07130B')
+        Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#22577A')
+        Rect $gui $x $y ($x + 15) ($y + 15) (C '#C7F9CC')
+        Rect $gui $x $y ($x + 15) $y (C '#A3F4AB')
+        Rect $gui $x $y $x ($y + 15) (C '#A3F4AB')
+        Rect $gui $x ($y + 15) ($x + 15) ($y + 15) (C '#2C7690')
+        Rect $gui ($x + 15) $y ($x + 15) ($y + 15) (C '#2C7690')
     }
 }
 foreach ($col in 0..8) {
     $x = 40 + $col * 18; $y = 198
-    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#8B8B8B')
-    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y - 1) (C '#373737')
-    Rect $gui ($x - 1) ($y + 16) ($x + 16) ($y + 16) (C '#07130B')
-    Rect $gui ($x - 1) ($y - 1) ($x - 1) ($y + 16) (C '#373737')
-    Rect $gui ($x + 16) ($y - 1) ($x + 16) ($y + 16) (C '#07130B')
-}
-$gui.Save((Join-Path $assets "textures\gui\botania_greenhouse.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+    Rect $gui ($x - 1) ($y - 1) ($x + 16) ($y + 16) (C '#22577A')
+    Rect $gui $x $y ($x + 15) ($y + 15) (C '#C7F9CC')
+    Rect $gui $x $y ($x + 15) $y (C '#A3F4AB')
+    Rect $gui $x $y $x ($y + 15) (C '#A3F4AB')
+    Rect $gui $x ($y + 15) ($x + 15) ($y + 15) (C '#2C7690')
+    Rect $gui ($x + 15) $y ($x + 15) ($y + 15) (C '#2C7690')
+}$gui.Save((Join-Path $assets "textures\gui\botania_greenhouse.png"), [System.Drawing.Imaging.ImageFormat]::Png)
 $gui.Dispose()
 
 Write-JsonFile (Join-Path $assets "blockstates\botania_greenhouse.json") @{

@@ -71,7 +71,7 @@ public class BotaniaGreenhouseScreen extends AbstractContainerScreen<BotaniaGree
                 title,
                 (this.imageWidth - this.font.width(title)) / 2,
                 4,
-                0xFF404040,
+                0xFFC7F9CC,
                 false);
     }
 
