@@ -532,5 +532,10 @@ public final class AscensionIC2 {
                 Capabilities.ItemHandler.BLOCK,
                 BOTANIA_GREENHOUSE_BE.get(),
                 (blockEntity, side) -> blockEntity.getInventory());
+        if (net.neoforged.fml.ModList.get() != null
+                && net.neoforged.fml.ModList.get().isLoaded("botania")) {
+            com.ascension_ic2.integration.botania.BotaniaCapabilities.register(
+                    event, BOTANIA_GREENHOUSE_BE.get());
+        }
     }
 }

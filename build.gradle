@@ -48,6 +48,7 @@ dependencies {
     compileOnly files('libs/Jade-1.21-NeoForge-15.1.6.jar')
     compileOnly files('libs/jei-1.21.1-neoforge-19.69.0.456.jar')
     compileOnly files('libs/botania-neoforge-1.21.1-1.2.0.jar')
+    compileOnly files('libs/appliedenergistics2-19.2.19.jar')
     runtimeOnly files('libs/ic2r-neoforge-1.2.6.jar')
 }
 

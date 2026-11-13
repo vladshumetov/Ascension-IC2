@@ -1,5 +1,6 @@
 package com.ascension_ic2.energy;
 
+import appeng.api.config.Actionable;
 import com.ascension_ic2.integration.botania.BotaniaManaCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -22,13 +23,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import vazkii.botania.ae2.ae2.SafeMana;
+import vazkii.botania.api.mana.ManaReceiver;
 
 /**
  * Botania greenhouse: keeps generating/functional Botania flowers alive and consumes resource
  * items (water buckets, lava buckets, coal, food...) to create mana. Accepts any voltage and
  * never explodes. Mana is pushed into adjacent ManaPools/ManaReceivers (also Applied Botanics).
  */
-public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity implements MenuProvider {
+public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity
+        implements MenuProvider, ManaReceiver, SafeMana {
     public static final int ENERGY_TIER = 3;
     public static final int EU_PER_TICK = 256;
     public static final double EU_CAPACITY = 1_024_000.0;
@@ -88,6 +92,65 @@ public class BotaniaGreenhouseBlockEntity extends TierEnergyBlockEntity implemen
             setChanged();
         }
         return amount - accepted;
+    }
+    @Override
+    public net.minecraft.world.level.Level getManaReceiverLevel() {
+        return this.level;
+    }
+
+    @Override
+    public BlockPos getManaReceiverPos() {
+        return this.worldPosition;
+    }
+
+    @Override
+    public int getCurrentMana() {
+        return this.mana;
+    }
+
+    @Override
+    public boolean isFull() {
+        return this.mana >= MANA_CAPACITY;
+    }
+
+    @Override
+    public void receiveMana(int amount) {
+        if (amount <= 0) {
+            return;
+        }
+        this.mana = Math.min(MANA_CAPACITY, this.mana + amount);
+        setChanged();
+    }
+
+    @Override
+    public boolean canReceiveManaFromBursts() {
+        return true;
+    }
+
+    @Override
+    public int insert(int amount, Actionable actionable) {
+        if (amount <= 0) {
+            return 0;
+        }
+        int accepted = Math.min(amount, MANA_CAPACITY - this.mana);
+        if (accepted > 0 && actionable == Actionable.MODULATE) {
+            this.mana += accepted;
+            setChanged();
+        }
+        return accepted;
+    }
+
+    @Override
+    public int extract(int amount, Actionable actionable) {
+        if (amount <= 0) {
+            return 0;
+        }
+        int extracted = Math.min(amount, this.mana);
+        if (extracted > 0 && actionable == Actionable.MODULATE) {
+            this.mana -= extracted;
+            setChanged();
+        }
+        return extracted;
     }
     public ItemStackHandler getInventory() {
         return this.inventory;
