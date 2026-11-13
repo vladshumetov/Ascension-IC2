@@ -18,6 +18,10 @@ public class BloodGeneratorScreen extends AbstractContainerScreen<BloodGenerator
     private static final int ENERGY_BAR_Y = 103;
     private static final int BAR_WIDTH = 190;
     private static final int BAR_HEIGHT = 5;
+    private static final ResourceLocation BLOOD_BAR = ResourceLocation.fromNamespaceAndPath(
+            AscensionIC2.MOD_ID, "textures/gui/bars/blood.png");
+    private static final ResourceLocation ENERGY_BAR = ResourceLocation.fromNamespaceAndPath(
+            AscensionIC2.MOD_ID, "textures/gui/bars/energy.png");
 
     private static final int COLOR_LABEL = 0xFFC9A3A3;
     private static final int COLOR_VALUE = 0xFFFFFFFF;
@@ -48,16 +52,14 @@ public class BloodGeneratorScreen extends AbstractContainerScreen<BloodGenerator
         if (blood > 0) {
             int x1 = this.leftPos + BAR_X;
             int y1 = this.topPos + BLOOD_BAR_Y;
-            guiGraphics.fill(x1, y1, x1 + blood, y1 + BAR_HEIGHT, 0xFF8E1B1B);
-            guiGraphics.fill(x1, y1, x1 + blood, y1 + 1, 0xFFE05A5A);
+            guiGraphics.blit(BLOOD_BAR, x1, y1, 0.0F, 0.0F, blood, BAR_HEIGHT, 190, BAR_HEIGHT);
         }
 
         int energy = this.menu.getEnergyScaled(BAR_WIDTH);
         if (energy > 0) {
             int x1 = this.leftPos + BAR_X;
             int y1 = this.topPos + ENERGY_BAR_Y;
-            guiGraphics.fill(x1, y1, x1 + energy, y1 + BAR_HEIGHT, 0xFFEB352E);
-            guiGraphics.fill(x1, y1, x1 + energy, y1 + 1, 0xFFFF8D4F);
+            guiGraphics.blit(ENERGY_BAR, x1, y1, 0.0F, 0.0F, energy, BAR_HEIGHT, 190, BAR_HEIGHT);
         }
     }
 

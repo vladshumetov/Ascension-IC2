@@ -18,6 +18,10 @@ public class BotaniaGreenhouseScreen extends AbstractContainerScreen<BotaniaGree
     private static final int ENERGY_BAR_Y = 103;
     private static final int BAR_WIDTH = 190;
     private static final int BAR_HEIGHT = 5;
+    private static final ResourceLocation MANA_BAR = ResourceLocation.fromNamespaceAndPath(
+            AscensionIC2.MOD_ID, "textures/gui/bars/mana.png");
+    private static final ResourceLocation ENERGY_BAR = ResourceLocation.fromNamespaceAndPath(
+            AscensionIC2.MOD_ID, "textures/gui/bars/energy.png");
 
     public BotaniaGreenhouseScreen(
             BotaniaGreenhouseMenu menu, Inventory playerInventory, Component title) {
@@ -43,15 +47,13 @@ public class BotaniaGreenhouseScreen extends AbstractContainerScreen<BotaniaGree
         if (mana > 0) {
             int x1 = this.leftPos + BAR_X;
             int y1 = this.topPos + MANA_BAR_Y;
-            guiGraphics.fill(x1, y1, x1 + mana, y1 + BAR_HEIGHT, 0xFF3F6FD8);
-            guiGraphics.fill(x1, y1, x1 + mana, y1 + 1, 0xFF9FD8FF);
+            guiGraphics.blit(MANA_BAR, x1, y1, 0.0F, 0.0F, mana, BAR_HEIGHT, 190, BAR_HEIGHT);
         }
         int energy = this.menu.getEnergyScaled(BAR_WIDTH);
         if (energy > 0) {
             int x1 = this.leftPos + BAR_X;
             int y1 = this.topPos + ENERGY_BAR_Y;
-            guiGraphics.fill(x1, y1, x1 + energy, y1 + BAR_HEIGHT, 0xFFEB352E);
-            guiGraphics.fill(x1, y1, x1 + energy, y1 + 1, 0xFFFF8D4F);
+            guiGraphics.blit(ENERGY_BAR, x1, y1, 0.0F, 0.0F, energy, BAR_HEIGHT, 190, BAR_HEIGHT);
         }
     }
 
