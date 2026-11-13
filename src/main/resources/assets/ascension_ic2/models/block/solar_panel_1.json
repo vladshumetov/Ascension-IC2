@@ -1,6 +1,12 @@
 {
     "textures":  {
-                     "all":  "ic2:block/generator/electric/solar_generator_top"
+                     "north":  "ascension_ic2:block/solar_panel_1_side",
+                     "south":  "ascension_ic2:block/solar_panel_1_side",
+                     "up":  "ascension_ic2:block/solar_panel_1_top",
+                     "west":  "ascension_ic2:block/solar_panel_1_side",
+                     "particle":  "ascension_ic2:block/solar_panel_1_side",
+                     "east":  "ascension_ic2:block/solar_panel_1_side",
+                     "down":  "ascension_ic2:block/solar_panel_1_bottom"
                  },
-    "parent":  "minecraft:block/cube_all"
+    "parent":  "minecraft:block/cube"
 }
